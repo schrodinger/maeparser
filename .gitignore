@@ -1,0 +1,20 @@
+tags
+*.o
+# dependency files
+*.d
+# programs
+test
+drop_cache
+# gcov files
+*.gch
+*.gcda
+*.gcno
+*.gcov
+# leftovers from clang analyze
+*.plist
+.*.swp
+.DS_Store
+*.dtps
+boost
+unittest
+env.sh
