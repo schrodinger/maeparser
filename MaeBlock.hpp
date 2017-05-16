@@ -4,6 +4,7 @@
 #include <cassert>
 #include <map>
 #include <stdexcept>
+#include <cstring>
 #include <string>
 
 namespace schrodinger
