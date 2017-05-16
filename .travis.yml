@@ -1,5 +1,9 @@
 sudo: false
 
+language: cpp
+compiler:
+      - gcc
+
 before_script:
   - mkdir build
   - cd build
@@ -17,6 +21,7 @@ addons:
     packages:
       - cmake
       - cmake-data
-      - g++
+      - gcc-4.8
+      - g++-4.8
       - libboost-all-dev
 
