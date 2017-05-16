@@ -17,4 +17,6 @@ addons:
     packages:
       - cmake
       - cmake-data
+      - g++
       - libboost-all-dev
+
