@@ -1,12 +1,11 @@
 sudo: false
 
 language: cpp
-compiler:
-      - gcc
 
 before_script:
   - mkdir build
   - cd build
+  - export CXX="g++-4.8"
   - cmake ..
 
 script:
