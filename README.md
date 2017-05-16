@@ -1,4 +1,5 @@
 # maeparser
+[![Build Status](https://travis-ci.org/schrodinger/maeparser.svg?branch=master)](https://travis-ci.org/schrodinger/maeparser)
 
 maeparser is parser for [Schrodinger](https://www.schrodinger.com/) Maestro
 files.
