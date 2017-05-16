@@ -3,7 +3,7 @@
 maeparser is parser for [Schrodinger](https://www.schrodinger.com/) Maestro
 files.
 
-Structure files (.mae,.maegz,.mae.gz0 can contineu multiple structures
+Structure files (.mae,.maegz,.mae.gz) can contain multiple structures
 deliminated by "f_m_ct".
 
 To read a structure,
