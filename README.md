@@ -24,8 +24,8 @@ Background
 
 Why do we have a recursive descent parser for mae files instead of using a
 parser generator like ANTLR or lex/yacc? The main reasons are that the mae
-format language 1) is pretty simple, 2) unlikely to change significantly,
-3) is not a context free grammar, and 4) speed of parsing these
+format language is 1) pretty simple, 2) unlikely to change significantly,
+and 3) not a context free grammar. In addition, speed of parsing these
 files is important.
 
 In what way is the current version of the language not a CFG? Special tokens
