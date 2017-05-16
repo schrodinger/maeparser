@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE(BufferedReader)
         std::shared_ptr<IndexedBlock> ibb = b->getIndexedBlock("m_bond");
         count++;
     }
-    BOOST_REQUIRE_EQUAL(count, 14604u);
+    BOOST_REQUIRE_EQUAL(count, 3u);
 }
 
 BOOST_AUTO_TEST_CASE(BufferedFileReader)
@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE(BufferedFileReader)
         count++;
     }
     fclose(f);
-    BOOST_REQUIRE_EQUAL(count, 14604u);
+    BOOST_REQUIRE_EQUAL(count, 3u);
 }
 
 BOOST_AUTO_TEST_CASE(TextReader)
@@ -253,7 +253,7 @@ BOOST_AUTO_TEST_CASE(TextReader)
     while ((b = r.next("f_m_ct")) != nullptr) {
         count++;
     }
-    BOOST_REQUIRE_EQUAL(count, 14604u);
+    BOOST_REQUIRE_EQUAL(count, 3u);
 }
 
 BOOST_AUTO_TEST_CASE(TextFileReader)
@@ -268,7 +268,7 @@ BOOST_AUTO_TEST_CASE(TextFileReader)
         count++;
     }
     fclose(f);
-    BOOST_REQUIRE_EQUAL(count, 14604u);
+    BOOST_REQUIRE_EQUAL(count, 3u);
 }
 
 BOOST_AUTO_TEST_CASE(DirectReader)
@@ -286,6 +286,6 @@ BOOST_AUTO_TEST_CASE(DirectReader)
         count++;
     }
     fclose(f);
-    BOOST_REQUIRE_EQUAL(count, 14604u);
+    BOOST_REQUIRE_EQUAL(count, 3u);
 }
 BOOST_AUTO_TEST_SUITE_END()

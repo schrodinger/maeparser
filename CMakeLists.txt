@@ -11,5 +11,6 @@ add_library(maeparser Buffer.cpp MaeBlock.cpp MaeParser.cpp Reader.cpp)
 enable_testing()
 add_subdirectory(test)
 
-add_test(NAME unittest COMMAND test/unittest)
+add_test(NAME unittest COMMAND ${CMAKE_BINARY_DIR}/test/unittest
+         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
 

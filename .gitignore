@@ -3,7 +3,6 @@ tags
 # dependency files
 *.d
 # programs
-test
 drop_cache
 # gcov files
 *.gch
