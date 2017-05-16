@@ -543,6 +543,10 @@ BOOST_AUTO_TEST_CASE(RealErrors)
         }
     }
     {
+        // Different versions of boost give different results due to
+        // boost::spirit
+        const std::string valid_error1("Line 2, column 2: Bad real number.\n");
+        const std::string valid_error2("Line 2, column 4: Bad real number.\n");
         try {
             std::stringstream ss("\n -2EE3. ");
             Buffer b(ss);
@@ -550,8 +554,10 @@ BOOST_AUTO_TEST_CASE(RealErrors)
             parse_value<double>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 2, column 4: "
-                                          "Bad real number.\n");
+            BOOST_REQUIRE_MESSAGE(
+                e.what() == valid_error1 || e.what() == valid_error2,
+                "Expected " << valid_error1 << " or " << valid_error2
+                            << " but got " << e.what());
         }
     }
 }

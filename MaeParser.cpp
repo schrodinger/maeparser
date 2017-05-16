@@ -166,6 +166,7 @@ done:
     if (!qi::parse(save, buffer.current, qi::double_, value) ||
         save != buffer.current) {
         // On error, save will have advanced to the point of the problem.
+        // May differ on versions of boost
         throw read_exception(buffer.line_number, buffer.getColumn(save),
                              "Bad real number.");
     }
