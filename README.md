@@ -1,7 +1,7 @@
 # maeparser
 [![Build Status](https://travis-ci.org/schrodinger/maeparser.svg?branch=master)](https://travis-ci.org/schrodinger/maeparser)
 
-maeparser is parser for [Schrodinger](https://www.schrodinger.com/) Maestro
+maeparser is a parser for [Schrodinger](https://www.schrodinger.com/) Maestro
 files.
 
 Structure files (.mae,.maegz,.mae.gz) can contain multiple structures
