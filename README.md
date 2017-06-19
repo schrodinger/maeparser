@@ -30,7 +30,7 @@ and 3) not a context free grammar. In addition, speed of parsing these
 files is important.
 
 In what way is the current version of the language not a CFG? Special tokens
-like block opener '{' and key/value separator ':::' can also be string
+like block opener `{` and key/value separator `:::` can also be string
 values because the quotes on string values are not required. This results in
 complication and pain in attempts to define a grammar.
 
