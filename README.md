@@ -10,15 +10,22 @@ deliminated by "f_m_ct".
 To read a structure,
 
 ```C++
-FILE* f = fopen("test.mae", "r");
-Reader r(f);
+#include "Reader.hpp"
 
-std::shared_ptr<Block> b;
+...
+
+FILE* f = fopen("test.mae", "r");
+schrodinger::mae::Reader r(f);
+
+std::shared_ptr<schrodinger::mae::Block> b;
 while ((b = r.next("f_m_ct")) != nullptr) {
   // Parse structure
 }
 fclose(f);
 ```
+
+See also test/UsageDemo.cpp, which reads an example structure and
+stores it in a dummy Molecule class.
 
 Background
 ==========

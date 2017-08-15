@@ -281,6 +281,16 @@ template <typename T> class IndexedProperty
         return m_data[index];
     }
 
+    inline T& at(size_type index)
+    {
+        return operator[](index);
+    }
+
+    inline const T& at(size_type index) const
+    {
+        return operator[](index);
+    }
+
     void set(size_type index, const T& value)
     {
         m_data[index] = value;
