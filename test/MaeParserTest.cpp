@@ -1,5 +1,7 @@
 #include <iostream>
 
+#define BOOST_TEST_DYN_LINK
+#include <boost/algorithm/string.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "Buffer.hpp"
@@ -8,6 +10,8 @@
 
 using namespace schrodinger;
 using namespace schrodinger::mae;
+
+using boost::trim_copy;
 
 static std::string get_string(IndexedBlockBuffer& indexed_block_buffer,
                               size_t index)
@@ -65,9 +69,9 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
             std::string name = outer_block_beginning(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 1, column 1: "
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 1: "
                                           "Bad format for outer block name; "
-                                          "must be (f|p)_<author>_<name>.\n");
+                                          "must be (f|p)_<author>_<name>.");
         }
     }
     {
@@ -78,9 +82,9 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
             std::string name = outer_block_beginning(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 1, column 4: "
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 4: "
                                           "Bad format for outer block name; "
-                                          "must be (f|p)_<author>_<name>.\n");
+                                          "must be (f|p)_<author>_<name>.");
         }
     }
     {
@@ -91,9 +95,9 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
             std::string name = outer_block_beginning(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 1, column 2: "
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 2: "
                                           "Bad format for outer block name; "
-                                          "must be (f|p)_<author>_<name>.\n");
+                                          "must be (f|p)_<author>_<name>.");
         }
     }
     {
@@ -104,8 +108,8 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
             std::string name = outer_block_beginning(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 1, column 10: "
-                                          "Missing '{' for outer block.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 10: "
+                                          "Missing '{' for outer block.");
         }
     }
 }
@@ -149,9 +153,9 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
             BOOST_REQUIRE_EQUAL(
-                e.what(),
+                trim_copy(std::string(e.what())),
                 "Line 1, column 1: "
-                "Bad format for block name; must be <author>_<name>.\n");
+                "Bad format for block name; must be <author>_<name>.");
         }
     }
     {
@@ -162,8 +166,8 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
             mp.blockBeginning(&indexed);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 1, column 9: "
-                                          "Unexpected character.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 9: "
+                                          "Unexpected character.");
         }
     }
     {
@@ -174,8 +178,8 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
             mp.blockBeginning(&indexed);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 1, column 13: "
-                                          "Bad block index; missing ']'.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 13: "
+                                          "Bad block index; missing ']'.");
         }
     }
     {
@@ -186,8 +190,8 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
             mp.blockBeginning(&indexed);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 1, column 14: "
-                                          "Missing '{' for block.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 14: "
+                                          "Missing '{' for block.");
         }
     }
     {
@@ -199,9 +203,9 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
             BOOST_REQUIRE_EQUAL(
-                e.what(),
+                trim_copy(std::string(e.what())),
                 "Line 1, column 1: "
-                "Bad format for block name; must be <author>_<name>.\n");
+                "Bad format for block name; must be <author>_<name>.");
         }
     }
     {
@@ -213,9 +217,9 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
             BOOST_REQUIRE_EQUAL(
-                e.what(),
+                trim_copy(std::string(e.what())),
                 "Line 1, column 6: "
-                "Bad format for block name; must be <author>_<name>.\n");
+                "Bad format for block name; must be <author>_<name>.");
         }
     }
 }
@@ -259,8 +263,8 @@ BOOST_AUTO_TEST_CASE(BlockBodyErrors)
         try {
             mp.blockBody(std::string("f_m_ct"));
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 10, column 2: "
-                                          "Missing '}' for block.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 10, column 2: "
+                                          "Missing '}' for block.");
         }
     }
 }
@@ -338,10 +342,10 @@ BOOST_AUTO_TEST_CASE(PropertyList)
             }
             BOOST_FAIL("Exception expected.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
                                 "Line 1, column 13: "
                                 "Bad format for property; "
-                                "must be (b|i|r|s)_<author>_<name>.\n");
+                                "must be (b|i|r|s)_<author>_<name>.");
         }
     }
 }
@@ -355,10 +359,10 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
             mp.property();
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
                                 "Line 1, column 2: "
                                 "Bad format for property; "
-                                "must be (b|i|r|s)_<author>_<name>.\n");
+                                "must be (b|i|r|s)_<author>_<name>.");
         }
     }
     {
@@ -368,10 +372,10 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
             mp.property();
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
                                 "Line 1, column 1: "
                                 "Bad format for property; "
-                                "must be (b|i|r|s)_<author>_<name>.\n");
+                                "must be (b|i|r|s)_<author>_<name>.");
         }
     }
     {
@@ -381,10 +385,10 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
             mp.property();
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
                                 "Line 1, column 5: "
                                 "Bad format for property; "
-                                "must be (b|i|r|s)_<author>_<name>.\n");
+                                "must be (b|i|r|s)_<author>_<name>.");
         }
     }
     {
@@ -394,10 +398,10 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
             mp.property();
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
                                 "Line 1, column 5: "
                                 "Bad format for property; "
-                                "must be (b|i|r|s)_<author>_<name>.\n");
+                                "must be (b|i|r|s)_<author>_<name>.");
         }
     }
 }
@@ -435,8 +439,8 @@ BOOST_AUTO_TEST_CASE(IntegerErrors)
             parse_value<int>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
-                                "Line 1, column 3: Unexpected '-'.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 1, column 3: Unexpected '-'.");
         }
     }
 
@@ -447,8 +451,8 @@ BOOST_AUTO_TEST_CASE(IntegerErrors)
             parse_value<int>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
-                                "Line 1, column 4: Unexpected '-'.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 1, column 4: Unexpected '-'.");
         }
     }
 
@@ -460,8 +464,8 @@ BOOST_AUTO_TEST_CASE(IntegerErrors)
             parse_value<int>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
-                                "Line 3, column 1: Missing integer.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 3, column 1: Missing integer.");
         }
     }
 
@@ -473,8 +477,8 @@ BOOST_AUTO_TEST_CASE(IntegerErrors)
             parse_value<int>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
-                                "Line 3, column 4: Unexpected character.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 3, column 4: Unexpected character.");
         }
     }
 }
@@ -514,8 +518,8 @@ BOOST_AUTO_TEST_CASE(RealErrors)
             parse_value<double>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 1, column 1: "
-                                          "Missing real.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 1: "
+                                          "Missing real.");
         }
     }
     {
@@ -525,9 +529,9 @@ BOOST_AUTO_TEST_CASE(RealErrors)
             parse_value<double>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
                                 "Line 1, column 5: "
-                                "Unexpected character in real number.\n");
+                                "Unexpected character in real number.");
         }
     }
     {
@@ -538,15 +542,15 @@ BOOST_AUTO_TEST_CASE(RealErrors)
             parse_value<double>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(), "Line 2, column 6: "
-                                          "Bad real number.\n");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 2, column 6: "
+                                          "Bad real number.");
         }
     }
     {
         // Different versions of boost give different results due to
         // boost::spirit
-        const std::string valid_error1("Line 2, column 2: Bad real number.\n");
-        const std::string valid_error2("Line 2, column 4: Bad real number.\n");
+        const std::string valid_error1("Line 2, column 2: Bad real number.");
+        const std::string valid_error2("Line 2, column 4: Bad real number.");
         try {
             std::stringstream ss("\n -2EE3. ");
             Buffer b(ss);
@@ -555,7 +559,7 @@ BOOST_AUTO_TEST_CASE(RealErrors)
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
             BOOST_REQUIRE_MESSAGE(
-                e.what() == valid_error1 || e.what() == valid_error2,
+                trim_copy(std::string(e.what())) == valid_error1 || trim_copy(std::string(e.what())) == valid_error2,
                 "Expected " << valid_error1 << " or " << valid_error2
                             << " but got " << e.what());
         }
@@ -612,9 +616,9 @@ BOOST_AUTO_TEST_CASE(StringErrors)
             parse_value<std::string>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
                                 "Line 1, column 11: "
-                                "Unterminated quoted string at EOF.\n");
+                                "Unterminated quoted string at EOF.");
         }
     }
 }
@@ -645,9 +649,9 @@ BOOST_AUTO_TEST_CASE(BooleanErrors)
             parse_value<bool>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
                                 "Line 4, column 1: "
-                                "Unexpected character for boolean value.\n");
+                                "Unexpected character for boolean value.");
         }
     }
     {
@@ -658,9 +662,9 @@ BOOST_AUTO_TEST_CASE(BooleanErrors)
             parse_value<bool>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(e.what(),
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
                                 "Line 3, column 2: "
-                                "Unexpected character for boolean value.\n");
+                                "Unexpected character for boolean value.");
         }
     }
 }
@@ -956,9 +960,9 @@ BOOST_AUTO_TEST_CASE(Test8)
         ibb.parse(b);
         BOOST_FAIL("Expected an exception.");
     } catch (read_exception& e) {
-        BOOST_REQUIRE_EQUAL(e.what(),
+        BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
                             "Line 1, column 11: "
-                            "Unexpected EOF in indexed block values.\n");
+                            "Unexpected EOF in indexed block values.");
     }
 }
 

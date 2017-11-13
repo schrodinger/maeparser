@@ -21,13 +21,15 @@ static bool property_key_author_name(Buffer& buffer, char*& save);
 
 static std::string outer_block_name(Buffer& buffer);
 
-const int read_exception::BUFFER_SIZE;
-
 void read_exception::format(int line_number, int column, const char* msg)
 {
-    snprintf(m_msg, BUFFER_SIZE, "Line %d, column %d: %s\n", line_number,
+#ifdef _MSC_VER
+    _snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE, "Line %d, column %d: %s\n", line_number,
+#else
+    snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE, "Line %d, column %d: %s\n", line_number,
+#endif
              column, msg);
-    m_msg[BUFFER_SIZE - 1] = '\0';
+    m_msg[MAEPARSER_EXCEPTION_BUFFER_SIZE - 1] = '\0';
 }
 
 // TODO: Not sure that newlines embedded in comments are allowed.
@@ -88,7 +90,7 @@ bool character(char c, Buffer& buffer, char*& save)
  * Read an integer and return its value. An integer is terminated
  * either by whitespace or a ']'.
  */
-template <> int parse_value<int>(Buffer& buffer)
+template <> EXPORT_MAEPARSER int parse_value<int>(Buffer& buffer)
 {
     int value = 0;
     int sign = 1;
@@ -128,7 +130,7 @@ template <> int parse_value<int>(Buffer& buffer)
     return value * sign;
 }
 
-template <> double parse_value<double>(Buffer& buffer)
+template <> EXPORT_MAEPARSER double parse_value<double>(Buffer& buffer)
 {
     char* save = buffer.current;
     while (buffer.current < buffer.end || buffer.load(save)) {
@@ -173,7 +175,7 @@ done:
     return value;
 }
 
-template <> std::string parse_value<std::string>(Buffer& buffer)
+template <> EXPORT_MAEPARSER std::string parse_value<std::string>(Buffer& buffer)
 {
     char* save = buffer.current;
     if (*buffer.current != '"') {
@@ -201,7 +203,7 @@ template <> std::string parse_value<std::string>(Buffer& buffer)
     }
 }
 
-template <> bool parse_value<bool>(Buffer& buffer)
+template <> EXPORT_MAEPARSER bool parse_value<bool>(Buffer& buffer)
 {
     bool value = false;
     if (*buffer.current == '1') {

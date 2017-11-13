@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
 #include "MaeBlock.hpp"
