@@ -7,6 +7,8 @@
 #include <cstring>
 #include <string>
 
+#include "MaeParserConfig.hpp"
+
 namespace schrodinger
 {
 namespace mae
@@ -28,7 +30,7 @@ inline const T& get_property(const std::map<std::string, T>& map,
 class IndexedBlockBuffer;
 class IndexedBlock;
 
-class IndexedBlockMapI
+class EXPORT_MAEPARSER IndexedBlockMapI
 {
   public:
     virtual ~IndexedBlockMapI(){};
@@ -37,7 +39,7 @@ class IndexedBlockMapI
     getIndexedBlock(const std::string& name) = 0;
 };
 
-class IndexedBlockMap : public IndexedBlockMapI
+class EXPORT_MAEPARSER IndexedBlockMap : public IndexedBlockMapI
 {
     std::map<std::string, std::shared_ptr<IndexedBlock>> m_indexed_block;
 
@@ -57,7 +59,7 @@ class IndexedBlockMap : public IndexedBlockMapI
     }
 };
 
-class BufferedIndexedBlockMap : public IndexedBlockMapI
+class EXPORT_MAEPARSER BufferedIndexedBlockMap : public IndexedBlockMapI
 {
   private:
     std::map<std::string, std::shared_ptr<IndexedBlock>> m_indexed_block;
@@ -80,7 +82,7 @@ class BufferedIndexedBlockMap : public IndexedBlockMapI
     }
 };
 
-class Block
+class EXPORT_MAEPARSER Block
 {
   private:
     std::string m_name;
@@ -331,7 +333,7 @@ inline void set_indexed_property(std::map<std::string, std::shared_ptr<T>>& map,
     map.insert(std::pair<std::string, std::shared_ptr<T>>(name, value));
 }
 
-class IndexedBlock
+class EXPORT_MAEPARSER IndexedBlock
 {
   private:
     const std::string m_name;

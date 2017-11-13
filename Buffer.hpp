@@ -13,6 +13,8 @@
 #include <stdexcept>
 #include <vector>
 
+#include "MaeParserConfig.hpp"
+
 namespace schrodinger
 {
 
@@ -20,7 +22,7 @@ namespace schrodinger
  * A simple data class to hold unchanging character buffer data. Copies are
  * reference counted.
  */
-class BufferData
+class EXPORT_MAEPARSER BufferData
 {
   private:
     std::shared_ptr<std::vector<char>> m_data;
@@ -160,7 +162,7 @@ class FileLoader : public BufferLoader
  * The character buffer is stored in a BufferData object, which is reference
  * counted and can be retrieved by the data() method.
  */
-class Buffer
+class EXPORT_MAEPARSER Buffer
 {
   private:
     BufferData m_data;
@@ -264,12 +266,12 @@ std::ostream& operator<<(std::ostream& os, const Buffer& b);
  * A class to collect tokens with minimal copying by saving the buffer and
  * token start and end indices.
  */
-class TokenBufferList
+class EXPORT_MAEPARSER TokenBufferList
 {
-  private:
+  public:
     /// A simple data class to keep the info about the buffers and tokens
     // straight.
-    class TokenBuffer
+    class EXPORT_MAEPARSER TokenBuffer
     {
       public:
         BufferData buffer_data;
@@ -283,6 +285,7 @@ class TokenBufferList
         {
         }
     };
+  private:
 
     /// List of TokenBuffer objects.
     std::list<TokenBuffer> m_token_buffer_list;

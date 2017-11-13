@@ -9,8 +9,11 @@
 
 #include <boost/dynamic_bitset.hpp>
 
+#include "MaeParserConfig.hpp"
 #include "Buffer.hpp"
 #include "MaeBlock.hpp"
+
+#define MAEPARSER_EXCEPTION_BUFFER_SIZE 256
 
 namespace schrodinger
 {
@@ -27,7 +30,7 @@ void comment(Buffer& buffer);
  * Parse (and throw away) zero or more characters of whitespace including \t,
  * \r, \n and ' ', along with any embedded comments.
  */
-void whitespace(Buffer& buffer);
+EXPORT_MAEPARSER void whitespace(Buffer& buffer);
 
 /**
  * Parse a triple colon or raise an exception.
@@ -62,15 +65,14 @@ std::shared_ptr<std::string> property_key(Buffer& buffer);
  * Set the name of the block in the provided argument; an empty string
  * if unnamed. If EOF is reached, return false, otherwise return true.
  */
-std::string outer_block_beginning(Buffer& buffer);
+EXPORT_MAEPARSER std::string outer_block_beginning(Buffer& buffer);
 
 template <typename T> T parse_value(Buffer& buffer);
 
-class read_exception : public std::exception
+class EXPORT_MAEPARSER read_exception : public std::exception
 {
   private:
-    static const int BUFFER_SIZE = 256;
-    char m_msg[BUFFER_SIZE];
+    char m_msg[MAEPARSER_EXCEPTION_BUFFER_SIZE];
 
     void format(int line_number, int column, const char* msg);
 
@@ -93,14 +95,14 @@ class read_exception : public std::exception
  * collections, so we can do things like easily invoke different parsers on
  * each element while parsing a row of values.
  */
-class Parser
+class EXPORT_MAEPARSER Parser
 {
   public:
     virtual void parse(Buffer& buffer) = 0;
     virtual ~Parser(){};
 };
 
-class IndexedBlockParser
+class EXPORT_MAEPARSER IndexedBlockParser
 {
     std::vector<std::string> m_property_names;
 
@@ -113,7 +115,7 @@ class IndexedBlockParser
     virtual std::shared_ptr<IndexedBlockMapI> getIndexedBlockMap() = 0;
 };
 
-class IndexedBlockBuffer
+class EXPORT_MAEPARSER IndexedBlockBuffer
 {
   private:
     std::vector<std::string> m_property_names;
@@ -154,7 +156,7 @@ class IndexedBlockBuffer
     IndexedBlock* getIndexedBlock();
 };
 
-class BufferedIndexedBlockParser : public IndexedBlockParser
+class EXPORT_MAEPARSER BufferedIndexedBlockParser : public IndexedBlockParser
 {
   private:
     std::shared_ptr<BufferedIndexedBlockMap> m_indexed_block_map;
@@ -169,7 +171,7 @@ class BufferedIndexedBlockParser : public IndexedBlockParser
     virtual void parse(const std::string& name, size_t size, Buffer& buffer);
 };
 
-class DirectIndexedBlockParser : public IndexedBlockParser
+class EXPORT_MAEPARSER DirectIndexedBlockParser : public IndexedBlockParser
 {
     std::shared_ptr<IndexedBlockMap> m_indexed_block_map;
 
@@ -181,7 +183,7 @@ class DirectIndexedBlockParser : public IndexedBlockParser
     virtual std::shared_ptr<IndexedBlockMapI> getIndexedBlockMap();
 };
 
-class IndexedValueParser : public Parser
+class EXPORT_MAEPARSER IndexedValueParser : public Parser
 {
   public:
     virtual void addToIndexedBlock(IndexedBlock* block) = 0;
@@ -253,7 +255,7 @@ template <typename T> class IndexedValueCollector : public IndexedValueParser
     }
 };
 
-class MaeParser
+class EXPORT_MAEPARSER MaeParser
 {
   protected:
     Buffer m_buffer;
@@ -324,7 +326,7 @@ class MaeParser
     void whitespace() { schrodinger::mae::whitespace(m_buffer); }
 };
 
-class DirectMaeParser : public MaeParser
+class EXPORT_MAEPARSER DirectMaeParser : public MaeParser
 {
   public:
     explicit DirectMaeParser(std::istream& stream,

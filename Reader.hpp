@@ -2,6 +2,7 @@
 
 #include <cstdio>
 
+#include "MaeParserConfig.hpp"
 #include "Buffer.hpp"
 #include "MaeBlock.hpp"
 #include "MaeParser.hpp"
@@ -11,7 +12,7 @@ namespace schrodinger
 namespace mae
 {
 
-class Reader
+class EXPORT_MAEPARSER Reader
 {
   private:
     MaeParser* m_mae_parser;
