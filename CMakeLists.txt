@@ -10,22 +10,21 @@ endif(MSVC)
 
 find_package(Boost)
 include_directories(${Boost_INCLUDE_DIRS})
+
 add_library(maeparser SHARED Buffer.cpp MaeBlock.cpp MaeParser.cpp Reader.cpp)
 
+target_include_directories(maeparser PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>)
+
 install(TARGETS maeparser
-    LIBRARY
-    DESTINATION lib)
+    EXPORT maeparser-targets
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin)
 
-INCLUDE (CMakePackageConfigHelpers)
-CONFIGURE_PACKAGE_CONFIG_FILE (
-    ${PROJECT_NAME}-config.cmake.in ${PROJECT_NAME}-config.cmake
-    INSTALL_DESTINATION lib/cmake
-    NO_CHECK_REQUIRED_COMPONENTS_MACRO)
-
-INSTALL (FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake DESTINATION lib/cmake)
-
-export(TARGETS maeparser FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}-targets.cmake )
-INSTALL (FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-targets.cmake DESTINATION lib/cmake)
+INSTALL(EXPORT maeparser-targets
+    FILE ${PROJECT_NAME}-config.cmake
+    DESTINATION lib/cmake)
 
 target_compile_definitions(maeparser PRIVATE IN_MAEPARSER)
 
