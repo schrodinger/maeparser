@@ -206,8 +206,8 @@ BOOST_AUTO_TEST_CASE(NestedIndexedBlock)
     BOOST_REQUIRE(b);
     std::shared_ptr<IndexedBlock> ibn = b->getIndexedBlock("m_nested");
     auto prop = ibn->getStringProperty("s_m_prop");
-    BOOST_REQUIRE_EQUAL((*prop)[0], "1.1.0");
-    BOOST_REQUIRE_EQUAL((*prop)[1], "1.1.0");
+    BOOST_REQUIRE_EQUAL((*prop)[0u], "1.1.0");
+    BOOST_REQUIRE_EQUAL((*prop)[1u], "1.1.0");
 }
 
 BOOST_AUTO_TEST_CASE(BufferedReader)
