@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(maeBlock)
             // not have the "i_m_template_index" property.
             const auto template_indices = atom_data->getIntProperty("i_m_template_index");
             for (size_t i=0; i<size; ++i) {
-                auto index = static_cast<unsigned long>(i);
+                auto index = static_cast<boost::dynamic_bitset<>::size_type>(i);
                 if (template_indices->isDefined(index)) {
                     st->demo_property[index] = template_indices->at(index);
                 }

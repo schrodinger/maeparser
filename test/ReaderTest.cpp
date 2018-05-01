@@ -3,6 +3,7 @@
 #include <iostream>
 
 #define BOOST_TEST_DYN_LINK
+#include <boost/dynamic_bitset.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "Reader.hpp"
@@ -206,8 +207,8 @@ BOOST_AUTO_TEST_CASE(NestedIndexedBlock)
     BOOST_REQUIRE(b);
     std::shared_ptr<IndexedBlock> ibn = b->getIndexedBlock("m_nested");
     auto prop = ibn->getStringProperty("s_m_prop");
-    BOOST_REQUIRE_EQUAL((*prop)[0ul], "1.1.0");
-    BOOST_REQUIRE_EQUAL((*prop)[1ul], "1.1.0");
+    BOOST_REQUIRE_EQUAL((*prop)[static_cast<boost::dynamic_bitset<>::size_type>(0)], "1.1.0");
+    BOOST_REQUIRE_EQUAL((*prop)[static_cast<boost::dynamic_bitset<>::size_type>(1)], "1.1.0");
 }
 
 BOOST_AUTO_TEST_CASE(BufferedReader)
