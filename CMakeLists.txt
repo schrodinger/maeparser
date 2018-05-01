@@ -20,6 +20,7 @@ target_include_directories(maeparser PUBLIC
 install(TARGETS maeparser
     EXPORT maeparser-targets
     LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin)
 
 INSTALL(EXPORT maeparser-targets
