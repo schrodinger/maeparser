@@ -4,8 +4,8 @@ cmake_minimum_required(VERSION 3.2)
 project(maeparser)
 
 if(MSVC)
-    # C4251 disables warnings for export STL containers as arguments (returning a vector of things)
-add_definitions(/wd4251 /D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS)
+# C4251 disables warnings for export STL containers as arguments (returning a vector of things)
+add_definitions(/wd4251 /D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS /WX)
 endif(MSVC)
 
 find_package(Boost)
