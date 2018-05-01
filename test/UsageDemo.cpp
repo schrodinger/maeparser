@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(maeBlock)
             for (size_t i=0; i<size; ++i) {
                 auto index = static_cast<boost::dynamic_bitset<>::size_type>(i);
                 if (template_indices->isDefined(index)) {
-                    st->demo_property[index] = template_indices->at(index);
+                    st->demo_property[index] = static_cast<int>(template_indices->at(index));
                 }
             }
         }
