@@ -426,8 +426,7 @@ BOOST_AUTO_TEST_CASE(Integer)
     {
         std::stringstream ss("-2147483648");
         Buffer b(ss);
-        int val = -2147483648;
-        BOOST_REQUIRE_EQUAL(parse_value<int>(b), val);
+        BOOST_REQUIRE_EQUAL(parse_value<int>(b), -2147483648l);
     }
 }
 
