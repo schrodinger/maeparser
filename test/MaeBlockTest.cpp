@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE(maeIndexedRealProperty)
     }
     {
         auto dv = std::make_shared<std::vector<double>>();
-        boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3lu);
+        boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3ul);
         bs->set(1);
 
         dv->push_back(1.0);
@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(maeIndexedRealProperty)
     }
     {
         std::vector<double> dv;
-        boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3);
+        boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3ul);
         bs->set(1);
 
         dv.push_back(1.0);
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlock)
     double tolerance = std::numeric_limits<double>::epsilon();
     {
         std::vector<double> dv;
-        boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3);
+        boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3ul);
         bs->set(1);
 
         dv.push_back(1.0);
