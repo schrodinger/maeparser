@@ -24,11 +24,13 @@ static std::string outer_block_name(Buffer& buffer);
 void read_exception::format(int line_number, int column, const char* msg)
 {
 #ifdef _MSC_VER
-    _snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE, "Line %d, column %d: %s\n", line_number,
+    _snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE,
+              "Line %d, column %d: %s\n", line_number,
 #else
-    snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE, "Line %d, column %d: %s\n", line_number,
+    snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE, "Line %d, column %d: %s\n",
+             line_number,
 #endif
-             column, msg);
+              column, msg);
     m_msg[MAEPARSER_EXCEPTION_BUFFER_SIZE - 1] = '\0';
 }
 
@@ -175,7 +177,8 @@ done:
     return value;
 }
 
-template <> EXPORT_MAEPARSER std::string parse_value<std::string>(Buffer& buffer)
+template <>
+EXPORT_MAEPARSER std::string parse_value<std::string>(Buffer& buffer)
 {
     char* save = buffer.current;
     if (*buffer.current != '"') {
@@ -545,7 +548,7 @@ void DirectIndexedBlockParser::parse(const std::string& name, size_t size,
         parsers.push_back(p);
     }
 
-    for (int i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i) {
         for (auto parser : parsers) {
             whitespace(buffer);
             parser->parse(buffer);
