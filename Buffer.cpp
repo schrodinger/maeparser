@@ -131,8 +131,10 @@ bool BufferDataCollector::load(BufferData& data, const char* begin,
     return succeeded;
 }
 
-size_t BufferDataCollector::readData(char* ptr, size_t size) const
+size_t BufferDataCollector::readData(char*, size_t) const
 {
+    // char* ptr, size_t size are unnamed to avoid compilation warning messages.
+
     // The BufferDataCollector doesn't actually read any data directly; it
     // delegates that to its member BufferLoader instance.
     return 0;
