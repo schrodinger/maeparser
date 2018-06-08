@@ -104,10 +104,12 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlock)
         dv.push_back(0.0);
         dv.push_back(3.0);
         IndexedBlock ib("m_atom");
+        BOOST_REQUIRE(!ib.hasRealProperty("r_m_float"));
         auto irps = std::shared_ptr<IndexedRealProperty>(
             new IndexedRealProperty(dv, bs));
 
         ib.setRealProperty("r_m_float", irps);
+        BOOST_REQUIRE(ib.hasRealProperty("r_m_float"));
 
         auto irpg = ib.getRealProperty("r_m_float");
         IndexedRealProperty& irp = *irpg;
