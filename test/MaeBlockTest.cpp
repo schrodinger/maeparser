@@ -121,4 +121,35 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlock)
         BOOST_REQUIRE_CLOSE(irp[2], 3.0, tolerance);
     }
 }
+
+BOOST_AUTO_TEST_CASE(maeIndexedBlockBool)
+{
+    using namespace mae;
+    {
+        std::vector<bool> dv;
+        boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3);
+        bs->set(1);
+
+        dv.push_back(true);
+        dv.push_back(false);
+        dv.push_back(true);
+        IndexedBlock ib("m_atom");
+        BOOST_REQUIRE(!ib.hasBoolProperty("b_m_bool"));
+        auto ibps = std::shared_ptr<IndexedBoolProperty>(
+            new IndexedBoolProperty(dv, bs));
+
+        ib.setBoolProperty("b_m_bool", ibps);
+        BOOST_REQUIRE(ib.hasBoolProperty("b_m_bool"));
+
+        auto ibpg = ib.getBoolProperty("b_m_bool");
+        IndexedBoolProperty& ibp = *ibpg;
+        BOOST_REQUIRE(ibp.isDefined(0));
+        BOOST_REQUIRE_EQUAL(ibp[0], true);
+        BOOST_REQUIRE(!ibp.isDefined(1));
+        BOOST_REQUIRE_THROW(ibp[1], std::runtime_error);
+        BOOST_REQUIRE(ibp.isDefined(2));
+        BOOST_REQUIRE_EQUAL(ibp[2], true);
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
