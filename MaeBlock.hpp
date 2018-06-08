@@ -362,6 +362,11 @@ class EXPORT_MAEPARSER IndexedBlock
     void setProperty(const std::string& name,
                      std::shared_ptr<IndexedProperty<T>> value);
 
+    bool hasBoolProperty(const std::string& name) const
+    {
+        return (m_bmap.find(name) != m_bmap.end());
+    }
+
     std::shared_ptr<IndexedBoolProperty>
     getBoolProperty(const std::string& name) const
     {
@@ -372,6 +377,11 @@ class EXPORT_MAEPARSER IndexedBlock
                          const std::shared_ptr<IndexedBoolProperty> value)
     {
         set_indexed_property<IndexedBoolProperty>(m_bmap, name, value);
+    }
+
+    bool hasIntProperty(const std::string& name) const
+    {
+        return (m_imap.find(name) != m_imap.end());
     }
 
     std::shared_ptr<IndexedIntProperty>
@@ -386,6 +396,11 @@ class EXPORT_MAEPARSER IndexedBlock
         set_indexed_property<IndexedIntProperty>(m_imap, name, value);
     }
 
+    bool hasRealProperty(const std::string& name) const
+    {
+        return (m_rmap.find(name) != m_rmap.end());
+    }
+
     std::shared_ptr<IndexedRealProperty>
     getRealProperty(const std::string& name) const
     {
@@ -396,6 +411,11 @@ class EXPORT_MAEPARSER IndexedBlock
                          const std::shared_ptr<IndexedRealProperty> value)
     {
         set_indexed_property<IndexedRealProperty>(m_rmap, name, value);
+    }
+
+    bool hasStringProperty(const std::string& name) const
+    {
+        return (m_smap.find(name) != m_smap.end());
     }
 
     std::shared_ptr<IndexedStringProperty>
