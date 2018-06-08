@@ -119,7 +119,6 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlock)
         BOOST_REQUIRE_THROW(irp[1], std::runtime_error);
         BOOST_REQUIRE(irp.isDefined(2));
         BOOST_REQUIRE_CLOSE(irp[2], 3.0, tolerance);
-
     }
 }
 BOOST_AUTO_TEST_SUITE_END()
