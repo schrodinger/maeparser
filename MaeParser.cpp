@@ -206,7 +206,7 @@ EXPORT_MAEPARSER std::string parse_value<std::string>(Buffer& buffer)
     }
 }
 
-template <> EXPORT_MAEPARSER bool parse_value<bool>(Buffer& buffer)
+template <> EXPORT_MAEPARSER BoolProperty parse_value<BoolProperty>(Buffer& buffer)
 {
     bool value = false;
     if (*buffer.current == '1') {
@@ -333,7 +333,7 @@ std::shared_ptr<Block> MaeParser::blockBody(const std::string& name)
             block->setIntProperty((*(*iter)), parse_value<int>(m_buffer));
             break;
         case 'b':
-            block->setBoolProperty((*(*iter)), parse_value<bool>(m_buffer));
+            block->setBoolProperty((*(*iter)), parse_value<BoolProperty>(m_buffer));
             break;
         }
     }
@@ -531,7 +531,7 @@ void DirectIndexedBlockParser::parse(const std::string& name, size_t size,
     for (auto& key : property_keys) {
         switch (key[0]) {
         case 'b':
-            p = new IndexedValueCollector<bool>(key, size);
+            p = new IndexedValueCollector<BoolProperty>(key, size);
             break;
         case 'i':
             p = new IndexedValueCollector<int>(key, size);
@@ -663,7 +663,7 @@ IndexedBlock* IndexedBlockBuffer::getIndexedBlock()
         size_t len;
         switch (type) {
         case 'b': {
-            std::vector<bool> bvalues;
+            std::vector<BoolProperty> bvalues;
             bvalues.reserve(m_rows);
             for (size_t ix = prop_indx; ix < value_count; ix += col_count) {
                 getData(ix, &data, &len);
