@@ -629,13 +629,13 @@ BOOST_AUTO_TEST_CASE(Boolean)
         std::stringstream ss(" 1");
         Buffer b(ss);
         whitespace(b);
-        BOOST_REQUIRE_EQUAL(parse_value<bool>(b), true);
+        BOOST_REQUIRE_EQUAL(parse_value<BoolProperty>(b), true);
     }
     {
         std::stringstream ss("0 ");
         Buffer b(ss);
         whitespace(b);
-        BOOST_REQUIRE_EQUAL(parse_value<bool>(b), false);
+        BOOST_REQUIRE_EQUAL(parse_value<BoolProperty>(b), false);
     }
 }
 
@@ -646,7 +646,7 @@ BOOST_AUTO_TEST_CASE(BooleanErrors)
             std::stringstream ss("\n\n\na");
             Buffer b(ss);
             whitespace(b);
-            parse_value<bool>(b);
+            parse_value<BoolProperty>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
             BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
@@ -659,7 +659,7 @@ BOOST_AUTO_TEST_CASE(BooleanErrors)
             std::stringstream ss("\t\n\n11");
             Buffer b(ss);
             whitespace(b);
-            parse_value<bool>(b);
+            parse_value<BoolProperty>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
             BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),

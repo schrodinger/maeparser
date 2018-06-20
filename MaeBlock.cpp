@@ -64,10 +64,10 @@ BufferedIndexedBlockMap::getIndexedBlock(const std::string& name)
 }
 
 template <>
-EXPORT_MAEPARSER void IndexedBlock::setProperty<bool>(
-    const std::string& name, std::shared_ptr<IndexedProperty<bool>> value)
+EXPORT_MAEPARSER void IndexedBlock::setProperty<BoolProperty>(
+    const std::string& name, std::shared_ptr<IndexedBoolProperty> value)
 {
-    set_indexed_property<IndexedProperty<bool>>(m_bmap, name, value);
+    set_indexed_property<IndexedBoolProperty>(m_bmap, name, value);
 }
 
 template <>

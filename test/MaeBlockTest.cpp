@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlockBool)
 {
     using namespace mae;
     {
-        std::vector<bool> dv;
+        std::vector<BoolProperty> dv;
         boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3);
         bs->set(1);
 

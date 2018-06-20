@@ -13,6 +13,7 @@ namespace schrodinger
 {
 namespace mae
 {
+typedef uint8_t BoolProperty;
 
 template <typename T>
 inline const T& get_property(const std::map<std::string, T>& map,
@@ -87,7 +88,7 @@ class EXPORT_MAEPARSER Block
   private:
     std::string m_name;
 
-    std::map<std::string, bool> m_bmap;
+    std::map<std::string, BoolProperty> m_bmap;
     std::map<std::string, double> m_rmap;
     std::map<std::string, int> m_imap;
     std::map<std::string, std::string> m_smap;
@@ -184,12 +185,12 @@ class EXPORT_MAEPARSER Block
 
     bool getBoolProperty(const std::string& name) const
     {
-        return get_property<bool>(m_bmap, name);
+        return get_property<BoolProperty>(m_bmap, name);
     }
 
     void setBoolProperty(const std::string& name, bool value)
     {
-        m_bmap[name] = value;
+        m_bmap[name] = static_cast<BoolProperty>(value);
     }
 
     bool hasStringProperty(const std::string& name) const
@@ -304,7 +305,7 @@ template <typename T> class IndexedProperty
 
 typedef IndexedProperty<double> IndexedRealProperty;
 typedef IndexedProperty<int> IndexedIntProperty;
-typedef IndexedProperty<bool> IndexedBoolProperty;
+typedef IndexedProperty<BoolProperty> IndexedBoolProperty;
 typedef IndexedProperty<std::string> IndexedStringProperty;
 
 template <typename T>
