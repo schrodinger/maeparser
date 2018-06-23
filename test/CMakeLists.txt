@@ -18,6 +18,6 @@ if (ZLIB_FOUND)
 else (ZLIB_FOUND)
 target_link_libraries(unittest
     maeparser
-    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${Boost_LIBRARIES})
 endif(ZLIB_FOUND)
 
