@@ -9,14 +9,13 @@
 #include "MaeBlock.hpp"
 
 using namespace schrodinger::mae;
-using std::shared_ptr;
 
 BOOST_AUTO_TEST_SUITE(ReaderSuite)
 
 BOOST_AUTO_TEST_CASE(Reader0)
 {
-    shared_ptr<std::stringstream> ss(new std::stringstream());
-    *ss << "\n"
+    std::stringstream ss;
+    ss << "\n"
        << "{"
           "\n"
        << "  s_m_m2io_version"
@@ -37,8 +36,8 @@ BOOST_AUTO_TEST_CASE(Reader0)
 
 BOOST_AUTO_TEST_CASE(NamedBlock0)
 {
-    shared_ptr<std::stringstream> ss(new std::stringstream());
-    *ss << "\n"
+    std::stringstream ss;
+    ss << "\n"
        << "\n"
        << "f_m_ct {"
           "\n"
@@ -60,8 +59,8 @@ BOOST_AUTO_TEST_CASE(NamedBlock0)
 
 BOOST_AUTO_TEST_CASE(NamedBlock1)
 {
-    shared_ptr<std::stringstream> ss(new std::stringstream());
-    *ss << "{"
+    std::stringstream ss;
+    ss << "{"
           "\n"
        << "  s_m_m2io_version"
           "\n"
@@ -95,8 +94,8 @@ BOOST_AUTO_TEST_CASE(NamedBlock1)
 
 BOOST_AUTO_TEST_CASE(NestedBlock)
 {
-    shared_ptr<std::stringstream> ss(new std::stringstream());
-    *ss << "{"
+    std::stringstream ss;
+    ss << "{"
           "\n"
        << "  s_m_m2io_version"
           "\n"
@@ -140,8 +139,8 @@ BOOST_AUTO_TEST_CASE(NestedBlock)
 
 BOOST_AUTO_TEST_CASE(NestedIndexedBlock)
 {
-    shared_ptr<std::stringstream> ss(new std::stringstream());
-    *ss << "{"
+    std::stringstream ss;
+    ss << "{"
           "\n" // 1
        << "  s_m_m2io_version"
           "\n" // 2
@@ -213,7 +212,7 @@ BOOST_AUTO_TEST_CASE(NestedIndexedBlock)
 
 BOOST_AUTO_TEST_CASE(BufferedReader)
 {
-    shared_ptr<std::ifstream> ss(new std::ifstream("test.mae"));
+    std::ifstream ss("test.mae");
 
     Reader r(ss);
 
@@ -246,7 +245,7 @@ BOOST_AUTO_TEST_CASE(BufferedFileReader)
 
 BOOST_AUTO_TEST_CASE(TextReader)
 {
-    shared_ptr<std::ifstream> ss(new std::ifstream("test.mae"));
+    std::ifstream ss("test.mae");
 
     Reader r(ss);
 
@@ -276,9 +275,9 @@ BOOST_AUTO_TEST_CASE(TextFileReader)
 BOOST_AUTO_TEST_CASE(DirectReader)
 {
     FILE* f = fopen("test.mae", "r");
-    shared_ptr<DirectMaeParser> mae_parser(new DirectMaeParser(f));
+    DirectMaeParser mae_parser(f);
 
-    Reader r(mae_parser);
+    Reader r(&mae_parser);
 
     size_t count = 0;
     std::shared_ptr<Block> b;
