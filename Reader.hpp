@@ -2,7 +2,10 @@
 
 #include <string>
 #include <cstdio>
+
+#ifdef ZLIB_AVAILABLE
 #include <boost/iostreams/filtering_streambuf.hpp>
+#endif
 
 #include "MaeParserConfig.hpp"
 #include "Buffer.hpp"
@@ -18,8 +21,10 @@ class EXPORT_MAEPARSER Reader
 {
   private:
     std::shared_ptr<MaeParser> m_mae_parser;
+#ifdef ZLIB_AVAILABLE
     std::shared_ptr<std::ifstream> m_pregzip_stream;
     std::shared_ptr<boost::iostreams::filtering_streambuf<boost::iostreams::input> > m_gzip_stream;
+#endif
 
   public:
     Reader(FILE* file, size_t buffer_size = BufferLoader::DEFAULT_SIZE)
