@@ -11,6 +11,8 @@
 using namespace schrodinger;
 using namespace schrodinger::mae;
 
+using std::shared_ptr;
+
 using boost::trim_copy;
 
 static std::string get_string(IndexedBlockBuffer& indexed_block_buffer,
@@ -117,7 +119,7 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
 BOOST_AUTO_TEST_CASE(BlockBeginning)
 {
     {
-        std::stringstream ss("m_something {");
+        shared_ptr<std::stringstream> ss(new std::stringstream("m_something {"));
         int indexed = 0;
         MaeParser mp(ss);
         std::string name = mp.blockBeginning(&indexed);
@@ -125,7 +127,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginning)
         BOOST_REQUIRE_EQUAL(indexed, 0);
     }
     {
-        std::stringstream ss("mmmm_block{");
+        shared_ptr<std::stringstream> ss(new std::stringstream("mmmm_block{"));
         int indexed = 0;
         MaeParser mp(ss);
         std::string name = mp.blockBeginning(&indexed);
@@ -133,7 +135,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginning)
         BOOST_REQUIRE_EQUAL(indexed, 0);
     }
     {
-        std::stringstream ss("m_whatev[23]{");
+        shared_ptr<std::stringstream> ss(new std::stringstream("m_whatev[23]{"));
         int indexed = 0;
         MaeParser mp(ss);
         std::string name = mp.blockBeginning(&indexed);
@@ -146,7 +148,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
 {
     {
         try {
-            std::stringstream ss("");
+            shared_ptr<std::stringstream> ss(new std::stringstream(""));
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
@@ -160,7 +162,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
     }
     {
         try {
-            std::stringstream ss("m_block[integer]");
+            shared_ptr<std::stringstream> ss(new std::stringstream("m_block[integer]"));
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
@@ -172,7 +174,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
     }
     {
         try {
-            std::stringstream ss("m_block[33  ");
+            shared_ptr<std::stringstream> ss(new std::stringstream("m_block[33  "));
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
@@ -184,7 +186,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
     }
     {
         try {
-            std::stringstream ss("m_block[33]  s_m_foo");
+            shared_ptr<std::stringstream> ss(new std::stringstream("m_block[33]  s_m_foo"));
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
@@ -196,7 +198,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
     }
     {
         try {
-            std::stringstream ss("'bad_block");
+            shared_ptr<std::stringstream> ss(new std::stringstream("'bad_block"));
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
@@ -210,7 +212,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
     }
     {
         try {
-            std::stringstream ss("mmmm_ ");
+            shared_ptr<std::stringstream> ss(new std::stringstream("mmmm_ "));
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
@@ -228,22 +230,23 @@ BOOST_AUTO_TEST_CASE(BlockBody)
 {
     double tolerance = std::numeric_limits<double>::epsilon();
     {
-        std::stringstream ss("b_m_foo b_m_bar::: 1 0 }");
+        shared_ptr<std::stringstream> ss(new std::stringstream("b_m_foo b_m_bar::: 1 0 }"));
         MaeParser mp(ss);
         auto bl = mp.blockBody(std::string("f_m_ct"));
         BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
         BOOST_REQUIRE(!bl->getBoolProperty("b_m_bar"));
     }
     {
-        std::stringstream ss(" b_m_foo b_m_bar ::: 1 0 }");
+        shared_ptr<std::stringstream> ss(new std::stringstream(" b_m_foo b_m_bar ::: 1 0 }"));
         MaeParser mp(ss);
         auto bl = mp.blockBody(std::string("f_m_ct"));
         BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
         BOOST_REQUIRE(!bl->getBoolProperty("b_m_bar"));
     }
     {
-        std::stringstream ss(" b_m_foo b_m_bar s_m_foo r_m_foo i_m_foo ::: "
-                             " 1       0       svalue  3.1415  22 }");
+        shared_ptr<std::stringstream> ss(new std::stringstream(
+                    " b_m_foo b_m_bar s_m_foo r_m_foo i_m_foo ::: "
+                    " 1       0       svalue  3.1415  22 }"));
         MaeParser mp(ss);
         auto bl = mp.blockBody(std::string("f_m_ct"));
         BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
@@ -257,8 +260,9 @@ BOOST_AUTO_TEST_CASE(BlockBody)
 BOOST_AUTO_TEST_CASE(BlockBodyErrors)
 {
     {
-        std::stringstream ss(" b_m_foo\n s_m_foo\n r_m_foo\n i_m_foo\n :::\n"
-                             " 1\n svalue\n 3.1415\n 22\n ");
+        shared_ptr<std::stringstream> ss(new std::stringstream(
+                    " b_m_foo\n s_m_foo\n r_m_foo\n i_m_foo\n :::\n"
+                    " 1\n svalue\n 3.1415\n 22\n "));
         MaeParser mp(ss);
         try {
             mp.blockBody(std::string("f_m_ct"));
@@ -272,25 +276,25 @@ BOOST_AUTO_TEST_CASE(BlockBodyErrors)
 BOOST_AUTO_TEST_CASE(Property)
 {
     {
-        std::stringstream ss("b_m_foo ");
+        shared_ptr<std::stringstream> ss(new std::stringstream("b_m_foo "));
         MaeParser mp(ss);
         auto p = mp.property();
         BOOST_REQUIRE(*p == "b_m_foo");
     }
     {
-        std::stringstream ss("r_m_bar ");
+        shared_ptr<std::stringstream> ss(new std::stringstream("r_m_bar "));
         MaeParser mp(ss);
         auto p = mp.property();
         BOOST_REQUIRE(*p == "r_m_bar");
     }
     {
-        std::stringstream ss("b_st_1_2_3_4_R_5 ");
+        shared_ptr<std::stringstream> ss(new std::stringstream("b_st_1_2_3_4_R_5 "));
         MaeParser mp(ss);
         auto p = mp.property();
         BOOST_REQUIRE(*p == "b_st_1_2_3_4_R_5");
     }
     {
-        std::stringstream ss("s_author_name ");
+        shared_ptr<std::stringstream> ss(new std::stringstream("s_author_name "));
         MaeParser mp(ss);
         auto p = mp.property();
         BOOST_REQUIRE(*p == "s_author_name");
@@ -300,7 +304,7 @@ BOOST_AUTO_TEST_CASE(Property)
 BOOST_AUTO_TEST_CASE(PropertyValueSeparator)
 {
     {
-        std::stringstream ss(":::");
+        shared_ptr<std::stringstream> ss(new std::stringstream(":::"));
         MaeParser mp(ss);
         auto p = mp.property();
         BOOST_REQUIRE(p == nullptr);
@@ -311,7 +315,7 @@ BOOST_AUTO_TEST_CASE(PropertyList)
 {
     {
         std::vector<std::string> properties;
-        std::stringstream ss("b_m_foo s_j_bar :::");
+        shared_ptr<std::stringstream> ss(new std::stringstream("b_m_foo s_j_bar :::"));
         // Buffer size of 14 was chosen to reproduce a bug during development;
         // a buffer boundary in the name part of the key.
         MaeParser mp(ss, 14u);
@@ -329,7 +333,7 @@ BOOST_AUTO_TEST_CASE(PropertyList)
     }
     {
         std::vector<std::string> properties;
-        std::stringstream ss("b_m_foo s_j_ :::");
+        shared_ptr<std::stringstream> ss(new std::stringstream("b_m_foo s_j_ :::"));
         MaeParser mp(ss);
         try {
             while (true) {
@@ -354,7 +358,7 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
 {
     {
         try {
-            std::stringstream ss("bo_m_foo ");
+            shared_ptr<std::stringstream> ss(new std::stringstream("bo_m_foo "));
             MaeParser mp(ss);
             mp.property();
             BOOST_FAIL("Expected an exception.");
@@ -367,7 +371,7 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
     }
     {
         try {
-            std::stringstream ss("x_m_foo ");
+            shared_ptr<std::stringstream> ss(new std::stringstream("x_m_foo "));
             MaeParser mp(ss);
             mp.property();
             BOOST_FAIL("Expected an exception.");
@@ -380,7 +384,7 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
     }
     {
         try {
-            std::stringstream ss("s_m_");
+            shared_ptr<std::stringstream> ss(new std::stringstream("s_m_"));
             MaeParser mp(ss);
             mp.property();
             BOOST_FAIL("Expected an exception.");
@@ -393,7 +397,7 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
     }
     {
         try {
-            std::stringstream ss("s_m_ ");
+            shared_ptr<std::stringstream> ss(new std::stringstream("s_m_ "));
             MaeParser mp(ss);
             mp.property();
             BOOST_FAIL("Expected an exception.");
