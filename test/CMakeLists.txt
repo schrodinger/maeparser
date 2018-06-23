@@ -1,5 +1,9 @@
-find_package(Boost COMPONENTS unit_test_framework system iostreams REQUIRED)
 find_package( ZLIB )
+if (ZLIB_FOUND)
+find_package(Boost COMPONENTS unit_test_framework system iostreams REQUIRED)
+else (ZLIB_FOUND)
+find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+endif(ZLIB_FOUND)
 
 include_directories(..)
 
@@ -18,6 +22,6 @@ if (ZLIB_FOUND)
 else (ZLIB_FOUND)
 target_link_libraries(unittest
     maeparser
-    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${Boost_LIBRARIES})
+    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 endif(ZLIB_FOUND)
 

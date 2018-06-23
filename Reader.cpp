@@ -3,8 +3,10 @@
 #include <fstream>
 #include <iostream>
 #include <boost/algorithm/string/predicate.hpp>
+#ifdef ZLIB_AVAILABLE
 #include <boost/iostreams/filtering_streambuf.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
+#endif
 
 
 using boost::algorithm::ends_with;
