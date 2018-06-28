@@ -1,9 +1,4 @@
-find_package( ZLIB )
-if (ZLIB_FOUND)
 find_package(Boost COMPONENTS unit_test_framework system iostreams REQUIRED)
-else (ZLIB_FOUND)
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-endif(ZLIB_FOUND)
 
 include_directories(..)
 
@@ -13,15 +8,7 @@ if(MSVC)
 add_custom_command(TARGET unittest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different  "${PROJECT_BINARY_DIR}/\$\(Configuration\)/maeparser.dll" "${CMAKE_BINARY_DIR}/test/\$\(Configuration\)/maeparser.dll")
 endif(MSVC)
 
-if (ZLIB_FOUND)
-    include_directories( ${ZLIB_INCLUDE_DIRS} )
-    target_compile_definitions(unittest PRIVATE ZLIB_AVAILABLE)
-    target_link_libraries(unittest
-        maeparser
-        ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${Boost_LIBRARIES} ${ZLIB_LIBRARIES})
-else (ZLIB_FOUND)
+include_directories( ${ZLIB_INCLUDE_DIRS} )
 target_link_libraries(unittest
     maeparser
-    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-endif(ZLIB_FOUND)
-
+    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${Boost_LIBRARIES} ${ZLIB_LIBRARIES})

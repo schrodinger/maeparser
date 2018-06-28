@@ -6,9 +6,9 @@ project(maeparser)
 if(MSVC)
     # C4251 disables warnings for export STL containers as arguments (returning a vector of things)
 add_definitions(/wd4251 /D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS)
+find_package(Boost REQUIRED COMPONENTS zlib)
 endif(MSVC)
 
-find_package( ZLIB )
 find_package(Boost)
 include_directories(${Boost_INCLUDE_DIRS})
 
@@ -29,9 +29,6 @@ INSTALL(EXPORT maeparser-targets
     DESTINATION lib/cmake)
 
 target_compile_definitions(maeparser PRIVATE IN_MAEPARSER)
-if (ZLIB_FOUND)
-    target_compile_definitions(maeparser PRIVATE ZLIB_AVAILABLE)
-endif (ZLIB_FOUND)
 
 set_property(TARGET maeparser PROPERTY CXX_VISIBILITY_PRESET "hidden")
 enable_testing()
