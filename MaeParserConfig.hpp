@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef STATIC_MAEPARSER
+
 #ifdef IN_MAEPARSER
 
 #ifdef WIN32
@@ -18,3 +20,8 @@
 
 #endif
 
+#else
+
+#define EXPORT_MAEPARSER
+
+#endif
