@@ -32,6 +32,15 @@ BOOST_AUTO_TEST_CASE(maeBlock)
     BOOST_REQUIRE(!b.hasBoolProperty("b"));
     BOOST_REQUIRE(b.getBoolProperty("a"));
     BOOST_REQUIRE_THROW(b.getBoolProperty("b"), std::out_of_range);
+
+    const std::vector<std::string> strings = {"Regular", "Spaced String"};
+    for(const auto value : strings) {
+        b.setStringProperty("a", value);
+        BOOST_REQUIRE(b.hasStringProperty("a"));
+        BOOST_REQUIRE(!b.hasStringProperty("b"));
+        BOOST_REQUIRE_EQUAL(b.getStringProperty("a"), value);
+        BOOST_REQUIRE_THROW(b.getStringProperty("b"), std::out_of_range);
+    }
 }
 
 BOOST_AUTO_TEST_CASE(maeIndexedRealProperty)
@@ -149,6 +158,36 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlockBool)
         BOOST_REQUIRE_THROW(ibp[1], std::runtime_error);
         BOOST_REQUIRE(ibp.isDefined(2));
         BOOST_REQUIRE_EQUAL(ibp[2], true);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(maeIndexedBlockString)
+{
+    using namespace mae;
+    {
+        std::vector<std::string> dv;
+        boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3);
+        bs->set(1);
+
+        dv.push_back("Hi with space");
+        dv.push_back("ignore me");
+        dv.push_back("Bye");
+        IndexedBlock ib("m_atom");
+        BOOST_REQUIRE(!ib.hasStringProperty("s_m_string"));
+        auto isps = std::shared_ptr<IndexedStringProperty>(
+            new IndexedStringProperty(dv, bs));
+
+        ib.setStringProperty("s_m_string", isps);
+        BOOST_REQUIRE(ib.hasStringProperty("s_m_string"));
+
+        auto ispg = ib.getStringProperty("s_m_string");
+        IndexedStringProperty& isp = *ispg;
+        BOOST_REQUIRE(isp.isDefined(0));
+        BOOST_REQUIRE_EQUAL(isp[0], "Hi with space");
+        BOOST_REQUIRE(!isp.isDefined(1));
+        BOOST_REQUIRE_THROW(isp[1], std::runtime_error);
+        BOOST_REQUIRE(isp.isDefined(2));
+        BOOST_REQUIRE_EQUAL(isp[2], "Bye");
     }
 }
 
