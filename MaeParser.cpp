@@ -492,8 +492,8 @@ void IndexedBlockBuffer::value(Buffer& buffer)
                     break;
                 }
                 ++buffer.current;
-                m_tokens_list.setTokenIndices(save - buffer.begin,
-                                              buffer.current - buffer.begin);
+                m_tokens_list.setTokenIndices(save - buffer.begin + 1,
+                                              buffer.current - buffer.begin - 1);
                 return;
             }
             ++buffer.current;

@@ -977,7 +977,7 @@ BOOST_AUTO_TEST_CASE(TestQuotedStrings1)
 
     std::string z;
     z = get_string(ibb, 1);
-    BOOST_REQUIRE_EQUAL(z, std::string("\"bc  \""));
+    BOOST_REQUIRE_EQUAL(z, std::string("bc  "));
     z = get_string(ibb, 2);
     BOOST_REQUIRE_EQUAL(z, std::string("ghijk"));
 }
@@ -993,7 +993,7 @@ BOOST_AUTO_TEST_CASE(TestQuotedStrings2)
 
     std::string z;
     z = get_string(ibb, 1);
-    BOOST_REQUIRE_EQUAL(z, std::string("\"bc \\\"\""));
+    BOOST_REQUIRE_EQUAL(z, std::string("bc \\\""));
     z = get_string(ibb, 2);
     BOOST_REQUIRE_EQUAL(z, std::string("ghijk"));
 }
