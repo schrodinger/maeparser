@@ -5,6 +5,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "MaeBlock.hpp"
+#include "MaeConstants.hpp"
 
 using namespace schrodinger;
 
