@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/spirit/include/qi_parse_attr.hpp>
 #include <boost/spirit/include/qi_numeric.hpp>
 
@@ -192,10 +193,14 @@ EXPORT_MAEPARSER std::string parse_value<std::string>(Buffer& buffer)
         return std::string(save, buffer.current);
     } else {
         save = ++buffer.current;
+        std::string rval;
         while (buffer.current < buffer.end || buffer.load(save)) {
             switch (*buffer.current) {
             case '"':
-                return std::string(save, buffer.current++);
+                rval = std::string(save, buffer.current++);
+                boost::replace_all(rval, "\\\\", "\\");
+                boost::replace_all(rval, "\\\"", "\"");
+                return rval;
             case '\\':
                 ++buffer.current;
                 break;
@@ -492,8 +497,8 @@ void IndexedBlockBuffer::value(Buffer& buffer)
                     break;
                 }
                 ++buffer.current;
-                m_tokens_list.setTokenIndices(save - buffer.begin + 1,
-                                              buffer.current - buffer.begin - 1);
+                m_tokens_list.setTokenIndices(save - buffer.begin,
+                                              buffer.current - buffer.begin);
                 return;
             }
             ++buffer.current;
@@ -743,7 +748,14 @@ IndexedBlock* IndexedBlockBuffer::getIndexedBlock()
                     is_null->set(svalues.size());
                     svalues.emplace_back();
                 } else {
-                    svalues.emplace_back(data, len);
+                    if(data[0] != '"') { // Check for quote wrapping
+                        svalues.emplace_back(data, len);
+                    } else { // During parsing we check for full quote wrapping
+                        auto rval = std::string(data+1, len-2);
+                        boost::replace_all(rval, "\\\\", "\\");
+                        boost::replace_all(rval, "\\\"", "\"");
+                        svalues.emplace_back(rval);
+                    }
                 }
             }
             std::shared_ptr<IndexedStringProperty> isp(

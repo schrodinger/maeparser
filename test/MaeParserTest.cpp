@@ -587,7 +587,7 @@ BOOST_AUTO_TEST_CASE(String)
         Buffer b(ss);
         whitespace(b);
         std::string s = parse_value<std::string>(b);
-        BOOST_REQUIRE_EQUAL(s, "Q\\ Z");
+        BOOST_REQUIRE_EQUAL(s, R"(Q\ Z)");
     }
     {
         std::stringstream ss(R"("a b c d e")");
@@ -977,7 +977,7 @@ BOOST_AUTO_TEST_CASE(TestQuotedStrings1)
 
     std::string z;
     z = get_string(ibb, 1);
-    BOOST_REQUIRE_EQUAL(z, std::string("bc  "));
+    BOOST_REQUIRE_EQUAL(z, std::string("\"bc  \""));
     z = get_string(ibb, 2);
     BOOST_REQUIRE_EQUAL(z, std::string("ghijk"));
 }
@@ -993,7 +993,7 @@ BOOST_AUTO_TEST_CASE(TestQuotedStrings2)
 
     std::string z;
     z = get_string(ibb, 1);
-    BOOST_REQUIRE_EQUAL(z, std::string("bc \\\""));
+    BOOST_REQUIRE_EQUAL(z, std::string("\"bc \\\"\""));
     z = get_string(ibb, 2);
     BOOST_REQUIRE_EQUAL(z, std::string("ghijk"));
 }
