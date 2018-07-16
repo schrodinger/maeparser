@@ -587,7 +587,7 @@ BOOST_AUTO_TEST_CASE(String)
         Buffer b(ss);
         whitespace(b);
         std::string s = parse_value<std::string>(b);
-        BOOST_REQUIRE_EQUAL(s, R"(Q\ Z)");
+        BOOST_REQUIRE_EQUAL(s, R"(Q Z)");
     }
     {
         std::stringstream ss(R"("a b c d e")");

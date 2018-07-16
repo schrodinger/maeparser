@@ -1,7 +1,6 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include <boost/algorithm/string.hpp>
 #include <boost/spirit/include/qi_parse_attr.hpp>
 #include <boost/spirit/include/qi_numeric.hpp>
 
@@ -87,6 +86,23 @@ bool character(char c, Buffer& buffer, char*& save)
         ++buffer.current;
         return true;
     }
+}
+
+static void remove_escape_characters(std::string& s)
+{
+    size_t j = 0;
+    for (size_t i = 0; i < s.size(); ++i, ++j) {
+        if (s[i] == '\\') {
+            if (i+1 < s.size() && s[i+1] == '\\') {
+                // Cover the case where we copy both '\' for '\\' instead of dropping
+                s[j++] = s[i];
+            }
+            ++i;
+        }
+        if (j < i)
+            s[j] = s[i];
+    }
+    s.resize(j);
 }
 
 /**
@@ -198,8 +214,7 @@ EXPORT_MAEPARSER std::string parse_value<std::string>(Buffer& buffer)
             switch (*buffer.current) {
             case '"':
                 rval = std::string(save, buffer.current++);
-                boost::replace_all(rval, "\\\\", "\\");
-                boost::replace_all(rval, "\\\"", "\"");
+                remove_escape_characters(rval);
                 return rval;
             case '\\':
                 ++buffer.current;
@@ -752,8 +767,7 @@ IndexedBlock* IndexedBlockBuffer::getIndexedBlock()
                         svalues.emplace_back(data, len);
                     } else { // During parsing we check for full quote wrapping
                         auto rval = std::string(data+1, len-2);
-                        boost::replace_all(rval, "\\\\", "\\");
-                        boost::replace_all(rval, "\\\"", "\"");
+                        remove_escape_characters(rval);
                         svalues.emplace_back(rval);
                     }
                 }
