@@ -92,13 +92,8 @@ static void remove_escape_characters(std::string& s)
 {
     size_t j = 0;
     for (size_t i = 0; i < s.size(); ++i, ++j) {
-        if (s[i] == '\\') {
-            if (i+1 < s.size() && s[i+1] == '\\') {
-                // Cover the case where we copy both '\' for '\\' instead of dropping
-                s[j++] = s[i];
-            }
+        if (s[i] == '\\')
             ++i;
-        }
         if (j < i)
             s[j] = s[i];
     }

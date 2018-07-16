@@ -299,12 +299,12 @@ BOOST_AUTO_TEST_CASE(QuotedStringTest)
     size_t count = 0;
     auto b = r.next("f_m_ct");
     auto title = b->getStringProperty("s_m_title");
-    BOOST_REQUIRE_EQUAL(title, R"(Title with p \\ " space)");
+    BOOST_REQUIRE_EQUAL(title, R"(Title with p \ " space)");
     auto atom_block = b->getIndexedBlock("m_atom");
     auto pdb_res = atom_block->getStringProperty("s_m_pdb_residue_name");
     BOOST_REQUIRE_EQUAL(pdb_res->at(0), "UNK ");
     auto atom_names = atom_block->getStringProperty("s_m_atom_name");
-    BOOST_REQUIRE_EQUAL(atom_names->at(0), R"(Does p " \\this work)");
+    BOOST_REQUIRE_EQUAL(atom_names->at(0), R"(Does p " \this work)");
 
     fclose(f);
 }
