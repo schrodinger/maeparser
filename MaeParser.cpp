@@ -88,6 +88,18 @@ bool character(char c, Buffer& buffer, char*& save)
     }
 }
 
+static void remove_escape_characters(std::string& s)
+{
+    size_t j = 0;
+    for (size_t i = 0; i < s.size(); ++i, ++j) {
+        if (s[i] == '\\')
+            ++i;
+        if (j < i)
+            s[j] = s[i];
+    }
+    s.resize(j);
+}
+
 /**
  * Read an integer and return its value. An integer is terminated
  * either by whitespace or a ']'.
@@ -192,10 +204,13 @@ EXPORT_MAEPARSER std::string parse_value<std::string>(Buffer& buffer)
         return std::string(save, buffer.current);
     } else {
         save = ++buffer.current;
+        std::string rval;
         while (buffer.current < buffer.end || buffer.load(save)) {
             switch (*buffer.current) {
             case '"':
-                return std::string(save, buffer.current++);
+                rval = std::string(save, buffer.current++);
+                remove_escape_characters(rval);
+                return rval;
             case '\\':
                 ++buffer.current;
                 break;
@@ -743,7 +758,13 @@ IndexedBlock* IndexedBlockBuffer::getIndexedBlock()
                     is_null->set(svalues.size());
                     svalues.emplace_back();
                 } else {
-                    svalues.emplace_back(data, len);
+                    if(data[0] != '"') { // Check for quote wrapping
+                        svalues.emplace_back(data, len);
+                    } else { // During parsing we check for full quote wrapping
+                        auto rval = std::string(data+1, len-2);
+                        remove_escape_characters(rval);
+                        svalues.emplace_back(rval);
+                    }
                 }
             }
             std::shared_ptr<IndexedStringProperty> isp(
