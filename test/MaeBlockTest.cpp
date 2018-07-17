@@ -115,10 +115,13 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlock)
         IndexedRealProperty& irp = *irpg;
         BOOST_REQUIRE(irp.isDefined(0));
         BOOST_REQUIRE_CLOSE(irp[0], 1.0, tolerance);
+        BOOST_REQUIRE_CLOSE(irp.at(0, 999.0), 1.0, tolerance);
         BOOST_REQUIRE(!irp.isDefined(1));
         BOOST_REQUIRE_THROW(irp[1], std::runtime_error);
+        BOOST_REQUIRE_CLOSE(irp.at(1, 999.0), 999.0, tolerance);
         BOOST_REQUIRE(irp.isDefined(2));
         BOOST_REQUIRE_CLOSE(irp[2], 3.0, tolerance);
+        BOOST_REQUIRE_CLOSE(irp.at(2, 999.0), 3.0, tolerance);
     }
 }
 
