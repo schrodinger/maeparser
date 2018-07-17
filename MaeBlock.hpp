@@ -294,6 +294,14 @@ template <typename T> class IndexedProperty
         return operator[](index);
     }
 
+    inline const T& at(size_type index, const T& default_) const
+    {
+        if (m_is_null && (*m_is_null)[index]) {
+            return default_;
+        }
+        return m_data[index];
+    }
+
     void set(size_type index, const T& value)
     {
         m_data[index] = value;
