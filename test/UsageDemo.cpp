@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(maeBlock)
 
         // Atom data is in the m_atom indexed block
         {
-            const auto atom_data = b->getIndexedBlock(ATOM_CT_BLOCK);
+            const auto atom_data = b->getIndexedBlock(ATOM_BLOCK);
             // All atoms are gauranteed to have these three field names:
             const auto atomic_numbers = atom_data->getIntProperty(ATOM_ATOMIC_NUM);
             const auto xs = atom_data->getRealProperty(ATOM_X_COORD);
@@ -102,22 +102,22 @@ BOOST_AUTO_TEST_CASE(maeBlock)
 
         // Bond data is in the m_bond indexed block
         {
-            const auto bond_data = b->getIndexedBlock(BOND_CT_BLOCK);
+            const auto bond_data = b->getIndexedBlock(BOND_BLOCK);
             // All bonds are gauranteed to have these three field names:
-            auto from_atoms = bond_data->getIntProperty(BOND_FROM_ATOM);
-            auto to_atoms = bond_data->getIntProperty(BOND_TO_ATOM);
+            auto bond_atom_1s = bond_data->getIntProperty(BOND_ATOM_1);
+            auto bond_atom_2s = bond_data->getIntProperty(BOND_ATOM_2);
             auto orders = bond_data->getIntProperty(BOND_ORDER);
-            const auto size = from_atoms->size();
+            const auto size = bond_atom_1s->size();
 
             for (size_t i = 0; i < size; ++i) {
                 // Atom indices in the bond data structure are 1 indexed!
-                const auto from_atom = from_atoms->at(i) - 1;
-                const auto to_atom = to_atoms->at(i) - 1;
+                const auto bond_atom_1 = bond_atom_1s->at(i) - 1;
+                const auto bond_atom_2 = bond_atom_2s->at(i) - 1;
                 const auto order = orders->at(i);
 
                 // Only one direction of the bond is recorded in the file
-                st->bonds.emplace_back(from_atom, to_atom, order);
-                st->bonds.emplace_back(to_atom, from_atom, order);
+                st->bonds.emplace_back(bond_atom_1, bond_atom_2, order);
+                st->bonds.emplace_back(bond_atom_2, bond_atom_1, order);
             }
         }
 

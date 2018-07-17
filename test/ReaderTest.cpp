@@ -221,8 +221,8 @@ BOOST_AUTO_TEST_CASE(BufferedReader)
     size_t count = 0;
     std::shared_ptr<Block> b;
     while ((b = r.next(CT_BLOCK)) != nullptr) {
-        std::shared_ptr<IndexedBlock> iba = b->getIndexedBlock(ATOM_CT_BLOCK);
-        std::shared_ptr<IndexedBlock> ibb = b->getIndexedBlock(BOND_CT_BLOCK);
+        std::shared_ptr<IndexedBlock> iba = b->getIndexedBlock(ATOM_BLOCK);
+        std::shared_ptr<IndexedBlock> ibb = b->getIndexedBlock(BOND_BLOCK);
         count++;
     }
     BOOST_REQUIRE_EQUAL(count, 3u);
@@ -237,8 +237,8 @@ BOOST_AUTO_TEST_CASE(BufferedFileReader)
     size_t count = 0;
     std::shared_ptr<Block> b;
     while ((b = r.next(CT_BLOCK)) != nullptr) {
-        std::shared_ptr<IndexedBlock> iba = b->getIndexedBlock(ATOM_CT_BLOCK);
-        std::shared_ptr<IndexedBlock> ibb = b->getIndexedBlock(BOND_CT_BLOCK);
+        std::shared_ptr<IndexedBlock> iba = b->getIndexedBlock(ATOM_BLOCK);
+        std::shared_ptr<IndexedBlock> ibb = b->getIndexedBlock(BOND_BLOCK);
         count++;
     }
     fclose(f);
@@ -284,8 +284,8 @@ BOOST_AUTO_TEST_CASE(DirectReader)
     size_t count = 0;
     std::shared_ptr<Block> b;
     while ((b = r.next(CT_BLOCK)) != nullptr) {
-        std::shared_ptr<IndexedBlock> iba = b->getIndexedBlock(ATOM_CT_BLOCK);
-        std::shared_ptr<IndexedBlock> ibb = b->getIndexedBlock(BOND_CT_BLOCK);
+        std::shared_ptr<IndexedBlock> iba = b->getIndexedBlock(ATOM_BLOCK);
+        std::shared_ptr<IndexedBlock> ibb = b->getIndexedBlock(BOND_BLOCK);
         count++;
     }
     fclose(f);
