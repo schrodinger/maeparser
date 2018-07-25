@@ -7,6 +7,7 @@
 #include "Buffer.hpp"
 #include "MaeParser.hpp"
 #include "MaeBlock.hpp"
+#include "MaeConstants.hpp"
 
 using namespace schrodinger;
 using namespace schrodinger::mae;
@@ -38,14 +39,14 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginning)
         Buffer b(ss);
         b.load();
         std::string name = outer_block_beginning(b);
-        BOOST_REQUIRE_EQUAL(name, "f_m_ct");
+        BOOST_REQUIRE_EQUAL(name, CT_BLOCK);
     }
     {
         std::stringstream ss("f_m_ct{");
         Buffer b(ss);
         b.load();
         std::string name = outer_block_beginning(b);
-        BOOST_REQUIRE_EQUAL(name, "f_m_ct");
+        BOOST_REQUIRE_EQUAL(name, CT_BLOCK);
     }
     {
         // TODO: Check that this is actually the desired behavior; I'm not
@@ -230,14 +231,14 @@ BOOST_AUTO_TEST_CASE(BlockBody)
     {
         std::stringstream ss("b_m_foo b_m_bar::: 1 0 }");
         MaeParser mp(ss);
-        auto bl = mp.blockBody(std::string("f_m_ct"));
+        auto bl = mp.blockBody(CT_BLOCK);
         BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
         BOOST_REQUIRE(!bl->getBoolProperty("b_m_bar"));
     }
     {
         std::stringstream ss(" b_m_foo b_m_bar ::: 1 0 }");
         MaeParser mp(ss);
-        auto bl = mp.blockBody(std::string("f_m_ct"));
+        auto bl = mp.blockBody(CT_BLOCK);
         BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
         BOOST_REQUIRE(!bl->getBoolProperty("b_m_bar"));
     }
@@ -245,7 +246,7 @@ BOOST_AUTO_TEST_CASE(BlockBody)
         std::stringstream ss(" b_m_foo b_m_bar s_m_foo r_m_foo i_m_foo ::: "
                              " 1       0       svalue  3.1415  22 }");
         MaeParser mp(ss);
-        auto bl = mp.blockBody(std::string("f_m_ct"));
+        auto bl = mp.blockBody(CT_BLOCK);
         BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
         BOOST_REQUIRE(!bl->getBoolProperty("b_m_bar"));
         BOOST_REQUIRE_EQUAL(bl->getStringProperty("s_m_foo"), "svalue");
@@ -261,7 +262,7 @@ BOOST_AUTO_TEST_CASE(BlockBodyErrors)
                              " 1\n svalue\n 3.1415\n 22\n ");
         MaeParser mp(ss);
         try {
-            mp.blockBody(std::string("f_m_ct"));
+            mp.blockBody(CT_BLOCK);
         } catch (read_exception& e) {
             BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 10, column 2: "
                                           "Missing '}' for block.");
