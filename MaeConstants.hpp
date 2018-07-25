@@ -15,6 +15,7 @@ const std::string ATOM_X_COORD = "r_m_x_coord";
 const std::string ATOM_Y_COORD = "r_m_y_coord";
 const std::string ATOM_Z_COORD = "r_m_z_coord";
 const std::string ATOM_FORMAL_CHARGE = "i_m_formal_charge";
+const std::string ATOM_PARTIAL_CHARGE = "r_m_charge1";
 const std::string BOND_BLOCK = "m_bond";
 const std::string BOND_ATOM_1 = "i_m_from";
 const std::string BOND_ATOM_2 = "i_m_to";
