@@ -1,4 +1,4 @@
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS unit_test_framework system iostreams REQUIRED)
 
 include_directories(..)
 
@@ -8,7 +8,7 @@ if(MSVC)
 add_custom_command(TARGET unittest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different  "${PROJECT_BINARY_DIR}/\$\(Configuration\)/maeparser.dll" "${CMAKE_BINARY_DIR}/test/\$\(Configuration\)/maeparser.dll")
 endif(MSVC)
 
-
+include_directories( ${ZLIB_INCLUDE_DIRS} )
 target_link_libraries(unittest
     maeparser
-    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${Boost_LIBRARIES} ${ZLIB_LIBRARIES})
