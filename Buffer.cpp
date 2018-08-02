@@ -108,7 +108,7 @@ BufferData::BufferData(size_t size) : m_data(nullptr), m_size(size)
     // Allocate space and add a trailing null character.
     m_size = size;
     m_data = std::shared_ptr<std::vector<char>>(new std::vector<char>());
-    m_data->reserve(m_size + 1);
+    m_data->resize(m_size + 1);
     (*m_data)[m_size] = '\0';
 }
 
