@@ -57,8 +57,7 @@ BOOST_AUTO_TEST_SUITE(DemoSuite)
 // exist in every f_m_ct block.
 BOOST_AUTO_TEST_CASE(maeBlock)
 {
-    std::ifstream ss("test.mae");
-    schrodinger::mae::Reader r(ss);
+    schrodinger::mae::Reader r("test2.maegz");
 
     std::vector<std::shared_ptr<Structure>> structures;
     std::shared_ptr<schrodinger::mae::Block> b;
