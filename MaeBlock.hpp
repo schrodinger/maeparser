@@ -2,9 +2,9 @@
 
 #include <boost/dynamic_bitset.hpp>
 #include <cassert>
+#include <cstring>
 #include <map>
 #include <stdexcept>
-#include <cstring>
 #include <string>
 
 #include "MaeParserConfig.hpp"
@@ -284,15 +284,9 @@ template <typename T> class IndexedProperty
         return m_data[index];
     }
 
-    inline T& at(size_type index)
-    {
-        return operator[](index);
-    }
+    inline T& at(size_type index) { return operator[](index); }
 
-    inline const T& at(size_type index) const
-    {
-        return operator[](index);
-    }
+    inline const T& at(size_type index) const { return operator[](index); }
 
     inline const T& at(size_type index, const T& default_) const
     {

@@ -285,8 +285,8 @@ class EXPORT_MAEPARSER TokenBufferList
         {
         }
     };
-  private:
 
+  private:
     /// List of TokenBuffer objects.
     std::list<TokenBuffer> m_token_buffer_list;
 

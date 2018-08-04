@@ -9,13 +9,13 @@
 // coherent environment. For instance, both a ligand and a receptor may exist
 // in a single f_m_ct block.
 //
+#include <array>
 #include <cstdio>
 #include <fstream>
 #include <iostream>
 #include <memory>
-#include <array>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #include "Reader.hpp"
 
@@ -23,13 +23,15 @@
 
 #include <boost/test/unit_test.hpp>
 
-
 // These classes are not intended for production use. The are merely intended
 // to illustrate where data is stored in the "block" data structures.
 class Bond
 {
-public:
-    Bond (int atom0, int atom1, int bond_order): atom0(atom0), atom1(atom1), bond_order(bond_order) {}
+  public:
+    Bond(int atom0, int atom1, int bond_order)
+        : atom0(atom0), atom1(atom1), bond_order(bond_order)
+    {
+    }
 
     const int atom0;
     const int atom1;
@@ -38,7 +40,7 @@ public:
 
 class Structure
 {
-public:
+  public:
     std::string title;
     std::vector<int> atomic_numbers;
     std::vector<std::array<double, 3>> coordinates;
@@ -48,7 +50,6 @@ public:
     // A "property" that some atoms have (others may not have this property)
     std::unordered_map<int, int> demo_property;
 };
-
 
 BOOST_AUTO_TEST_SUITE(DemoSuite)
 
@@ -69,7 +70,8 @@ BOOST_AUTO_TEST_CASE(maeBlock)
         {
             const auto atom_data = b->getIndexedBlock("m_atom");
             // All atoms are gauranteed to have these three field names:
-            const auto atomic_numbers = atom_data->getIntProperty("i_m_atomic_number");
+            const auto atomic_numbers =
+                atom_data->getIntProperty("i_m_atomic_number");
             const auto xs = atom_data->getRealProperty("r_m_x_coord");
             const auto ys = atom_data->getRealProperty("r_m_y_coord");
             const auto zs = atom_data->getRealProperty("r_m_z_coord");
@@ -79,7 +81,7 @@ BOOST_AUTO_TEST_CASE(maeBlock)
             BOOST_REQUIRE_EQUAL(size, zs->size());
 
             // atomic numbers, and x, y, and z coordinates
-            for (size_t i=0; i<size; ++i) {
+            for (size_t i = 0; i < size; ++i) {
                 st->atomic_numbers.push_back(atomic_numbers->at(i));
                 st->coordinates.push_back({{xs->at(i), ys->at(i), zs->at(i)}});
             }
@@ -87,8 +89,9 @@ BOOST_AUTO_TEST_CASE(maeBlock)
             // Other properties could fail, because not all properties have
             // values for all atoms. The last atom of the first structure does
             // not have the "i_m_template_index" property.
-            const auto template_indices = atom_data->getIntProperty("i_m_template_index");
-            for (size_t i=0; i<size; ++i) {
+            const auto template_indices =
+                atom_data->getIntProperty("i_m_template_index");
+            for (size_t i = 0; i < size; ++i) {
                 if (template_indices->isDefined(i)) {
                     st->demo_property[i] = template_indices->at(i);
                 }
@@ -104,7 +107,7 @@ BOOST_AUTO_TEST_CASE(maeBlock)
             auto orders = bond_data->getIntProperty("i_m_order");
             const auto size = from_atoms->size();
 
-            for (size_t i=0; i<size; ++i) {
+            for (size_t i = 0; i < size; ++i) {
                 // Atom indices in the bond data structure are 1 indexed!
                 const auto from_atom = from_atoms->at(i) - 1;
                 const auto to_atom = to_atoms->at(i) - 1;

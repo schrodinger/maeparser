@@ -9,9 +9,9 @@
 
 #include <boost/dynamic_bitset.hpp>
 
-#include "MaeParserConfig.hpp"
 #include "Buffer.hpp"
 #include "MaeBlock.hpp"
+#include "MaeParserConfig.hpp"
 
 #define MAEPARSER_EXCEPTION_BUFFER_SIZE 256
 

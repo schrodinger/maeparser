@@ -5,8 +5,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include "Buffer.hpp"
-#include "MaeParser.hpp"
 #include "MaeBlock.hpp"
+#include "MaeParser.hpp"
 
 using namespace schrodinger;
 using namespace schrodinger::mae;
@@ -71,9 +71,10 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
             std::string name = outer_block_beginning(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 1: "
-                                          "Bad format for outer block name; "
-                                          "must be (f|p)_<author>_<name>.");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 1, column 1: "
+                                "Bad format for outer block name; "
+                                "must be (f|p)_<author>_<name>.");
         }
     }
     {
@@ -84,9 +85,10 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
             std::string name = outer_block_beginning(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 4: "
-                                          "Bad format for outer block name; "
-                                          "must be (f|p)_<author>_<name>.");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 1, column 4: "
+                                "Bad format for outer block name; "
+                                "must be (f|p)_<author>_<name>.");
         }
     }
     {
@@ -97,9 +99,10 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
             std::string name = outer_block_beginning(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 2: "
-                                          "Bad format for outer block name; "
-                                          "must be (f|p)_<author>_<name>.");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 1, column 2: "
+                                "Bad format for outer block name; "
+                                "must be (f|p)_<author>_<name>.");
         }
     }
     {
@@ -110,8 +113,9 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
             std::string name = outer_block_beginning(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 10: "
-                                          "Missing '{' for outer block.");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 1, column 10: "
+                                "Missing '{' for outer block.");
         }
     }
 }
@@ -119,7 +123,7 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
 BOOST_AUTO_TEST_CASE(BlockBeginning)
 {
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream("m_something {"));
+        auto ss = std::make_shared<std::stringstream>("m_something {");
         int indexed = 0;
         MaeParser mp(ss);
         std::string name = mp.blockBeginning(&indexed);
@@ -127,7 +131,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginning)
         BOOST_REQUIRE_EQUAL(indexed, 0);
     }
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream("mmmm_block{"));
+        auto ss = std::make_shared<std::stringstream>("mmmm_block{");
         int indexed = 0;
         MaeParser mp(ss);
         std::string name = mp.blockBeginning(&indexed);
@@ -135,7 +139,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginning)
         BOOST_REQUIRE_EQUAL(indexed, 0);
     }
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream("m_whatev[23]{"));
+        auto ss = std::make_shared<std::stringstream>("m_whatev[23]{");
         int indexed = 0;
         MaeParser mp(ss);
         std::string name = mp.blockBeginning(&indexed);
@@ -148,7 +152,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
 {
     {
         try {
-            shared_ptr<std::stringstream> ss(new std::stringstream(""));
+            auto ss = std::make_shared<std::stringstream>("");
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
@@ -162,43 +166,47 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
     }
     {
         try {
-            shared_ptr<std::stringstream> ss(new std::stringstream("m_block[integer]"));
+            auto ss = std::make_shared<std::stringstream>("m_block[integer]");
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 9: "
-                                          "Unexpected character.");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 1, column 9: "
+                                "Unexpected character.");
         }
     }
     {
         try {
-            shared_ptr<std::stringstream> ss(new std::stringstream("m_block[33  "));
+            auto ss = std::make_shared<std::stringstream>("m_block[33  ");
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 13: "
-                                          "Bad block index; missing ']'.");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 1, column 13: "
+                                "Bad block index; missing ']'.");
         }
     }
     {
         try {
-            shared_ptr<std::stringstream> ss(new std::stringstream("m_block[33]  s_m_foo"));
+            auto ss =
+                std::make_shared<std::stringstream>("m_block[33]  s_m_foo");
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 14: "
-                                          "Missing '{' for block.");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 1, column 14: "
+                                "Missing '{' for block.");
         }
     }
     {
         try {
-            shared_ptr<std::stringstream> ss(new std::stringstream("'bad_block"));
+            auto ss = std::make_shared<std::stringstream>("'bad_block");
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
@@ -212,7 +220,7 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
     }
     {
         try {
-            shared_ptr<std::stringstream> ss(new std::stringstream("mmmm_ "));
+            auto ss = std::make_shared<std::stringstream>("mmmm_ ");
             int indexed = 0;
             MaeParser mp(ss);
             mp.blockBeginning(&indexed);
@@ -230,23 +238,25 @@ BOOST_AUTO_TEST_CASE(BlockBody)
 {
     double tolerance = std::numeric_limits<double>::epsilon();
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream("b_m_foo b_m_bar::: 1 0 }"));
+        auto ss =
+            std::make_shared<std::stringstream>("b_m_foo b_m_bar::: 1 0 }");
         MaeParser mp(ss);
         auto bl = mp.blockBody(std::string("f_m_ct"));
         BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
         BOOST_REQUIRE(!bl->getBoolProperty("b_m_bar"));
     }
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream(" b_m_foo b_m_bar ::: 1 0 }"));
+        auto ss =
+            std::make_shared<std::stringstream>(" b_m_foo b_m_bar ::: 1 0 }");
         MaeParser mp(ss);
         auto bl = mp.blockBody(std::string("f_m_ct"));
         BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
         BOOST_REQUIRE(!bl->getBoolProperty("b_m_bar"));
     }
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream(
-                    " b_m_foo b_m_bar s_m_foo r_m_foo i_m_foo ::: "
-                    " 1       0       svalue  3.1415  22 }"));
+        auto ss = std::make_shared<std::stringstream>(
+            " b_m_foo b_m_bar s_m_foo r_m_foo i_m_foo ::: "
+            " 1       0       svalue  3.1415  22 }");
         MaeParser mp(ss);
         auto bl = mp.blockBody(std::string("f_m_ct"));
         BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
@@ -260,15 +270,16 @@ BOOST_AUTO_TEST_CASE(BlockBody)
 BOOST_AUTO_TEST_CASE(BlockBodyErrors)
 {
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream(
-                    " b_m_foo\n s_m_foo\n r_m_foo\n i_m_foo\n :::\n"
-                    " 1\n svalue\n 3.1415\n 22\n "));
+        auto ss = std::make_shared<std::stringstream>(
+            " b_m_foo\n s_m_foo\n r_m_foo\n i_m_foo\n :::\n"
+            " 1\n svalue\n 3.1415\n 22\n ");
         MaeParser mp(ss);
         try {
             mp.blockBody(std::string("f_m_ct"));
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 10, column 2: "
-                                          "Missing '}' for block.");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 10, column 2: "
+                                "Missing '}' for block.");
         }
     }
 }
@@ -276,25 +287,25 @@ BOOST_AUTO_TEST_CASE(BlockBodyErrors)
 BOOST_AUTO_TEST_CASE(Property)
 {
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream("b_m_foo "));
+        auto ss = std::make_shared<std::stringstream>("b_m_foo ");
         MaeParser mp(ss);
         auto p = mp.property();
         BOOST_REQUIRE(*p == "b_m_foo");
     }
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream("r_m_bar "));
+        auto ss = std::make_shared<std::stringstream>("r_m_bar ");
         MaeParser mp(ss);
         auto p = mp.property();
         BOOST_REQUIRE(*p == "r_m_bar");
     }
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream("b_st_1_2_3_4_R_5 "));
+        auto ss = std::make_shared<std::stringstream>("b_st_1_2_3_4_R_5 ");
         MaeParser mp(ss);
         auto p = mp.property();
         BOOST_REQUIRE(*p == "b_st_1_2_3_4_R_5");
     }
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream("s_author_name "));
+        auto ss = std::make_shared<std::stringstream>("s_author_name ");
         MaeParser mp(ss);
         auto p = mp.property();
         BOOST_REQUIRE(*p == "s_author_name");
@@ -304,7 +315,7 @@ BOOST_AUTO_TEST_CASE(Property)
 BOOST_AUTO_TEST_CASE(PropertyValueSeparator)
 {
     {
-        shared_ptr<std::stringstream> ss(new std::stringstream(":::"));
+        auto ss = std::make_shared<std::stringstream>(":::");
         MaeParser mp(ss);
         auto p = mp.property();
         BOOST_REQUIRE(p == nullptr);
@@ -315,7 +326,7 @@ BOOST_AUTO_TEST_CASE(PropertyList)
 {
     {
         std::vector<std::string> properties;
-        shared_ptr<std::stringstream> ss(new std::stringstream("b_m_foo s_j_bar :::"));
+        auto ss = std::make_shared<std::stringstream>("b_m_foo s_j_bar :::");
         // Buffer size of 14 was chosen to reproduce a bug during development;
         // a buffer boundary in the name part of the key.
         MaeParser mp(ss, 14u);
@@ -333,7 +344,7 @@ BOOST_AUTO_TEST_CASE(PropertyList)
     }
     {
         std::vector<std::string> properties;
-        shared_ptr<std::stringstream> ss(new std::stringstream("b_m_foo s_j_ :::"));
+        auto ss = std::make_shared<std::stringstream>("b_m_foo s_j_ :::");
         MaeParser mp(ss);
         try {
             while (true) {
@@ -358,7 +369,7 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
 {
     {
         try {
-            shared_ptr<std::stringstream> ss(new std::stringstream("bo_m_foo "));
+            auto ss = std::make_shared<std::stringstream>("bo_m_foo ");
             MaeParser mp(ss);
             mp.property();
             BOOST_FAIL("Expected an exception.");
@@ -371,7 +382,7 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
     }
     {
         try {
-            shared_ptr<std::stringstream> ss(new std::stringstream("x_m_foo "));
+            auto ss = std::make_shared<std::stringstream>("x_m_foo ");
             MaeParser mp(ss);
             mp.property();
             BOOST_FAIL("Expected an exception.");
@@ -384,7 +395,7 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
     }
     {
         try {
-            shared_ptr<std::stringstream> ss(new std::stringstream("s_m_"));
+            auto ss = std::make_shared<std::stringstream>("s_m_");
             MaeParser mp(ss);
             mp.property();
             BOOST_FAIL("Expected an exception.");
@@ -397,7 +408,7 @@ BOOST_AUTO_TEST_CASE(PropertyErrors)
     }
     {
         try {
-            shared_ptr<std::stringstream> ss(new std::stringstream("s_m_ "));
+            auto ss = std::make_shared<std::stringstream>("s_m_ ");
             MaeParser mp(ss);
             mp.property();
             BOOST_FAIL("Expected an exception.");
@@ -522,8 +533,9 @@ BOOST_AUTO_TEST_CASE(RealErrors)
             parse_value<double>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 1, column 1: "
-                                          "Missing real.");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 1, column 1: "
+                                "Missing real.");
         }
     }
     {
@@ -546,8 +558,9 @@ BOOST_AUTO_TEST_CASE(RealErrors)
             parse_value<double>(b);
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
-            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())), "Line 2, column 6: "
-                                          "Bad real number.");
+            BOOST_REQUIRE_EQUAL(trim_copy(std::string(e.what())),
+                                "Line 2, column 6: "
+                                "Bad real number.");
         }
     }
     {
@@ -563,7 +576,8 @@ BOOST_AUTO_TEST_CASE(RealErrors)
             BOOST_FAIL("Expected an exception.");
         } catch (read_exception& e) {
             BOOST_REQUIRE_MESSAGE(
-                trim_copy(std::string(e.what())) == valid_error1 || trim_copy(std::string(e.what())) == valid_error2,
+                trim_copy(std::string(e.what())) == valid_error1 ||
+                    trim_copy(std::string(e.what())) == valid_error2,
                 "Expected " << valid_error1 << " or " << valid_error2
                             << " but got " << e.what());
         }

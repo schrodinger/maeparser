@@ -1,13 +1,13 @@
 #pragma once
 
-#include <string>
-#include <cstdio>
 #include <boost/iostreams/filtering_streambuf.hpp>
+#include <cstdio>
+#include <string>
 
-#include "MaeParserConfig.hpp"
 #include "Buffer.hpp"
 #include "MaeBlock.hpp"
 #include "MaeParser.hpp"
+#include "MaeParserConfig.hpp"
 
 namespace schrodinger
 {
@@ -19,7 +19,9 @@ class EXPORT_MAEPARSER Reader
   private:
     std::shared_ptr<MaeParser> m_mae_parser;
     std::shared_ptr<std::ifstream> m_pregzip_stream;
-    std::shared_ptr<boost::iostreams::filtering_streambuf<boost::iostreams::input> > m_gzip_stream;
+    std::shared_ptr<
+        boost::iostreams::filtering_streambuf<boost::iostreams::input>>
+        m_gzip_stream;
 
   public:
     Reader(FILE* file, size_t buffer_size = BufferLoader::DEFAULT_SIZE)

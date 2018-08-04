@@ -5,7 +5,7 @@ project(maeparser)
 
 if(MSVC)
     # C4251 disables warnings for export STL containers as arguments (returning a vector of things)
-add_definitions(/wd4251 /D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(/wd4251 /D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS)
 endif(MSVC)
 
 find_package(Boost COMPONENTS iostreams unit_test_framework REQUIRED)

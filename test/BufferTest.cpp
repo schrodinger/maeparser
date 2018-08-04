@@ -154,7 +154,6 @@ BOOST_AUTO_TEST_CASE(NewlineCase0)
     while (b.current < b.end || b.load()) {
         ++b.current;
     }
-
     BOOST_REQUIRE_EQUAL(b.getColumn(), 1u);
 }
 
