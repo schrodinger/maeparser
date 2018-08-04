@@ -325,7 +325,7 @@ std::string MaeParser::blockBeginning(int* indexed)
 std::shared_ptr<Block> MaeParser::blockBody(const std::string& name)
 {
     auto block = std::make_shared<Block>(name);
-    IndexedBlockParser* indexed_block_parser = getIndexedBlockParser();
+    auto indexed_block_parser = std::shared_ptr<IndexedBlockParser>(getIndexedBlockParser());
 
     std::vector<std::shared_ptr<std::string>> property_names;
     schrodinger::mae::whitespace(m_buffer);
