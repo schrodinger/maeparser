@@ -1,11 +1,11 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include <boost/spirit/include/qi_parse_attr.hpp>
 #include <boost/spirit/include/qi_numeric.hpp>
+#include <boost/spirit/include/qi_parse_attr.hpp>
 
-#include "MaeParser.hpp"
 #include "MaeBlock.hpp"
+#include "MaeParser.hpp"
 
 #define WHITESPACE ' ' : case '\n' : case '\r' : case '\t'
 
@@ -221,7 +221,8 @@ EXPORT_MAEPARSER std::string parse_value<std::string>(Buffer& buffer)
     }
 }
 
-template <> EXPORT_MAEPARSER BoolProperty parse_value<BoolProperty>(Buffer& buffer)
+template <>
+EXPORT_MAEPARSER BoolProperty parse_value<BoolProperty>(Buffer& buffer)
 {
     bool value = false;
     if (*buffer.current == '1') {
@@ -325,7 +326,8 @@ std::string MaeParser::blockBeginning(int* indexed)
 std::shared_ptr<Block> MaeParser::blockBody(const std::string& name)
 {
     auto block = std::make_shared<Block>(name);
-    IndexedBlockParser* indexed_block_parser = getIndexedBlockParser();
+    auto indexed_block_parser =
+        std::shared_ptr<IndexedBlockParser>(getIndexedBlockParser());
 
     std::vector<std::shared_ptr<std::string>> property_names;
     schrodinger::mae::whitespace(m_buffer);
@@ -348,7 +350,8 @@ std::shared_ptr<Block> MaeParser::blockBody(const std::string& name)
             block->setIntProperty((*(*iter)), parse_value<int>(m_buffer));
             break;
         case 'b':
-            block->setBoolProperty((*(*iter)), parse_value<BoolProperty>(m_buffer));
+            block->setBoolProperty((*(*iter)),
+                                   parse_value<BoolProperty>(m_buffer));
             break;
         }
     }
@@ -517,9 +520,7 @@ void IndexedBlockBuffer::value(Buffer& buffer)
     }
 }
 
-DirectIndexedBlockParser::~DirectIndexedBlockParser()
-{
-}
+DirectIndexedBlockParser::~DirectIndexedBlockParser() {}
 
 void DirectIndexedBlockParser::parse(const std::string& name, size_t size,
                                      Buffer& buffer)
@@ -758,10 +759,10 @@ IndexedBlock* IndexedBlockBuffer::getIndexedBlock()
                     is_null->set(svalues.size());
                     svalues.emplace_back();
                 } else {
-                    if(data[0] != '"') { // Check for quote wrapping
+                    if (data[0] != '"') { // Check for quote wrapping
                         svalues.emplace_back(data, len);
                     } else { // During parsing we check for full quote wrapping
-                        auto rval = std::string(data+1, len-2);
+                        auto rval = std::string(data + 1, len - 2);
                         remove_escape_characters(rval);
                         svalues.emplace_back(rval);
                     }
@@ -781,9 +782,7 @@ BufferedIndexedBlockParser::BufferedIndexedBlockParser()
     m_indexed_block_map = std::make_shared<BufferedIndexedBlockMap>();
 }
 
-BufferedIndexedBlockParser::~BufferedIndexedBlockParser()
-{
-}
+BufferedIndexedBlockParser::~BufferedIndexedBlockParser() {}
 
 std::shared_ptr<IndexedBlockMapI>
 BufferedIndexedBlockParser::getIndexedBlockMap()

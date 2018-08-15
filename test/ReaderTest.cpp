@@ -5,27 +5,28 @@
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
-#include "Reader.hpp"
 #include "MaeBlock.hpp"
+#include "Reader.hpp"
 
 using namespace schrodinger::mae;
+using std::shared_ptr;
 
 BOOST_AUTO_TEST_SUITE(ReaderSuite)
 
 BOOST_AUTO_TEST_CASE(Reader0)
 {
-    std::stringstream ss;
-    ss << "\n"
-       << "{"
-          "\n"
-       << "  s_m_m2io_version"
-          "\n"
-       << "  :::"
-          "\n"
-       << "  1.1.0 "
-          "\n"
-       << "}"
-          "\n";
+    auto ss = std::make_shared<std::stringstream>();
+    *ss << "\n"
+        << "{"
+           "\n"
+        << "  s_m_m2io_version"
+           "\n"
+        << "  :::"
+           "\n"
+        << "  1.1.0 "
+           "\n"
+        << "}"
+           "\n";
 
     Reader r(ss);
 
@@ -36,19 +37,19 @@ BOOST_AUTO_TEST_CASE(Reader0)
 
 BOOST_AUTO_TEST_CASE(NamedBlock0)
 {
-    std::stringstream ss;
-    ss << "\n"
-       << "\n"
-       << "f_m_ct {"
-          "\n"
-       << "  s_m_prop"
-          "\n"
-       << "  :::"
-          "\n"
-       << "  1.1.0 "
-          "\n"
-       << "}"
-          "\n";
+    auto ss = std::make_shared<std::stringstream>();
+    *ss << "\n"
+        << "\n"
+        << "f_m_ct {"
+           "\n"
+        << "  s_m_prop"
+           "\n"
+        << "  :::"
+           "\n"
+        << "  1.1.0 "
+           "\n"
+        << "}"
+           "\n";
 
     Reader r(ss);
 
@@ -59,28 +60,28 @@ BOOST_AUTO_TEST_CASE(NamedBlock0)
 
 BOOST_AUTO_TEST_CASE(NamedBlock1)
 {
-    std::stringstream ss;
-    ss << "{"
-          "\n"
-       << "  s_m_m2io_version"
-          "\n"
-       << "  :::"
-          "\n"
-       << "  1.1.0 "
-          "\n"
-       << "}"
-          "\n"
-       << "\n"
-       << "f_m_ct {"
-          "\n"
-       << "  s_m_prop"
-          "\n"
-       << "  :::"
-          "\n"
-       << "  1.1.0 "
-          "\n"
-       << "}"
-          "\n";
+    auto ss = std::make_shared<std::stringstream>();
+    *ss << "{"
+           "\n"
+        << "  s_m_m2io_version"
+           "\n"
+        << "  :::"
+           "\n"
+        << "  1.1.0 "
+           "\n"
+        << "}"
+           "\n"
+        << "\n"
+        << "f_m_ct {"
+           "\n"
+        << "  s_m_prop"
+           "\n"
+        << "  :::"
+           "\n"
+        << "  1.1.0 "
+           "\n"
+        << "}"
+           "\n";
 
     Reader r(ss);
 
@@ -94,38 +95,38 @@ BOOST_AUTO_TEST_CASE(NamedBlock1)
 
 BOOST_AUTO_TEST_CASE(NestedBlock)
 {
-    std::stringstream ss;
-    ss << "{"
-          "\n"
-       << "  s_m_m2io_version"
-          "\n"
-       << "  :::"
-          "\n"
-       << "  1.1.0 "
-          "\n"
-       << "}"
-          "\n"
-       << "\n"
-       << "f_m_ct {"
-          "\n"
-       << "  s_m_prop"
-          "\n"
-       << "  :::"
-          "\n"
-       << "  1.1.0 "
-          "\n"
-       << "  m_nested {"
-          "\n"
-       << "    s_m_prop"
-          "\n"
-       << "    :::"
-          "\n"
-       << "    1.1.0 "
-          "\n"
-       << "  }"
-          "\n"
-       << "}"
-          "\n";
+    auto ss = std::make_shared<std::stringstream>();
+    *ss << "{"
+           "\n"
+        << "  s_m_m2io_version"
+           "\n"
+        << "  :::"
+           "\n"
+        << "  1.1.0 "
+           "\n"
+        << "}"
+           "\n"
+        << "\n"
+        << "f_m_ct {"
+           "\n"
+        << "  s_m_prop"
+           "\n"
+        << "  :::"
+           "\n"
+        << "  1.1.0 "
+           "\n"
+        << "  m_nested {"
+           "\n"
+        << "    s_m_prop"
+           "\n"
+        << "    :::"
+           "\n"
+        << "    1.1.0 "
+           "\n"
+        << "  }"
+           "\n"
+        << "}"
+           "\n";
 
     Reader r(ss);
 
@@ -139,66 +140,66 @@ BOOST_AUTO_TEST_CASE(NestedBlock)
 
 BOOST_AUTO_TEST_CASE(NestedIndexedBlock)
 {
-    std::stringstream ss;
-    ss << "{"
-          "\n" // 1
-       << "  s_m_m2io_version"
-          "\n" // 2
-       << "  :::"
-          "\n" // 3
-       << "  1.1.0 "
-          "\n" // 4
-       << "}"
-          "\n" // 5
-       << "\n" // 6
-       << "f_m_ct {"
-          "\n" // 7
-       << "  s_m_prop"
-          "\n" // 8
-       << "  :::"
-          "\n" // 9
-       << "  1.1.0 "
-          "\n" // 10
-       << "  m_nested[2] {"
-          "\n" // 11
-       << "    s_m_prop"
-          "\n" // 12
-       << "    :::"
-          "\n" // 13
-       << "    1 1.1.0 "
-          "\n" // 14
-       << "    2 1.1.0 "
-          "\n" // 15
-       << "    :::"
-          "\n" // 16
-       << "  }"
-          "\n" // 17
-       << "  m_bond[2] {"
-          "\n" // 18
-       << "    s_m_prop"
-          "\n" // 19
-       << "    :::"
-          "\n" // 20
-       << "    1 1.1.0 "
-          "\n" // 21
-       << "    2 1.1.0 "
-          "\n" // 22
-       << "    :::"
-          "\n" // 23
-       << "  }"
-          "\n" // 24
-       << "  m_dependencies {"
-          "\n" // 25
-       << "    s_m_prop"
-          "\n" // 26
-       << "    :::"
-          "\n" // 27
-       << "    1.1.0 "
-          "\n" // 28
-       << "  }"
-          "\n" // 29
-       << "}"
-          "\n"; // 30
+    auto ss = std::make_shared<std::stringstream>();
+    *ss << "{"
+           "\n" // 1
+        << "  s_m_m2io_version"
+           "\n" // 2
+        << "  :::"
+           "\n" // 3
+        << "  1.1.0 "
+           "\n" // 4
+        << "}"
+           "\n" // 5
+        << "\n" // 6
+        << "f_m_ct {"
+           "\n" // 7
+        << "  s_m_prop"
+           "\n" // 8
+        << "  :::"
+           "\n" // 9
+        << "  1.1.0 "
+           "\n" // 10
+        << "  m_nested[2] {"
+           "\n" // 11
+        << "    s_m_prop"
+           "\n" // 12
+        << "    :::"
+           "\n" // 13
+        << "    1 1.1.0 "
+           "\n" // 14
+        << "    2 1.1.0 "
+           "\n" // 15
+        << "    :::"
+           "\n" // 16
+        << "  }"
+           "\n" // 17
+        << "  m_bond[2] {"
+           "\n" // 18
+        << "    s_m_prop"
+           "\n" // 19
+        << "    :::"
+           "\n" // 20
+        << "    1 1.1.0 "
+           "\n" // 21
+        << "    2 1.1.0 "
+           "\n" // 22
+        << "    :::"
+           "\n" // 23
+        << "  }"
+           "\n" // 24
+        << "  m_dependencies {"
+           "\n" // 25
+        << "    s_m_prop"
+           "\n" // 26
+        << "    :::"
+           "\n" // 27
+        << "    1.1.0 "
+           "\n" // 28
+        << "  }"
+           "\n" // 29
+        << "}"
+           "\n"; // 30
 
     Reader r(ss);
 
@@ -212,7 +213,7 @@ BOOST_AUTO_TEST_CASE(NestedIndexedBlock)
 
 BOOST_AUTO_TEST_CASE(BufferedReader)
 {
-    std::ifstream ss("test.mae");
+    auto ss = std::make_shared<std::ifstream>("test.mae");
 
     Reader r(ss);
 
@@ -245,7 +246,7 @@ BOOST_AUTO_TEST_CASE(BufferedFileReader)
 
 BOOST_AUTO_TEST_CASE(TextReader)
 {
-    std::ifstream ss("test.mae");
+    auto ss = std::make_shared<std::ifstream>("test.mae");
 
     Reader r(ss);
 
@@ -275,9 +276,9 @@ BOOST_AUTO_TEST_CASE(TextFileReader)
 BOOST_AUTO_TEST_CASE(DirectReader)
 {
     FILE* f = fopen("test.mae", "r");
-    DirectMaeParser mae_parser(f);
+    auto mae_parser = std::make_shared<DirectMaeParser>(f);
 
-    Reader r(&mae_parser);
+    Reader r(mae_parser);
 
     size_t count = 0;
     std::shared_ptr<Block> b;
@@ -296,7 +297,6 @@ BOOST_AUTO_TEST_CASE(QuotedStringTest)
 
     Reader r(f);
 
-    size_t count = 0;
     auto b = r.next("f_m_ct");
     auto title = b->getStringProperty("s_m_title");
     BOOST_REQUIRE_EQUAL(title, R"(Title with p \ " space)");

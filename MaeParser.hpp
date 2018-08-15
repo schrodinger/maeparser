@@ -9,9 +9,9 @@
 
 #include <boost/dynamic_bitset.hpp>
 
-#include "MaeParserConfig.hpp"
 #include "Buffer.hpp"
 #include "MaeBlock.hpp"
+#include "MaeParserConfig.hpp"
 
 #define MAEPARSER_EXCEPTION_BUFFER_SIZE 256
 
@@ -259,6 +259,7 @@ class EXPORT_MAEPARSER MaeParser
 {
   protected:
     Buffer m_buffer;
+    std::shared_ptr<std::istream> m_stream;
 
     virtual IndexedBlockParser* getIndexedBlockParser()
     {
@@ -266,9 +267,9 @@ class EXPORT_MAEPARSER MaeParser
     }
 
   public:
-    explicit MaeParser(std::istream& stream,
+    explicit MaeParser(std::shared_ptr<std::istream> stream,
                        size_t buffer_size = BufferLoader::DEFAULT_SIZE)
-        : m_buffer(stream, buffer_size)
+        : m_stream(stream), m_buffer(*stream, buffer_size)
     {
         m_buffer.load();
     }
@@ -329,7 +330,7 @@ class EXPORT_MAEPARSER MaeParser
 class EXPORT_MAEPARSER DirectMaeParser : public MaeParser
 {
   public:
-    explicit DirectMaeParser(std::istream& stream,
+    explicit DirectMaeParser(std::shared_ptr<std::istream> stream,
                              size_t buffer_size = BufferLoader::DEFAULT_SIZE)
         : MaeParser(stream, buffer_size)
     {

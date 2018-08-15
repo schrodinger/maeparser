@@ -78,8 +78,9 @@ EXPORT_MAEPARSER void IndexedBlock::setProperty<double>(
 }
 
 template <>
-EXPORT_MAEPARSER void IndexedBlock::setProperty<int>(const std::string& name,
-                                    std::shared_ptr<IndexedProperty<int>> value)
+EXPORT_MAEPARSER void
+IndexedBlock::setProperty<int>(const std::string& name,
+                               std::shared_ptr<IndexedProperty<int>> value)
 {
     set_indexed_property<IndexedProperty<int>>(m_imap, name, value);
 }

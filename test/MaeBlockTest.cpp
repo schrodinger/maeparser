@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(maeBlock)
     BOOST_REQUIRE_THROW(b.getBoolProperty("b"), std::out_of_range);
 
     const std::vector<std::string> strings = {"Regular", "Spaced String"};
-    for(const auto value : strings) {
+    for (const auto value : strings) {
         b.setStringProperty("a", value);
         BOOST_REQUIRE(b.hasStringProperty("a"));
         BOOST_REQUIRE(!b.hasStringProperty("b"));
