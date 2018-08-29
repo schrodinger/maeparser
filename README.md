@@ -6,7 +6,7 @@ maeparser is a parser for [Schrodinger](https://www.schrodinger.com/) Maestro
 files.
 
 Structure files (.mae,.maegz,.mae.gz) can contain multiple structures
-deliminated by "f_m_ct".  See [MaeConstants.hpp](MaeConstants.hpp) 
+delimited by "f_m_ct".  See [MaeConstants.hpp](MaeConstants.hpp) 
 for standard block and property names.
 
 To read a structure,
