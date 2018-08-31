@@ -18,10 +18,13 @@
 #include <vector>
 
 #include "Reader.hpp"
+#include "MaeConstants.hpp"
 
 #define BOOST_TEST_DYN_LINK
 
 #include <boost/test/unit_test.hpp>
+
+using namespace schrodinger::mae;
 
 // These classes are not intended for production use. The are merely intended
 // to illustrate where data is stored in the "block" data structures.
@@ -61,20 +64,19 @@ BOOST_AUTO_TEST_CASE(maeBlock)
     schrodinger::mae::Reader r("test2.maegz");
 
     std::vector<std::shared_ptr<Structure>> structures;
-    std::shared_ptr<schrodinger::mae::Block> b;
-    while ((b = r.next("f_m_ct")) != nullptr) {
+    std::shared_ptr<Block> b;
+    while ((b = r.next(CT_BLOCK)) != nullptr) {
         auto st = std::make_shared<Structure>();
-        st->title = b->getStringProperty("s_m_title");
+        st->title = b->getStringProperty(CT_TITLE);
 
         // Atom data is in the m_atom indexed block
         {
-            const auto atom_data = b->getIndexedBlock("m_atom");
+            const auto atom_data = b->getIndexedBlock(ATOM_BLOCK);
             // All atoms are gauranteed to have these three field names:
-            const auto atomic_numbers =
-                atom_data->getIntProperty("i_m_atomic_number");
-            const auto xs = atom_data->getRealProperty("r_m_x_coord");
-            const auto ys = atom_data->getRealProperty("r_m_y_coord");
-            const auto zs = atom_data->getRealProperty("r_m_z_coord");
+            const auto atomic_numbers = atom_data->getIntProperty(ATOM_ATOMIC_NUM);
+            const auto xs = atom_data->getRealProperty(ATOM_X_COORD);
+            const auto ys = atom_data->getRealProperty(ATOM_Y_COORD);
+            const auto zs = atom_data->getRealProperty(ATOM_Z_COORD);
             const auto size = atomic_numbers->size();
             BOOST_REQUIRE_EQUAL(size, xs->size());
             BOOST_REQUIRE_EQUAL(size, ys->size());
@@ -100,22 +102,22 @@ BOOST_AUTO_TEST_CASE(maeBlock)
 
         // Bond data is in the m_bond indexed block
         {
-            const auto bond_data = b->getIndexedBlock("m_bond");
+            const auto bond_data = b->getIndexedBlock(BOND_BLOCK);
             // All bonds are gauranteed to have these three field names:
-            auto from_atoms = bond_data->getIntProperty("i_m_from");
-            auto to_atoms = bond_data->getIntProperty("i_m_to");
-            auto orders = bond_data->getIntProperty("i_m_order");
-            const auto size = from_atoms->size();
+            auto bond_atom_1s = bond_data->getIntProperty(BOND_ATOM_1);
+            auto bond_atom_2s = bond_data->getIntProperty(BOND_ATOM_2);
+            auto orders = bond_data->getIntProperty(BOND_ORDER);
+            const auto size = bond_atom_1s->size();
 
             for (size_t i = 0; i < size; ++i) {
                 // Atom indices in the bond data structure are 1 indexed!
-                const auto from_atom = from_atoms->at(i) - 1;
-                const auto to_atom = to_atoms->at(i) - 1;
+                const auto bond_atom_1 = bond_atom_1s->at(i) - 1;
+                const auto bond_atom_2 = bond_atom_2s->at(i) - 1;
                 const auto order = orders->at(i);
 
                 // Only one direction of the bond is recorded in the file
-                st->bonds.emplace_back(from_atom, to_atom, order);
-                st->bonds.emplace_back(to_atom, from_atom, order);
+                st->bonds.emplace_back(bond_atom_1, bond_atom_2, order);
+                st->bonds.emplace_back(bond_atom_2, bond_atom_1, order);
             }
         }
 

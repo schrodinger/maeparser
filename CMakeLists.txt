@@ -39,6 +39,6 @@ add_subdirectory(test)
 add_test(NAME unittest COMMAND ${CMAKE_BINARY_DIR}/test/unittest
          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
-install(FILES Buffer.hpp MaeBlock.hpp  MaeParserConfig.hpp  MaeParser.hpp  Reader.hpp
+install(FILES Buffer.hpp MaeBlock.hpp  MaeParserConfig.hpp  MaeParser.hpp  Reader.hpp MaeConstants.hpp
         DESTINATION include/maeparser)
 
