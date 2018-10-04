@@ -13,6 +13,11 @@ find_package(Boost COMPONENTS iostreams unit_test_framework REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 add_library(maeparser SHARED Buffer.cpp MaeBlock.cpp MaeParser.cpp Reader.cpp)
+SET_TARGET_PROPERTIES (maeparser
+    PROPERTIES
+       VERSION 1.0.1
+       SOVERSION 1
+)
 target_link_libraries(maeparser Boost::disable_autolinking Boost::dynamic_linking Boost::iostreams)
 
 target_include_directories(maeparser PUBLIC
