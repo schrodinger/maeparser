@@ -57,3 +57,13 @@ of data and 2) Not so flexible that each user has to implement their own rules.
 The Maestro format avoids this paradox by having the exact flexibility
 that Schrödinger's physics based backends require, without additional
 flexibility that other use cases might demand.
+
+In supporting Schrödinger's backend suite, maeparser is able
+to handle output from:
+    * Molecular Dynamics applications, such as Desmond and FEP+
+    * Ligand-Protein Docking applications, such as Glide
+    * Homology Modeling and folding applications, such as Prime
+    * Ligand-based search applications, such as Phase and Phase Shape
+    * Quantum Mechanics applications, such as Jaguar
+    * Protein-Protein Docking applications
+    * Many other backends used in both Life and Material Sciences
