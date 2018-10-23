@@ -134,7 +134,7 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlock)
         BOOST_REQUIRE_CLOSE(irp.at(2, 999.0), 3.0, tolerance);
 
         auto no_prop = ib.getRealProperty("r_m_nonexistant");
-        BOOST_REQUIRE_EQUAL(no_prop.get(), nullptr);
+        BOOST_REQUIRE(no_prop.get() == nullptr);
     }
 }
 
