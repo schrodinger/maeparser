@@ -317,7 +317,7 @@ get_indexed_property(const std::map<std::string, std::shared_ptr<T>>& map,
 {
     auto iter = map.find(name);
     if (iter == map.end()) {
-        throw std::out_of_range("Key not found: " + name);
+        return std::shared_ptr<T>(nullptr);
     } else {
         return iter->second;
     }
