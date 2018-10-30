@@ -35,9 +35,12 @@ class EXPORT_MAEPARSER IndexedBlockMapI
 {
   public:
     virtual ~IndexedBlockMapI(){};
-    virtual bool hasIndexedBlock(const std::string& name) = 0;
+    virtual bool hasIndexedBlock(const std::string& name) const = 0;
     virtual std::shared_ptr<IndexedBlock>
-    getIndexedBlock(const std::string& name) = 0;
+    getIndexedBlock(const std::string& name) const = 0;
+
+    virtual std::vector<std::string> getBlockNames() const = 0;
+    bool operator==(const IndexedBlockMapI& rhs);
 };
 
 class EXPORT_MAEPARSER IndexedBlockMap : public IndexedBlockMapI
@@ -45,10 +48,20 @@ class EXPORT_MAEPARSER IndexedBlockMap : public IndexedBlockMapI
     std::map<std::string, std::shared_ptr<IndexedBlock>> m_indexed_block;
 
   public:
-    virtual bool hasIndexedBlock(const std::string& name);
+    virtual bool hasIndexedBlock(const std::string& name) const;
 
     virtual std::shared_ptr<IndexedBlock>
-    getIndexedBlock(const std::string& name);
+    getIndexedBlock(const std::string& name) const;
+
+    virtual std::vector<std::string> getBlockNames() const
+    {
+        std::vector<std::string> rval;
+        for(const auto& p : m_indexed_block) {
+            rval.push_back(p.first);
+        }
+
+        return rval;
+    }
 
     /**
      * Add an IndexedBlock to the map.
@@ -58,6 +71,7 @@ class EXPORT_MAEPARSER IndexedBlockMap : public IndexedBlockMapI
     {
         m_indexed_block[name] = indexed_block;
     }
+
 };
 
 class EXPORT_MAEPARSER BufferedIndexedBlockMap : public IndexedBlockMapI
@@ -67,10 +81,20 @@ class EXPORT_MAEPARSER BufferedIndexedBlockMap : public IndexedBlockMapI
     std::map<std::string, std::shared_ptr<IndexedBlockBuffer>> m_indexed_buffer;
 
   public:
-    virtual bool hasIndexedBlock(const std::string& name);
+    virtual bool hasIndexedBlock(const std::string& name) const;
 
     virtual std::shared_ptr<IndexedBlock>
-    getIndexedBlock(const std::string& name);
+    getIndexedBlock(const std::string& name) const;
+
+    virtual std::vector<std::string> getBlockNames() const
+    {
+        std::vector<std::string> rval;
+        for(const auto& p : m_indexed_buffer) {
+            rval.push_back(p.first);
+        }
+
+        return rval;
+    }
 
     /**
      * Add an IndexedBlockBuffer to the map, which can be used to retrieve an
@@ -110,14 +134,20 @@ class EXPORT_MAEPARSER Block
 
     const std::string& getName() const { return m_name; }
 
+    std::string toString() const;
+    void write(std::ostream& out, unsigned int current_indentation = 0) const;
+
     void setIndexedBlockMap(std::shared_ptr<IndexedBlockMapI> indexed_block_map)
     {
         m_indexed_block_map = indexed_block_map;
     }
 
+    bool hasIndexedBlockData() const {
+        return m_indexed_block_map != nullptr;
+    }
     bool hasIndexedBlock(const std::string& name)
     {
-        return m_indexed_block_map->hasIndexedBlock(name);
+        return hasIndexedBlockData() && m_indexed_block_map->hasIndexedBlock(name);
     }
 
     std::shared_ptr<IndexedBlock> getIndexedBlock(const std::string& name);
@@ -147,6 +177,8 @@ class EXPORT_MAEPARSER Block
             return iter->second;
         }
     }
+
+    bool operator==(const Block& rhs) const;
 
     bool hasRealProperty(const std::string& name) const
     {
@@ -241,6 +273,8 @@ template <typename T> class IndexedProperty
             delete m_is_null;
         }
     }
+
+    bool operator==(const IndexedProperty<T>& rhs) const;
 
     size_type size() const { return m_data.size(); }
 
@@ -357,6 +391,16 @@ class EXPORT_MAEPARSER IndexedBlock
     IndexedBlock(const std::string& name)
         : m_name(name), m_bmap(), m_imap(), m_rmap(), m_smap()
     {
+    }
+
+    size_t size() const;
+    const std::string& getName() const { return m_name; }
+    std::string toString() const;
+    void write(std::ostream& out, unsigned int current_indentation = 0) const;
+    bool operator==(const IndexedBlock& rhs) const;
+    bool operator!=(const IndexedBlock& rhs) const
+    {
+        return !(operator==(rhs));
     }
 
     // Default destructor. ~IndexedBlock()

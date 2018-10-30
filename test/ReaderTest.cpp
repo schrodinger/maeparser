@@ -290,6 +290,7 @@ BOOST_AUTO_TEST_CASE(DirectReader)
     }
     fclose(f);
     BOOST_REQUIRE_EQUAL(count, 3u);
+
 }
 
 BOOST_AUTO_TEST_CASE(QuotedStringTest)
