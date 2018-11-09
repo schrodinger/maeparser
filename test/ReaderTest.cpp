@@ -206,7 +206,7 @@ BOOST_AUTO_TEST_CASE(NestedIndexedBlock)
 
     auto b = r.next(CT_BLOCK);
     BOOST_REQUIRE(b);
-    std::shared_ptr<IndexedBlock> ibn = b->getIndexedBlock("m_nested");
+    auto ibn = b->getIndexedBlock("m_nested");
     auto prop = ibn->getStringProperty("s_m_prop");
     BOOST_REQUIRE_EQUAL((*prop)[0], "1.1.0");
     BOOST_REQUIRE_EQUAL((*prop)[1], "1.1.0");
@@ -221,8 +221,8 @@ BOOST_AUTO_TEST_CASE(BufferedReader)
     size_t count = 0;
     std::shared_ptr<Block> b;
     while ((b = r.next(CT_BLOCK)) != nullptr) {
-        std::shared_ptr<IndexedBlock> iba = b->getIndexedBlock(ATOM_BLOCK);
-        std::shared_ptr<IndexedBlock> ibb = b->getIndexedBlock(BOND_BLOCK);
+        auto iba = b->getIndexedBlock(ATOM_BLOCK);
+        auto ibb = b->getIndexedBlock(BOND_BLOCK);
         count++;
     }
     BOOST_REQUIRE_EQUAL(count, 3u);
@@ -237,8 +237,8 @@ BOOST_AUTO_TEST_CASE(BufferedFileReader)
     size_t count = 0;
     std::shared_ptr<Block> b;
     while ((b = r.next(CT_BLOCK)) != nullptr) {
-        std::shared_ptr<IndexedBlock> iba = b->getIndexedBlock(ATOM_BLOCK);
-        std::shared_ptr<IndexedBlock> ibb = b->getIndexedBlock(BOND_BLOCK);
+        auto iba = b->getIndexedBlock(ATOM_BLOCK);
+        auto ibb = b->getIndexedBlock(BOND_BLOCK);
         count++;
     }
     fclose(f);
@@ -284,8 +284,8 @@ BOOST_AUTO_TEST_CASE(DirectReader)
     size_t count = 0;
     std::shared_ptr<Block> b;
     while ((b = r.next(CT_BLOCK)) != nullptr) {
-        std::shared_ptr<IndexedBlock> iba = b->getIndexedBlock(ATOM_BLOCK);
-        std::shared_ptr<IndexedBlock> ibb = b->getIndexedBlock(BOND_BLOCK);
+        auto iba = b->getIndexedBlock(ATOM_BLOCK);
+        auto ibb = b->getIndexedBlock(BOND_BLOCK);
         count++;
     }
     fclose(f);

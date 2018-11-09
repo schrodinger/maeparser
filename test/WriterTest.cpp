@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_SUITE(WriterSuite)
 BOOST_AUTO_TEST_CASE(Writer0)
 {
     Reader r("test.mae");
-    auto w = new Writer("test_write.mae");
+    auto w = std::make_shared<Writer>("test_write.mae");
     std::vector<std::shared_ptr<Block> > input;
 
     std::shared_ptr<Block> b;
@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(Writer0)
         input.push_back(b);
         w->write(b);
     }
-    delete w;
+    w.reset();
 
     Reader output_r("test_write.mae");
     int input_num = 0;
@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(Writer0)
 BOOST_AUTO_TEST_CASE(Writer1)
 {
     Reader r("test.mae");
-    auto w = new Writer("test_write.maegz");
+    auto w = std::make_shared<Writer>("test_write.maegz");
     std::vector<std::shared_ptr<Block> > input;
 
     std::shared_ptr<Block> b;
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(Writer1)
         input.push_back(b);
         w->write(b);
     }
-    delete w;
+    w.reset();
 
     Reader output_r("test_write.maegz");
     int input_num = 0;

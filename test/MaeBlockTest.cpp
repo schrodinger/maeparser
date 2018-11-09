@@ -204,15 +204,11 @@ std::shared_ptr<mae::IndexedBlock> getExampleIndexedBlock()
     auto ib = std::make_shared<IndexedBlock>("m_atom");
 
     // Set up a bool property
-    std::vector<BoolProperty> dv;
+    std::vector<BoolProperty> dv = {true, false, true};
     boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3);
     bs->set(1);
 
-    dv.push_back(true);
-    dv.push_back(false);
-    dv.push_back(true);
-    auto ibps = std::shared_ptr<IndexedBoolProperty>(
-            new IndexedBoolProperty(dv, bs));
+    auto ibps = std::make_shared<IndexedBoolProperty>(dv, bs);
     ib->setBoolProperty("b_m_bool", ibps);
 
     // Set up a real property
