@@ -359,8 +359,6 @@ static bool maps_indexed_props_equal(const T& lmap, const T& rmap)
 
 bool IndexedBlock::operator==(const IndexedBlock& rhs) const
 {
-    using namespace std;
-
     if(!maps_indexed_props_equal(m_bmap, rhs.m_bmap)) return false;
     if(!maps_indexed_props_equal(m_imap, rhs.m_imap)) return false;
     if(!maps_indexed_props_equal(m_rmap, rhs.m_rmap)) return false;
