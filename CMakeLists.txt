@@ -38,10 +38,11 @@ target_compile_definitions(maeparser PRIVATE IN_MAEPARSER)
 
 set_property(TARGET maeparser PROPERTY CXX_VISIBILITY_PRESET "hidden")
 
-enable_testing()
+# Enable CTest
+include(CTest)
 add_subdirectory(test)
 
-add_test(NAME unittest COMMAND ${CMAKE_BINARY_DIR}/test/unittest
+add_test(NAME unittest COMMAND $<TARGET_FILE:unittest>
          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
 install(FILES Buffer.hpp MaeBlock.hpp  MaeParserConfig.hpp  MaeParser.hpp  Reader.hpp MaeConstants.hpp
