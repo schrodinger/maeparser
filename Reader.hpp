@@ -17,11 +17,11 @@ namespace mae
 class EXPORT_MAEPARSER Reader
 {
   private:
-    std::shared_ptr<MaeParser> m_mae_parser;
-    std::shared_ptr<std::ifstream> m_pregzip_stream;
-    std::shared_ptr<
+    std::shared_ptr<MaeParser> m_mae_parser = nullptr;
+    std::unique_ptr<std::istream> m_stream = nullptr;
+    std::unique_ptr<
         boost::iostreams::filtering_streambuf<boost::iostreams::input>>
-        m_gzip_stream;
+        m_gzip_stream_filter = nullptr;
 
   public:
     Reader(FILE* file, size_t buffer_size = BufferLoader::DEFAULT_SIZE)
@@ -29,7 +29,7 @@ class EXPORT_MAEPARSER Reader
         m_mae_parser.reset(new MaeParser(file, buffer_size));
     }
 
-    Reader(std::shared_ptr<std::istream> stream,
+    Reader(std::istream &stream,
            size_t buffer_size = BufferLoader::DEFAULT_SIZE)
     {
         m_mae_parser.reset(new MaeParser(stream, buffer_size));

@@ -16,8 +16,8 @@ BOOST_AUTO_TEST_SUITE(ReaderSuite)
 
 BOOST_AUTO_TEST_CASE(Reader0)
 {
-    auto ss = std::make_shared<std::stringstream>();
-    *ss << "\n"
+    auto ss = std::stringstream();
+    ss << "\n"
         << "{"
            "\n"
         << "  s_m_m2io_version"
@@ -38,8 +38,8 @@ BOOST_AUTO_TEST_CASE(Reader0)
 
 BOOST_AUTO_TEST_CASE(NamedBlock0)
 {
-    auto ss = std::make_shared<std::stringstream>();
-    *ss << "\n"
+    auto ss = std::stringstream();
+    ss << "\n"
         << "\n"
         << "f_m_ct {"
            "\n"
@@ -61,8 +61,8 @@ BOOST_AUTO_TEST_CASE(NamedBlock0)
 
 BOOST_AUTO_TEST_CASE(NamedBlock1)
 {
-    auto ss = std::make_shared<std::stringstream>();
-    *ss << "{"
+    auto ss = std::stringstream();
+    ss << "{"
            "\n"
         << "  s_m_m2io_version"
            "\n"
@@ -96,8 +96,8 @@ BOOST_AUTO_TEST_CASE(NamedBlock1)
 
 BOOST_AUTO_TEST_CASE(NestedBlock)
 {
-    auto ss = std::make_shared<std::stringstream>();
-    *ss << "{"
+    auto ss = std::stringstream();
+    ss << "{"
            "\n"
         << "  s_m_m2io_version"
            "\n"
@@ -141,8 +141,8 @@ BOOST_AUTO_TEST_CASE(NestedBlock)
 
 BOOST_AUTO_TEST_CASE(NestedIndexedBlock)
 {
-    auto ss = std::make_shared<std::stringstream>();
-    *ss << "{"
+    auto ss = std::stringstream();
+    ss << "{"
            "\n" // 1
         << "  s_m_m2io_version"
            "\n" // 2
@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE(NestedIndexedBlock)
 
 BOOST_AUTO_TEST_CASE(BufferedReader)
 {
-    auto ss = std::make_shared<std::ifstream>("test.mae");
+    auto ss = std::ifstream("test.mae");
 
     Reader r(ss);
 
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(BufferedFileReader)
 
 BOOST_AUTO_TEST_CASE(TextReader)
 {
-    auto ss = std::make_shared<std::ifstream>("test.mae");
+    auto ss = std::ifstream("test.mae");
 
     Reader r(ss);
 
