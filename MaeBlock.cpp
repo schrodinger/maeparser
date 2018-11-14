@@ -1,4 +1,7 @@
 #include "MaeBlock.hpp"
+#include <cmath>
+
+
 #include "MaeParser.hpp"
 
 using namespace std;
@@ -128,13 +131,13 @@ shared_ptr<const IndexedBlock> Block::getIndexedBlock(const string& name)
     return const_pointer_cast<const IndexedBlock>(m_indexed_block_map->getIndexedBlock(name));
 }
 
-bool real_map_equal(map<string, double> rmap1,
-        map<string, double> rmap2)
+bool real_map_equal(const map<string, double>& rmap1,
+        const map<string, double>& rmap2)
 {
     if(rmap1.size() != rmap2.size()) return false;
     for(const auto& p : rmap1) {
         if(rmap2.count(p.first) != 1) return false;
-        if(abs(p.second - rmap2[p.first]) > tolerance) return false;
+        if((float)abs(p.second - rmap2.at(p.first)) > tolerance) return false;
     }
 
     return true;
@@ -243,7 +246,8 @@ EXPORT_MAEPARSER void IndexedBlock::setProperty<string>(
 size_t IndexedBlock::size() const
 {
     size_t count = 0;
-    // Counts of these maps are 1:1 with properties in the map
+    // To save memory, not all maps will have max index count for the block,
+    // so we must find the max size of all maps in the block.
     for(const auto& p : m_bmap) count = max(p.second->size(), count);
     for(const auto& p : m_imap) count = max(p.second->size(), count);
     for(const auto& p : m_rmap) count = max(p.second->size(), count);
@@ -338,7 +342,7 @@ bool IndexedProperty<double>::operator==(const IndexedProperty<double>& rhs) con
     } else if(*m_is_null != *(rhs.m_is_null)) return false;
 
     for(int i=0; i<m_data.size(); ++i)
-        if(abs(m_data[i] - rhs.m_data[i]) > tolerance) return false;
+        if((float)abs(m_data[i] - rhs.m_data[i]) > tolerance) return false;
 
     return true;
 }
@@ -346,13 +350,11 @@ bool IndexedProperty<double>::operator==(const IndexedProperty<double>& rhs) con
 template <typename T>
 static bool maps_indexed_props_equal(const T& lmap, const T& rmap)
 {
-    for(const auto& p : lmap) {
-        if(rmap.size() != lmap.size()) return false;
-        auto diff = std::mismatch(lmap.begin(), lmap.end(), rmap.begin(),
-                 [](decltype(*begin(lmap)) l, decltype(*begin(lmap)) r)
-                 {return l.first == r.first && *(l.second) == *(r.second);});
-        if (diff.first != lmap.end()) return false;
-    }
+    if(rmap.size() != lmap.size()) return false;
+    auto diff = std::mismatch(lmap.begin(), lmap.end(), rmap.begin(),
+            [](decltype(*begin(lmap)) l, decltype(*begin(lmap)) r)
+            {return l.first == r.first && *(l.second) == *(r.second);});
+    if (diff.first != lmap.end()) return false;
     return true;
 }
 
