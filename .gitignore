@@ -17,3 +17,6 @@ drop_cache
 boost
 unittest
 env.sh
+test_write.mae*
+#Vim temporary files
+*~

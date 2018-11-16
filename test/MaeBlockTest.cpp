@@ -198,4 +198,92 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlockString)
     }
 }
 
+std::shared_ptr<mae::IndexedBlock> getExampleIndexedBlock()
+{
+    using namespace mae;
+    auto ib = std::make_shared<IndexedBlock>("m_atom");
+
+    // Set up a bool property
+    std::vector<BoolProperty> dv = {true, false, true};
+    boost::dynamic_bitset<>* bs = new boost::dynamic_bitset<>(3);
+    bs->set(1);
+
+    auto ibps = std::make_shared<IndexedBoolProperty>(dv, bs);
+    ib->setBoolProperty("b_m_bool", ibps);
+
+    // Set up a real property
+    std::vector<double> rv = {0.1, 42};
+    boost::dynamic_bitset<>* rbs = new boost::dynamic_bitset<>(3);
+    rbs->set(2);
+
+    auto irps = std::shared_ptr<IndexedRealProperty>(
+            new IndexedRealProperty(rv, rbs));
+    ib->setRealProperty("r_m_reals", irps);
+
+    return ib;
+}
+
+BOOST_AUTO_TEST_CASE(toStringProperties)
+{
+    const std::string rval = \
+R"(dummy {
+  b_m_bool
+  r_m_real
+  i_m_int
+  s_m_string
+  :::
+  0
+  1.000000
+  42
+  "mae\"parser"
+  m_atom[3] {
+    # First column is Index #
+    b_m_bool
+    r_m_reals
+    :::
+    1 1 0.100000
+    2 <> 42.000000
+    3 1 <>
+    :::
+  }
+}
+
+)";
+    mae::Block b("dummy");
+    b.setRealProperty("r_m_real", 1.0);
+    b.setBoolProperty("b_m_bool", false);
+    b.setIntProperty("i_m_int", 42);
+    b.setStringProperty("s_m_string", "mae\"parser");
+
+    auto ib = getExampleIndexedBlock();
+
+    auto ibm = std::make_shared<mae::IndexedBlockMap>();
+    ibm->addIndexedBlock(ib->getName(), ib);
+    b.setIndexedBlockMap(ibm);
+
+    BOOST_REQUIRE_EQUAL(b.toString(), rval);
+}
+
+BOOST_AUTO_TEST_CASE(toStringIndexedProperties)
+{
+    using namespace mae;
+    const std::string rval = \
+R"(m_atom[3] {
+  # First column is Index #
+  b_m_bool
+  r_m_reals
+  :::
+  1 1 0.100000
+  2 <> 42.000000
+  3 1 <>
+  :::
+}
+)";
+
+    auto ib = getExampleIndexedBlock();
+
+    BOOST_REQUIRE_EQUAL(ib->toString(), rval);
+}
+
+
 BOOST_AUTO_TEST_SUITE_END()
