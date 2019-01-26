@@ -56,7 +56,7 @@ class EXPORT_MAEPARSER IndexedBlockMap : public IndexedBlockMapI
     virtual std::vector<std::string> getBlockNames() const
     {
         std::vector<std::string> rval;
-        for(const auto& p : m_indexed_block) {
+        for (const auto& p : m_indexed_block) {
             rval.push_back(p.first);
         }
 
@@ -71,7 +71,6 @@ class EXPORT_MAEPARSER IndexedBlockMap : public IndexedBlockMapI
     {
         m_indexed_block[name] = indexed_block;
     }
-
 };
 
 class EXPORT_MAEPARSER BufferedIndexedBlockMap : public IndexedBlockMapI
@@ -89,7 +88,7 @@ class EXPORT_MAEPARSER BufferedIndexedBlockMap : public IndexedBlockMapI
     virtual std::vector<std::string> getBlockNames() const
     {
         std::vector<std::string> rval;
-        for(const auto& p : m_indexed_buffer) {
+        for (const auto& p : m_indexed_buffer) {
             rval.push_back(p.first);
         }
 
@@ -142,15 +141,15 @@ class EXPORT_MAEPARSER Block
         m_indexed_block_map = indexed_block_map;
     }
 
-    bool hasIndexedBlockData() const {
-        return m_indexed_block_map != nullptr;
-    }
+    bool hasIndexedBlockData() const { return m_indexed_block_map != nullptr; }
     bool hasIndexedBlock(const std::string& name)
     {
-        return hasIndexedBlockData() && m_indexed_block_map->hasIndexedBlock(name);
+        return hasIndexedBlockData() &&
+               m_indexed_block_map->hasIndexedBlock(name);
     }
 
-    std::shared_ptr<const IndexedBlock> getIndexedBlock(const std::string& name);
+    std::shared_ptr<const IndexedBlock>
+    getIndexedBlock(const std::string& name);
 
     void addBlock(std::shared_ptr<Block> b) { m_sub_block[b->getName()] = b; }
 

@@ -17,8 +17,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Reader.hpp"
 #include "MaeConstants.hpp"
+#include "Reader.hpp"
 
 #define BOOST_TEST_DYN_LINK
 
@@ -73,7 +73,8 @@ BOOST_AUTO_TEST_CASE(maeBlock)
         {
             const auto atom_data = b->getIndexedBlock(ATOM_BLOCK);
             // All atoms are gauranteed to have these three field names:
-            const auto atomic_numbers = atom_data->getIntProperty(ATOM_ATOMIC_NUM);
+            const auto atomic_numbers =
+                atom_data->getIntProperty(ATOM_ATOMIC_NUM);
             const auto xs = atom_data->getRealProperty(ATOM_X_COORD);
             const auto ys = atom_data->getRealProperty(ATOM_Y_COORD);
             const auto zs = atom_data->getRealProperty(ATOM_Z_COORD);

@@ -1,8 +1,8 @@
 #include "Writer.hpp"
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <fstream>
 #include <iostream>
-#include <boost/algorithm/string/predicate.hpp>
 
 #include "MaeBlock.hpp"
 
@@ -26,7 +26,8 @@ Writer::Writer(std::string fname)
     pregzip_stream->open(fname, std::ios_base::out | std::ios_base::binary);
 
     if (ends_with(fname, ".maegz") || ends_with(fname, ".mae.gz")) {
-        m_gzip_stream = std::make_shared<boost::iostreams::filtering_ostreambuf>();
+        m_gzip_stream =
+            std::make_shared<boost::iostreams::filtering_ostreambuf>();
         m_gzip_compressor = make_shared<boost::iostreams::gzip_compressor>();
         m_gzip_stream->push(*m_gzip_compressor);
         m_gzip_stream->push(*pregzip_stream);

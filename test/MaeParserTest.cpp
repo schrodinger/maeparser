@@ -6,8 +6,8 @@
 
 #include "Buffer.hpp"
 #include "MaeBlock.hpp"
-#include "MaeParser.hpp"
 #include "MaeConstants.hpp"
+#include "MaeParser.hpp"
 
 using namespace schrodinger;
 using namespace schrodinger::mae;
