@@ -216,8 +216,8 @@ std::shared_ptr<mae::IndexedBlock> getExampleIndexedBlock()
     boost::dynamic_bitset<>* rbs = new boost::dynamic_bitset<>(3);
     rbs->set(2);
 
-    auto irps = std::shared_ptr<IndexedRealProperty>(
-            new IndexedRealProperty(rv, rbs));
+    auto irps =
+        std::shared_ptr<IndexedRealProperty>(new IndexedRealProperty(rv, rbs));
     ib->setRealProperty("r_m_reals", irps);
 
     return ib;
@@ -225,8 +225,8 @@ std::shared_ptr<mae::IndexedBlock> getExampleIndexedBlock()
 
 BOOST_AUTO_TEST_CASE(toStringProperties)
 {
-    const std::string rval = \
-R"(dummy {
+    const std::string rval =
+        R"(dummy {
   b_m_bool
   r_m_real
   i_m_int
@@ -267,8 +267,8 @@ R"(dummy {
 BOOST_AUTO_TEST_CASE(toStringIndexedProperties)
 {
     using namespace mae;
-    const std::string rval = \
-R"(m_atom[3] {
+    const std::string rval =
+        R"(m_atom[3] {
   # First column is Index #
   b_m_bool
   r_m_reals
@@ -284,6 +284,5 @@ R"(m_atom[3] {
 
     BOOST_REQUIRE_EQUAL(ib->toString(), rval);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -6,8 +6,8 @@
 #include <boost/test/unit_test.hpp>
 
 #include "MaeBlock.hpp"
-#include "Reader.hpp"
 #include "MaeConstants.hpp"
+#include "Reader.hpp"
 
 using namespace schrodinger::mae;
 using std::shared_ptr;
@@ -290,7 +290,6 @@ BOOST_AUTO_TEST_CASE(DirectReader)
     }
     fclose(f);
     BOOST_REQUIRE_EQUAL(count, 3u);
-
 }
 
 BOOST_AUTO_TEST_CASE(QuotedStringTest)
