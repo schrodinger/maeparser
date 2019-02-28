@@ -7,7 +7,6 @@
 
 #include "MaeParserConfig.hpp"
 
-
 namespace schrodinger
 {
 namespace mae

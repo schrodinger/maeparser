@@ -21,8 +21,8 @@ Reader::Reader(std::string fname, size_t buffer_size)
         m_mae_parser.reset(new MaeParser(stream, buffer_size));
     } else if (ends_with(fname, ".maegz") || ends_with(fname, ".mae.gz")) {
         m_pregzip_stream = stream; // Store it since maeparser won't
-        m_gzip_stream = std::make_shared<
-            boost::iostreams::filtering_istreambuf>();
+        m_gzip_stream =
+            std::make_shared<boost::iostreams::filtering_istreambuf>();
         m_gzip_stream->push(boost::iostreams::gzip_decompressor());
         m_gzip_stream->push(*stream);
         auto decompressed_stream =
