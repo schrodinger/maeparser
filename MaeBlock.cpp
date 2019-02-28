@@ -23,7 +23,7 @@ static string local_to_string(string val)
     if (val.length() == 0)
         return R"("")";
     // Create new string big enough to escape every character and add quotes
-    int pos_in_old = 0;
+    size_t pos_in_old = 0;
     bool escaped_char = false;
     for (; pos_in_old < val.length(); ++pos_in_old) {
         const char& c = val[pos_in_old];
@@ -35,7 +35,7 @@ static string local_to_string(string val)
     if (!escaped_char)
         return val;
 
-    int pos_in_new = 1;
+    size_t pos_in_new = 1;
     string new_string(val.length() * 2 + 2, '\"');
     for (pos_in_old = 0; pos_in_old < val.length(); ++pos_in_old) {
         const char& c = val[pos_in_old];
@@ -271,14 +271,14 @@ size_t IndexedBlock::size() const
 }
 
 template <typename T>
-static void
-output_indexed_property_values(ostream& out, const string& indentation,
-                               map<string, T> properties, unsigned int index)
+static void output_indexed_property_values(ostream& out,
+                                           map<string, T> properties,
+                                           unsigned int index)
 {
     for (const auto& p : properties) {
         const auto& property = p.second;
         if (property->isDefined(index)) {
-            out << " " << local_to_string(property->at(index));
+            out << ' ' << local_to_string(property->at(index));
         } else {
             out << " <>";
         }
@@ -310,10 +310,10 @@ void IndexedBlock::write(ostream& out, unsigned int current_indentation) const
 
     for (unsigned int i = 0; i < size(); ++i) {
         out << indentation << i + 1;
-        output_indexed_property_values(out, indentation, m_bmap, i);
-        output_indexed_property_values(out, indentation, m_rmap, i);
-        output_indexed_property_values(out, indentation, m_imap, i);
-        output_indexed_property_values(out, indentation, m_smap, i);
+        output_indexed_property_values(out, m_bmap, i);
+        output_indexed_property_values(out, m_rmap, i);
+        output_indexed_property_values(out, m_imap, i);
+        output_indexed_property_values(out, m_smap, i);
         out << endl;
     }
 
@@ -360,7 +360,7 @@ operator==(const IndexedProperty<double>& rhs) const
     } else if (*m_is_null != *(rhs.m_is_null))
         return false;
 
-    for (int i = 0; i < m_data.size(); ++i)
+    for (size_t i = 0; i < m_data.size(); ++i)
         if ((float) abs(m_data[i] - rhs.m_data[i]) > tolerance)
             return false;
 

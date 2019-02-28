@@ -269,7 +269,7 @@ class EXPORT_MAEPARSER MaeParser
   public:
     explicit MaeParser(std::shared_ptr<std::istream> stream,
                        size_t buffer_size = BufferLoader::DEFAULT_SIZE)
-        : m_stream(stream), m_buffer(*stream, buffer_size)
+        : m_buffer(*stream, buffer_size), m_stream(stream)
     {
         m_buffer.load();
     }
