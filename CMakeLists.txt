@@ -8,7 +8,7 @@ if(MSVC)
     add_definitions(/wd4251 /D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS)
 endif(MSVC)
 
-find_package(Boost COMPONENTS iostreams unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS filesystem iostreams unit_test_framework REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIRS})
 
@@ -40,9 +40,6 @@ set_property(TARGET maeparser PROPERTY CXX_VISIBILITY_PRESET "hidden")
 
 enable_testing()
 add_subdirectory(test)
-
-add_test(NAME unittest COMMAND ${CMAKE_BINARY_DIR}/test/unittest
-         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
 install(FILES Buffer.hpp MaeBlock.hpp  MaeParserConfig.hpp  MaeParser.hpp  Reader.hpp MaeConstants.hpp
         DESTINATION include/maeparser)

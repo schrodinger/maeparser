@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE(NestedIndexedBlock)
 
 BOOST_AUTO_TEST_CASE(BufferedReader)
 {
-    auto ss = std::make_shared<std::ifstream>("test.mae");
+    auto ss = std::make_shared<std::ifstream>("samples/test.mae");
 
     Reader r(ss);
 
@@ -230,7 +230,7 @@ BOOST_AUTO_TEST_CASE(BufferedReader)
 
 BOOST_AUTO_TEST_CASE(BufferedFileReader)
 {
-    FILE* f = fopen("test.mae", "r");
+    FILE* f = fopen("samples/test.mae", "r");
 
     Reader r(f);
 
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(BufferedFileReader)
 
 BOOST_AUTO_TEST_CASE(TextReader)
 {
-    auto ss = std::make_shared<std::ifstream>("test.mae");
+    auto ss = std::make_shared<std::ifstream>("samples/test.mae");
 
     Reader r(ss);
 
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_CASE(TextReader)
 
 BOOST_AUTO_TEST_CASE(TextFileReader)
 {
-    FILE* f = fopen("test.mae", "r");
+    FILE* f = fopen("samples/test.mae", "r");
 
     Reader r(f);
 
@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE(TextFileReader)
 
 BOOST_AUTO_TEST_CASE(DirectReader)
 {
-    FILE* f = fopen("test.mae", "r");
+    FILE* f = fopen("samples/test.mae", "r");
     auto mae_parser = std::make_shared<DirectMaeParser>(f);
 
     Reader r(mae_parser);
@@ -294,7 +294,7 @@ BOOST_AUTO_TEST_CASE(DirectReader)
 
 BOOST_AUTO_TEST_CASE(QuotedStringTest)
 {
-    FILE* f = fopen("test.mae", "r");
+    FILE* f = fopen("samples/test.mae", "r");
 
     Reader r(f);
 

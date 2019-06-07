@@ -10,15 +10,37 @@
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
+#include <boost/filesystem.hpp>
 
 using namespace schrodinger::mae;
 using std::shared_ptr;
+
+// We should make sure these do not exist before the tests starts,
+// this will prevent any chances of finding the results of an older test.
+const std::vector<std::string> generated_files = {"test_write.mae",
+                                                  "test_write.maegz"};
+
+class WriterGlobalFixture
+{
+  public:
+    WriterGlobalFixture()
+    {
+        for (auto& file : generated_files) {
+            boost::filesystem::path fpath(file);
+            if (boost::filesystem::exists(fpath)) {
+                boost::filesystem::remove(fpath);
+            }
+        }
+    }
+};
+
+BOOST_GLOBAL_FIXTURE(WriterGlobalFixture);
 
 BOOST_AUTO_TEST_SUITE(WriterSuite)
 
 BOOST_AUTO_TEST_CASE(Writer0)
 {
-    Reader r("test.mae");
+    Reader r("samples/test.mae");
     auto w = std::make_shared<Writer>("test_write.mae");
     std::vector<std::shared_ptr<Block>> input;
 
@@ -38,7 +60,7 @@ BOOST_AUTO_TEST_CASE(Writer0)
 
 BOOST_AUTO_TEST_CASE(Writer1)
 {
-    Reader r("test.mae");
+    Reader r("samples/test.mae");
     auto w = std::make_shared<Writer>("test_write.maegz");
     std::vector<std::shared_ptr<Block>> input;
 
@@ -60,7 +82,7 @@ BOOST_AUTO_TEST_CASE(Writer1)
 // UNCOMMENT BLOCK TO TEST PERFORMANCE OF LIGAND WRITING
 BOOST_AUTO_TEST_CASE(PerfTest)
 {
-    Reader r("test.mae");
+    Reader r("samples/test.mae");
     auto w = std::make_shared<Writer>("test_write.maegz");
     std::vector<std::shared_ptr<Block> > input;
 

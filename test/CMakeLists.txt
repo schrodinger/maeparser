@@ -3,7 +3,13 @@ include_directories(..)
 add_executable(unittest
     MainTestSuite.cpp BufferTest.cpp MaeBlockTest.cpp MaeParserTest.cpp ReaderTest.cpp WriterTest.cpp UsageDemo.cpp)
 
-target_link_libraries(unittest maeparser Boost::unit_test_framework)
+target_link_libraries(unittest maeparser Boost::unit_test_framework Boost::filesystem)
+
+set(TEST_SAMPLES test.mae test2.maegz )
+file(COPY ${TEST_SAMPLES} DESTINATION ${CMAKE_BINARY_DIR}/test/samples)
+
+add_test(NAME unittest COMMAND ${CMAKE_BINARY_DIR}/test/unittest
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test)
 
 if(MSVC)
     add_custom_command(TARGET unittest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
