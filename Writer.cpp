@@ -28,7 +28,7 @@ Writer::Writer(std::shared_ptr<ostream> stream)
 
 Writer::Writer(std::string fname)
 {
-    constexpr auto ios_mode = std::ios_base::out | std::ios_base::binary;
+    const auto ios_mode = std::ios_base::out | std::ios_base::binary;
 
     if (ends_with(fname, ".maegz") || ends_with(fname, ".mae.gz")) {
         auto* gzip_stream = new filtering_ostream();
