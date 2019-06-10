@@ -23,6 +23,7 @@
 #define BOOST_TEST_DYN_LINK
 
 #include <boost/test/unit_test.hpp>
+#include <boost/filesystem.hpp>
 
 using namespace schrodinger::mae;
 
@@ -54,6 +55,10 @@ class Structure
     std::unordered_map<int, int> demo_property;
 };
 
+const boost::filesystem::path test_samples_path(TEST_SAMPLES_PATH);
+const std::string compressed_sample =
+    (test_samples_path / "test2.maegz").string();
+
 BOOST_AUTO_TEST_SUITE(DemoSuite)
 
 // Reads all atom and bond information from test.mae, which is a standard
@@ -61,7 +66,7 @@ BOOST_AUTO_TEST_SUITE(DemoSuite)
 // exist in every f_m_ct block.
 BOOST_AUTO_TEST_CASE(maeBlock)
 {
-    schrodinger::mae::Reader r("test2.maegz");
+    schrodinger::mae::Reader r(compressed_sample);
 
     std::vector<std::shared_ptr<Structure>> structures;
     std::shared_ptr<Block> b;
