@@ -5,8 +5,8 @@ add_executable(unittest
 
 target_link_libraries(unittest maeparser Boost::unit_test_framework Boost::filesystem)
 
-set(TEST_SAMPLES test.mae test2.maegz )
-file(COPY ${TEST_SAMPLES} DESTINATION ${CMAKE_BINARY_DIR}/test/samples)
+get_filename_component(TEST_SAMPLES_PATH ${CMAKE_CURRENT_SOURCE_DIR} ABSOLUTE)
+target_compile_definitions(unittest PRIVATE "TEST_SAMPLES_PATH=\"${TEST_SAMPLES_PATH}\"")
 
 add_test(NAME unittest COMMAND ${CMAKE_BINARY_DIR}/test/unittest
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test)

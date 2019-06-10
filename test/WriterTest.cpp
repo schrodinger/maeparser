@@ -20,6 +20,10 @@ using std::shared_ptr;
 const std::vector<std::string> generated_files = {"test_write.mae",
                                                   "test_write.maegz"};
 
+const boost::filesystem::path test_samples_path(TEST_SAMPLES_PATH);
+const std::string uncompressed_sample =
+    (test_samples_path / "test.mae").string();
+
 class WriterGlobalFixture
 {
   public:
@@ -40,7 +44,7 @@ BOOST_AUTO_TEST_SUITE(WriterSuite)
 
 BOOST_AUTO_TEST_CASE(Writer0)
 {
-    Reader r("samples/test.mae");
+    Reader r(uncompressed_sample);
     auto w = std::make_shared<Writer>("test_write.mae");
     std::vector<std::shared_ptr<Block>> input;
 
@@ -60,7 +64,7 @@ BOOST_AUTO_TEST_CASE(Writer0)
 
 BOOST_AUTO_TEST_CASE(Writer1)
 {
-    Reader r("samples/test.mae");
+    Reader r(uncompressed_sample);
     auto w = std::make_shared<Writer>("test_write.maegz");
     std::vector<std::shared_ptr<Block>> input;
 
@@ -82,7 +86,7 @@ BOOST_AUTO_TEST_CASE(Writer1)
 // UNCOMMENT BLOCK TO TEST PERFORMANCE OF LIGAND WRITING
 BOOST_AUTO_TEST_CASE(PerfTest)
 {
-    Reader r("samples/test.mae");
+    Reader r(uncompressed_sample);
     auto w = std::make_shared<Writer>("test_write.maegz");
     std::vector<std::shared_ptr<Block> > input;
 
