@@ -26,7 +26,12 @@ build:
 before_build:
   - mkdir %APPVEYOR_BUILD_FOLDER%\build
   - cd %APPVEYOR_BUILD_FOLDER%\build
-  - cmake -G "Visual Studio 12 Win64" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBOOST_ROOT=%BOOST_ROOT_PATH% -DCMAKE_INSTALL_PREFIX=%P% ..
+  - cmake .. ^
+      -G "Visual Studio 12 Win64" ^
+      -DMAEPARSER_RIGOROUS_BUILD=ON ^
+      -DCMAKE_BUILD_TYPE=%CONFIGURATION% ^
+      -DBOOST_ROOT=%BOOST_ROOT_PATH% ^
+      -DCMAKE_INSTALL_PREFIX=%P%
 
 test_script:
   - set PATH=%BOOST_LIBRARY_PATH%;%PATH%
