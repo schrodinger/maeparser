@@ -34,15 +34,12 @@ Reader::Reader(std::string fname, size_t buffer_size)
 
 std::shared_ptr<Block> Reader::next(const std::string& outer_block_name)
 {
-    for (;;) {
+    std::shared_ptr<Block> block;
+    do {
         m_mae_parser->whitespace();
-        auto block = m_mae_parser->outerBlock();
-        if (block == nullptr) {
-            return nullptr;
-        } else if (block->getName() == outer_block_name) {
-            return block;
-        }
-    }
+        block = m_mae_parser->outerBlock();
+    } while (block != nullptr && block->getName() != outer_block_name);
+    return block;
 }
 } // namespace mae
 } // namespace schrodinger
