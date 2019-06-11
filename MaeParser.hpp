@@ -166,8 +166,6 @@ class EXPORT_MAEPARSER BufferedIndexedBlockParser : public IndexedBlockParser
   public:
     BufferedIndexedBlockParser();
 
-    virtual ~BufferedIndexedBlockParser() final;
-
     virtual std::shared_ptr<IndexedBlockMapI> getIndexedBlockMap();
 
     virtual void parse(const std::string& name, size_t size, Buffer& buffer);
@@ -178,8 +176,6 @@ class EXPORT_MAEPARSER DirectIndexedBlockParser : public IndexedBlockParser
     std::shared_ptr<IndexedBlockMap> m_indexed_block_map;
 
   public:
-    virtual ~DirectIndexedBlockParser() final;
-
     virtual void parse(const std::string& name, size_t size, Buffer& buffer);
 
     virtual std::shared_ptr<IndexedBlockMapI> getIndexedBlockMap();
