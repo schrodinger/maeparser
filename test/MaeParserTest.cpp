@@ -63,7 +63,6 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginning)
 
 BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
 {
-    std::string name;
     {
         std::stringstream ss("b_m_ct {");
         Buffer b(ss);
@@ -442,7 +441,13 @@ BOOST_AUTO_TEST_CASE(Integer)
     {
         std::stringstream ss("-2147483648");
         Buffer b(ss);
+#ifdef _MSC_VER
+        // MSVC is buggy:
+        // https://developercommunity.visualstudio.com/content/problem/141813/-2147483648-c4146-error.html
+        BOOST_REQUIRE_EQUAL(parse_value<int>(b), 0x80000000);
+#else
         BOOST_REQUIRE_EQUAL(parse_value<int>(b), -2147483648);
+#endif
     }
 }
 
@@ -648,13 +653,15 @@ BOOST_AUTO_TEST_CASE(Boolean)
         std::stringstream ss(" 1");
         Buffer b(ss);
         whitespace(b);
-        BOOST_REQUIRE_EQUAL(parse_value<BoolProperty>(b), true);
+        BOOST_REQUIRE_EQUAL(parse_value<BoolProperty>(b),
+                            static_cast<BoolProperty>(true));
     }
     {
         std::stringstream ss("0 ");
         Buffer b(ss);
         whitespace(b);
-        BOOST_REQUIRE_EQUAL(parse_value<BoolProperty>(b), false);
+        BOOST_REQUIRE_EQUAL(parse_value<BoolProperty>(b),
+                            static_cast<BoolProperty>(false));
     }
 }
 

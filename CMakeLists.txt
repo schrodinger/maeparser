@@ -3,10 +3,20 @@ cmake_minimum_required(VERSION 3.5)
 
 project(maeparser)
 
+option(MAEPARSER_RIGUROUS_BUILD "Abort the build if the compiler issues any warnings" OFF )
+
 if(MSVC)
     # C4251 disables warnings for export STL containers as arguments (returning a vector of things)
-    add_definitions(/wd4251 /D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS)
+    add_definitions(/wd4251 /wd4275 /wd4996 /D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS)
 endif(MSVC)
+
+if(MAEPARSER_RIGUROUS_BUILD)
+if(MSVC)
+    add_definitions(/WX)
+else(MSVC)
+    add_definitions(-Wall -Wextra -Werror)
+endif(MSVC)
+endif(MAEPARSER_RIGUROUS_BUILD)
 
 find_package(Boost COMPONENTS filesystem iostreams unit_test_framework REQUIRED)
 

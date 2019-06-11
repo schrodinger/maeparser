@@ -21,16 +21,16 @@ static bool property_key_author_name(Buffer& buffer, char*& save);
 
 static std::string outer_block_name(Buffer& buffer);
 
-void read_exception::format(int line_number, int column, const char* msg)
+void read_exception::format(size_t line_number, size_t column, const char* msg)
 {
 #ifdef _MSC_VER
     _snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE,
-              "Line %d, column %d: %s\n", line_number,
+              "Line %Iu, column %Iu: %s\n",
 #else
-    snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE, "Line %d, column %d: %s\n",
-             line_number,
+    snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE,
+             "Line %zu, column %zu: %s\n",
 #endif
-              column, msg);
+              line_number, column, msg);
     m_msg[MAEPARSER_EXCEPTION_BUFFER_SIZE - 1] = '\0';
 }
 
@@ -351,12 +351,12 @@ std::shared_ptr<Block> MaeParser::blockBody(const std::string& name)
             break;
         case 'b':
             block->setBoolProperty((*(*iter)),
-                                   parse_value<BoolProperty>(m_buffer));
+                                   1u == parse_value<BoolProperty>(m_buffer));
             break;
         }
     }
     schrodinger::mae::whitespace(m_buffer);
-    while (true) {
+    for (;;) {
         if (!m_buffer.load()) {
             throw read_exception(m_buffer, "Missing '}' for block.");
         }
@@ -520,7 +520,9 @@ void IndexedBlockBuffer::value(Buffer& buffer)
     }
 }
 
-DirectIndexedBlockParser::~DirectIndexedBlockParser() {}
+DirectIndexedBlockParser::~DirectIndexedBlockParser()
+{
+}
 
 void DirectIndexedBlockParser::parse(const std::string& name, size_t size,
                                      Buffer& buffer)
@@ -782,7 +784,9 @@ BufferedIndexedBlockParser::BufferedIndexedBlockParser()
     m_indexed_block_map = std::make_shared<BufferedIndexedBlockMap>();
 }
 
-BufferedIndexedBlockParser::~BufferedIndexedBlockParser() {}
+BufferedIndexedBlockParser::~BufferedIndexedBlockParser()
+{
+}
 
 std::shared_ptr<IndexedBlockMapI>
 BufferedIndexedBlockParser::getIndexedBlockMap()

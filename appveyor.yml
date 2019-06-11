@@ -34,5 +34,3 @@ test_script:
   # For whatever reason, boost_iostreams depends on libbz2.dll
   - copy %BOOST_LIBRARY_PATH%\boost_bzip2-vc120-mt-1_56.dll %APPVEYOR_BUILD_FOLDER%\build\test\%CONFIGURATION%\libbz2.dll
   - ctest -V -C %CONFIGURATION%
-
-

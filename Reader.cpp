@@ -34,7 +34,7 @@ Reader::Reader(std::string fname, size_t buffer_size)
 
 std::shared_ptr<Block> Reader::next(const std::string& outer_block_name)
 {
-    while (true) {
+    for (;;) {
         m_mae_parser->whitespace();
         auto block = m_mae_parser->outerBlock();
         if (block == nullptr) {
