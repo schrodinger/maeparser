@@ -439,15 +439,13 @@ BOOST_AUTO_TEST_CASE(Integer)
         BOOST_REQUIRE_EQUAL(parse_value<int>(b), 2147483647);
     }
     {
-        std::stringstream ss("-2147483648");
+        // There is a bug in some VS editions that raises warning C4146
+        // when assigning -2147483648 to an int in code..
+        const int reference = std::numeric_limits<int>::min();
+        std::stringstream ss;
+        ss << reference;
         Buffer b(ss);
-#ifdef _MSC_VER
-        // MSVC is buggy:
-        // https://developercommunity.visualstudio.com/content/problem/141813/-2147483648-c4146-error.html
-        BOOST_REQUIRE_EQUAL(parse_value<int>(b), 0x80000000);
-#else
-        BOOST_REQUIRE_EQUAL(parse_value<int>(b), -2147483648);
-#endif
+        BOOST_REQUIRE_EQUAL(parse_value<int>(b), reference);
     }
 }
 
