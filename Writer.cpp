@@ -10,6 +10,7 @@
 
 #include "MaeBlock.hpp"
 
+using namespace std;
 using boost::algorithm::ends_with;
 using boost::iostreams::filtering_ostream;
 using boost::iostreams::file_sink;
