@@ -1,6 +1,10 @@
 #include "Writer.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/iostreams/filter/gzip.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/device/file.hpp>
+
 #include <fstream>
 #include <iostream>
 
@@ -8,6 +12,8 @@
 
 using namespace std;
 using boost::algorithm::ends_with;
+using boost::iostreams::filtering_ostream;
+using boost::iostreams::file_sink;
 
 namespace schrodinger
 {
@@ -22,19 +28,18 @@ Writer::Writer(std::shared_ptr<ostream> stream)
 
 Writer::Writer(std::string fname)
 {
-    auto pregzip_stream = new ofstream();
-    pregzip_stream->open(fname, std::ios_base::out | std::ios_base::binary);
+    const auto ios_mode = std::ios_base::out | std::ios_base::binary;
 
     if (ends_with(fname, ".maegz") || ends_with(fname, ".mae.gz")) {
-        m_gzip_stream =
-            std::make_shared<boost::iostreams::filtering_ostreambuf>();
-        m_gzip_compressor = make_shared<boost::iostreams::gzip_compressor>();
-        m_gzip_stream->push(*m_gzip_compressor);
-        m_gzip_stream->push(*pregzip_stream);
-        m_out = std::make_shared<std::ostream>(m_gzip_stream.get());
+        auto* gzip_stream = new filtering_ostream();
+        gzip_stream->push(boost::iostreams::gzip_compressor());
+        gzip_stream->push(file_sink(fname, ios_mode));
+        m_out.reset(static_cast<ostream*>(gzip_stream));
     } else {
-        m_out.reset(dynamic_cast<ostream*>(pregzip_stream));
+        auto* file_stream = new ofstream(fname, ios_mode);
+        m_out.reset(static_cast<ostream*>(file_stream));
     }
+
     write_opening_block();
 }
 

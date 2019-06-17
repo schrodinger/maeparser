@@ -38,7 +38,11 @@ target_compile_definitions(maeparser PRIVATE IN_MAEPARSER)
 
 set_property(TARGET maeparser PROPERTY CXX_VISIBILITY_PRESET "hidden")
 
-enable_testing()
+set(MEMORYCHECK_COMMAND_OPTIONS "${MEMORYCHECK_COMMAND_OPTIONS} --tool=memcheck \
+        --time-stamp=yes --num-callers=20 --gen-suppressions=all --leak-check=full \
+        --show-reachable=yes --trace-children=yes --error-exitcode=29")
+
+include(CTest)
 add_subdirectory(test)
 
 install(FILES Buffer.hpp MaeBlock.hpp  MaeParserConfig.hpp  MaeParser.hpp  Reader.hpp MaeConstants.hpp
