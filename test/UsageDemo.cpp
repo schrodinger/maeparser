@@ -52,7 +52,7 @@ class Structure
     std::vector<Bond> bonds;
 
     // A "property" that some atoms have (others may not have this property)
-    std::unordered_map<int, int> demo_property;
+    std::unordered_map<size_t, int> demo_property;
 };
 
 const boost::filesystem::path test_samples_path(TEST_SAMPLES_PATH);

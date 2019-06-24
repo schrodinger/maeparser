@@ -21,16 +21,16 @@ static bool property_key_author_name(Buffer& buffer, char*& save);
 
 static std::string outer_block_name(Buffer& buffer);
 
-void read_exception::format(int line_number, int column, const char* msg)
+void read_exception::format(size_t line_number, size_t column, const char* msg)
 {
 #ifdef _MSC_VER
     _snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE,
-              "Line %d, column %d: %s\n", line_number,
+              "Line %Iu, column %Iu: %s\n",
 #else
-    snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE, "Line %d, column %d: %s\n",
-             line_number,
+    snprintf(m_msg, MAEPARSER_EXCEPTION_BUFFER_SIZE,
+             "Line %zu, column %zu: %s\n",
 #endif
-              column, msg);
+              line_number, column, msg);
     m_msg[MAEPARSER_EXCEPTION_BUFFER_SIZE - 1] = '\0';
 }
 
@@ -333,52 +333,49 @@ std::shared_ptr<Block> MaeParser::blockBody(const std::string& name)
     schrodinger::mae::whitespace(m_buffer);
     properties(&property_names);
 
-    std::vector<std::shared_ptr<std::string>>::const_iterator iter =
-        property_names.begin();
-    std::string s;
-    for (; iter != property_names.end(); ++iter) {
+    for (auto& property_name : property_names) {
         schrodinger::mae::whitespace(m_buffer);
-        switch ((*(*iter))[0]) {
+        switch ((*property_name)[0]) {
         case 'r':
-            block->setRealProperty((*(*iter)), parse_value<double>(m_buffer));
+            block->setRealProperty(*property_name,
+                                   parse_value<double>(m_buffer));
             break;
         case 's':
-            block->setStringProperty((*(*iter)),
+            block->setStringProperty(*property_name,
                                      parse_value<std::string>(m_buffer));
             break;
         case 'i':
-            block->setIntProperty((*(*iter)), parse_value<int>(m_buffer));
+            block->setIntProperty(*property_name, parse_value<int>(m_buffer));
             break;
         case 'b':
-            block->setBoolProperty((*(*iter)),
-                                   parse_value<BoolProperty>(m_buffer));
+            block->setBoolProperty(*property_name,
+                                   1u == parse_value<BoolProperty>(m_buffer));
             break;
         }
     }
-    schrodinger::mae::whitespace(m_buffer);
-    while (true) {
+
+    auto advance = [this]() {
+        schrodinger::mae::whitespace(m_buffer);
         if (!m_buffer.load()) {
             throw read_exception(m_buffer, "Missing '}' for block.");
         }
+    };
 
-        if (*m_buffer.current == '}') {
-            ++m_buffer.current;
-            break;
-        }
-
-        int indexed = 0;
+    int indexed = 0;
+    for (advance(); *m_buffer.current != '}'; advance()) {
         std::string name = blockBeginning(&indexed);
         if (indexed) {
             indexed_block_parser->parse(name, indexed, m_buffer);
         } else {
-            std::shared_ptr<Block> sub_block =
-                std::shared_ptr<Block>(blockBody(name));
+            std::shared_ptr<Block> sub_block = blockBody(name);
             block->addBlock(sub_block);
         }
-        schrodinger::mae::whitespace(m_buffer);
     }
-    block->setIndexedBlockMap(std::shared_ptr<IndexedBlockMapI>(
-        indexed_block_parser->getIndexedBlockMap()));
+
+    ++m_buffer.current;
+
+    block->setIndexedBlockMap(indexed_block_parser->getIndexedBlockMap());
+
     return block;
 }
 
@@ -387,7 +384,7 @@ void MaeParser::properties(
 {
     std::shared_ptr<std::string> property_name;
     while ((property_name = property_key(m_buffer)) != nullptr) {
-        property_names->push_back(std::shared_ptr<std::string>(property_name));
+        property_names->push_back(property_name);
         schrodinger::mae::whitespace(m_buffer);
     }
     triple_colon(m_buffer);
@@ -519,8 +516,6 @@ void IndexedBlockBuffer::value(Buffer& buffer)
         throw read_exception(buffer, "Unterminated quoted string at EOF.");
     }
 }
-
-DirectIndexedBlockParser::~DirectIndexedBlockParser() {}
 
 void DirectIndexedBlockParser::parse(const std::string& name, size_t size,
                                      Buffer& buffer)
@@ -781,8 +776,6 @@ BufferedIndexedBlockParser::BufferedIndexedBlockParser()
 {
     m_indexed_block_map = std::make_shared<BufferedIndexedBlockMap>();
 }
-
-BufferedIndexedBlockParser::~BufferedIndexedBlockParser() {}
 
 std::shared_ptr<IndexedBlockMapI>
 BufferedIndexedBlockParser::getIndexedBlockMap()

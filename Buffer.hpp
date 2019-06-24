@@ -25,7 +25,7 @@ namespace schrodinger
 class EXPORT_MAEPARSER BufferData
 {
   private:
-    std::shared_ptr<std::vector<char>> m_data;
+    std::vector<char> m_data;
     size_t m_size;
 
   public:
@@ -34,12 +34,12 @@ class EXPORT_MAEPARSER BufferData
     /**
      * Return access to the beginning of the data buffer for loading.
      */
-    char* begin() { return m_data->data(); }
+    char* begin() { return m_data.data(); }
 
     /**
      * Return a pointer to the beginning of the character buffer.
      */
-    const char* begin() const { return m_data->data(); }
+    const char* begin() const { return m_data.data(); }
 
     /**
      * Return the logical size of the buffer.
@@ -128,6 +128,10 @@ class StreamLoader : public BufferLoader
 
   public:
     StreamLoader(std::istream& stream) : m_stream(stream) {}
+
+    StreamLoader() = delete;
+    StreamLoader(const StreamLoader&) = delete;
+    StreamLoader& operator=(const StreamLoader&) = delete;
 
     virtual size_t readData(char* ptr, size_t size) const override;
 };
