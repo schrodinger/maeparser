@@ -10,7 +10,7 @@ before_script:
 
 script:
   - make
-  - make test CTEST_OUTPUT_ON_FAILURE=1
+  - ctest -V -T memcheck --output-on-failure || (cat Testing/Temporary/MemoryChecker.*.log && exit 29)
 
 addons:
   apt:
@@ -23,4 +23,4 @@ addons:
       - gcc-4.8
       - g++-4.8
       - libboost-all-dev
-
+      - valgrind
