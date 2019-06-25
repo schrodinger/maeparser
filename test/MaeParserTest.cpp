@@ -63,7 +63,6 @@ BOOST_AUTO_TEST_CASE(OuterBlockBeginning)
 
 BOOST_AUTO_TEST_CASE(OuterBlockBeginErrors)
 {
-    std::string name;
     {
         std::stringstream ss("b_m_ct {");
         Buffer b(ss);
@@ -440,9 +439,13 @@ BOOST_AUTO_TEST_CASE(Integer)
         BOOST_REQUIRE_EQUAL(parse_value<int>(b), 2147483647);
     }
     {
-        std::stringstream ss("-2147483648");
+        // There is a bug in some VS editions that raises warning C4146
+        // when assigning -2147483648 to an int in code..
+        const int reference = std::numeric_limits<int>::min();
+        std::stringstream ss;
+        ss << reference;
         Buffer b(ss);
-        BOOST_REQUIRE_EQUAL(parse_value<int>(b), -2147483648);
+        BOOST_REQUIRE_EQUAL(parse_value<int>(b), reference);
     }
 }
 
@@ -648,13 +651,15 @@ BOOST_AUTO_TEST_CASE(Boolean)
         std::stringstream ss(" 1");
         Buffer b(ss);
         whitespace(b);
-        BOOST_REQUIRE_EQUAL(parse_value<BoolProperty>(b), true);
+        BOOST_REQUIRE_EQUAL(parse_value<BoolProperty>(b),
+                            static_cast<BoolProperty>(true));
     }
     {
         std::stringstream ss("0 ");
         Buffer b(ss);
         whitespace(b);
-        BOOST_REQUIRE_EQUAL(parse_value<BoolProperty>(b), false);
+        BOOST_REQUIRE_EQUAL(parse_value<BoolProperty>(b),
+                            static_cast<BoolProperty>(false));
     }
 }
 

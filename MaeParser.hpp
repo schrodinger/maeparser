@@ -74,7 +74,7 @@ class EXPORT_MAEPARSER read_exception : public std::exception
   private:
     char m_msg[MAEPARSER_EXCEPTION_BUFFER_SIZE];
 
-    void format(int line_number, int column, const char* msg);
+    void format(size_t line_number, size_t column, const char* msg);
 
   public:
     read_exception(const Buffer& buffer, const char* msg)
@@ -82,7 +82,7 @@ class EXPORT_MAEPARSER read_exception : public std::exception
         format(buffer.line_number, buffer.getColumn(), msg);
     }
 
-    read_exception(int line_number, int column, const char* msg)
+    read_exception(size_t line_number, size_t column, const char* msg)
     {
         format(line_number, column, msg);
     }
@@ -129,6 +129,8 @@ class EXPORT_MAEPARSER IndexedBlockBuffer
     {
     }
 
+    virtual ~IndexedBlockBuffer() {}
+
     void addPropertyName(const std::string name)
     {
         m_property_names.push_back(name);
@@ -164,8 +166,6 @@ class EXPORT_MAEPARSER BufferedIndexedBlockParser : public IndexedBlockParser
   public:
     BufferedIndexedBlockParser();
 
-    virtual ~BufferedIndexedBlockParser();
-
     virtual std::shared_ptr<IndexedBlockMapI> getIndexedBlockMap();
 
     virtual void parse(const std::string& name, size_t size, Buffer& buffer);
@@ -176,8 +176,6 @@ class EXPORT_MAEPARSER DirectIndexedBlockParser : public IndexedBlockParser
     std::shared_ptr<IndexedBlockMap> m_indexed_block_map;
 
   public:
-    virtual ~DirectIndexedBlockParser();
-
     virtual void parse(const std::string& name, size_t size, Buffer& buffer);
 
     virtual std::shared_ptr<IndexedBlockMapI> getIndexedBlockMap();

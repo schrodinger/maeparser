@@ -22,7 +22,7 @@ class EXPORT_MAEPARSER Writer
 
   public:
     Writer() = delete;
-    explicit Writer(std::string fname);
+    explicit Writer(const std::string& fname);
     Writer(std::shared_ptr<std::ostream> stream);
 
     void write(const std::shared_ptr<Block>& block);

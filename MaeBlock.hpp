@@ -216,7 +216,7 @@ class EXPORT_MAEPARSER Block
 
     bool getBoolProperty(const std::string& name) const
     {
-        return get_property<BoolProperty>(m_bmap, name);
+        return 1u == get_property<BoolProperty>(m_bmap, name);
     }
 
     void setBoolProperty(const std::string& name, bool value)
@@ -289,7 +289,7 @@ template <typename T> class IndexedProperty
             assert(index < m_data.size());
             return true;
         } else {
-            return !(*m_is_null)[index];
+            return !m_is_null->test(index);
         }
     }
 
@@ -303,7 +303,7 @@ template <typename T> class IndexedProperty
 
     inline T& operator[](size_type index)
     {
-        if (m_is_null && (*m_is_null)[index]) {
+        if (m_is_null && m_is_null->test(index)) {
             throw std::runtime_error("Indexed property value undefined.");
         }
         return m_data[index];
@@ -311,7 +311,7 @@ template <typename T> class IndexedProperty
 
     inline const T& operator[](size_type index) const
     {
-        if (m_is_null && (*m_is_null)[index]) {
+        if (m_is_null && m_is_null->test(index)) {
             throw std::runtime_error("Indexed property value undefined.");
         }
         return m_data[index];
@@ -323,7 +323,7 @@ template <typename T> class IndexedProperty
 
     inline const T& at(size_type index, const T& default_) const
     {
-        if (m_is_null && (*m_is_null)[index]) {
+        if (m_is_null && m_is_null->test(index)) {
             return default_;
         }
         return m_data[index];
@@ -332,7 +332,7 @@ template <typename T> class IndexedProperty
     void set(size_type index, const T& value)
     {
         m_data[index] = value;
-        if (m_is_null != NULL && (*m_is_null)[index]) {
+        if (m_is_null != NULL && m_is_null->test(index)) {
             m_is_null->reset(index);
         }
     }

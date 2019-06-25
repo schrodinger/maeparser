@@ -20,13 +20,12 @@ namespace schrodinger
 namespace mae
 {
 
-Writer::Writer(std::shared_ptr<ostream> stream)
+Writer::Writer(std::shared_ptr<ostream> stream) : m_out(stream)
 {
-    m_out = stream;
     write_opening_block();
 }
 
-Writer::Writer(std::string fname)
+Writer::Writer(const std::string& fname)
 {
     const auto ios_mode = std::ios_base::out | std::ios_base::binary;
 

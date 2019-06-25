@@ -160,11 +160,11 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlockBool)
         auto ibpg = ib.getBoolProperty("b_m_bool");
         IndexedBoolProperty& ibp = *ibpg;
         BOOST_REQUIRE(ibp.isDefined(0));
-        BOOST_REQUIRE_EQUAL(ibp[0], true);
+        BOOST_REQUIRE_EQUAL(ibp[0], static_cast<BoolProperty>(true));
         BOOST_REQUIRE(!ibp.isDefined(1));
         BOOST_REQUIRE_THROW(ibp[1], std::runtime_error);
         BOOST_REQUIRE(ibp.isDefined(2));
-        BOOST_REQUIRE_EQUAL(ibp[2], true);
+        BOOST_REQUIRE_EQUAL(ibp[2], static_cast<BoolProperty>(true));
     }
 }
 
