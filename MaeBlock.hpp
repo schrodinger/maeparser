@@ -238,6 +238,15 @@ class EXPORT_MAEPARSER Block
     {
         m_smap[name] = value;
     }
+
+    template <typename T> const std::map<std::string, T>& getProperties() const;
+#ifdef WIN32
+    template <>
+    const std::map<std::string, BoolProperty>& getProperties() const;
+    template <> const std::map<std::string, int>& getProperties() const;
+    template <> const std::map<std::string, double>& getProperties() const;
+    template <> const std::map<std::string, std::string>& getProperties() const;
+#endif
 };
 
 template <typename T> class IndexedProperty
@@ -475,6 +484,24 @@ class EXPORT_MAEPARSER IndexedBlock
     {
         set_indexed_property<IndexedStringProperty>(m_smap, name, value);
     }
+
+    template <typename T>
+    const std::map<std::string, std::shared_ptr<IndexedProperty<T>>>&
+    getProperties() const;
+#ifdef WIN32
+    template <>
+    const std::map<std::string, std::shared_ptr<IndexedProperty<BoolProperty>>>&
+    getProperties() const;
+    template <>
+    const std::map<std::string, std::shared_ptr<IndexedProperty<int>>>&
+    getProperties() const;
+    template <>
+    const std::map<std::string, std::shared_ptr<IndexedProperty<double>>>&
+    getProperties() const;
+    template <>
+    const std::map<std::string, std::shared_ptr<IndexedProperty<std::string>>>&
+    getProperties() const;
+#endif
 };
 
 } // namespace mae
