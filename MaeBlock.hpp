@@ -34,8 +34,10 @@ class IndexedBlock;
 class EXPORT_MAEPARSER IndexedBlockMapI
 {
   public:
-    virtual ~IndexedBlockMapI(){};
+    virtual ~IndexedBlockMapI() = default;
+
     virtual bool hasIndexedBlock(const std::string& name) const = 0;
+
     virtual std::shared_ptr<const IndexedBlock>
     getIndexedBlock(const std::string& name) const = 0;
 
@@ -109,7 +111,7 @@ class EXPORT_MAEPARSER BufferedIndexedBlockMap : public IndexedBlockMapI
 class EXPORT_MAEPARSER Block
 {
   private:
-    std::string m_name;
+    const std::string m_name;
 
     std::map<std::string, BoolProperty> m_bmap;
     std::map<std::string, double> m_rmap;
@@ -119,21 +121,20 @@ class EXPORT_MAEPARSER Block
     std::shared_ptr<IndexedBlockMapI> m_indexed_block_map;
 
     // Prevent copying.
-    Block(const Block&);
-    Block& operator=(const Block&);
+    Block(const Block&) = delete;
+    Block& operator=(const Block&) = delete;
 
   public:
     Block(std::string name)
-        : m_name(name), m_bmap(), m_rmap(), m_imap(), m_smap(),
+        : m_name(std::move(name)), m_bmap(), m_rmap(), m_imap(), m_smap(),
           m_indexed_block_map(nullptr)
     {
     }
 
-    ~Block();
-
     const std::string& getName() const { return m_name; }
 
     std::string toString() const;
+
     void write(std::ostream& out, unsigned int current_indentation = 0) const;
 
     void setIndexedBlockMap(std::shared_ptr<IndexedBlockMapI> indexed_block_map)
@@ -234,7 +235,7 @@ class EXPORT_MAEPARSER Block
         return get_property<std::string>(m_smap, name);
     }
 
-    void setStringProperty(const std::string& name, std::string value)
+    void setStringProperty(const std::string& name, const std::string& value)
     {
         m_smap[name] = value;
     }
@@ -247,8 +248,8 @@ template <typename T> class IndexedProperty
     boost::dynamic_bitset<>* m_is_null;
 
     // Prevent copying.
-    IndexedProperty<T>(const IndexedProperty<T>&);
-    IndexedProperty<T>& operator=(const IndexedProperty<T>&);
+    IndexedProperty<T>(const IndexedProperty<T>&) = delete;
+    IndexedProperty<T>& operator=(const IndexedProperty<T>&) = delete;
 
   public:
     typedef typename std::vector<T>::size_type size_type;
@@ -359,7 +360,7 @@ get_indexed_property(const std::map<std::string, std::shared_ptr<T>>& map,
 template <typename T>
 inline void set_indexed_property(std::map<std::string, std::shared_ptr<T>>& map,
                                  const std::string& name,
-                                 const std::shared_ptr<T> value)
+                                 std::shared_ptr<T> value)
 
 {
     auto iter = map.find(name);
@@ -380,29 +381,32 @@ class EXPORT_MAEPARSER IndexedBlock
     std::map<std::string, std::shared_ptr<IndexedStringProperty>> m_smap;
 
     // Prevent copying.
-    IndexedBlock(const IndexedBlock&);
-    IndexedBlock& operator=(const IndexedBlock&);
+    IndexedBlock(const IndexedBlock&) = delete;
+    IndexedBlock& operator=(const IndexedBlock&) = delete;
 
   public:
     /**
      * Create an indexed block.
      */
-    IndexedBlock(const std::string& name)
-        : m_name(name), m_bmap(), m_imap(), m_rmap(), m_smap()
+    IndexedBlock(std::string name)
+        : m_name(std::move(name)), m_bmap(), m_imap(), m_rmap(), m_smap()
     {
     }
 
     size_t size() const;
+
     const std::string& getName() const { return m_name; }
+
     std::string toString() const;
+
     void write(std::ostream& out, unsigned int current_indentation = 0) const;
+
     bool operator==(const IndexedBlock& rhs) const;
+
     bool operator!=(const IndexedBlock& rhs) const
     {
         return !(operator==(rhs));
     }
-
-    // Default destructor. ~IndexedBlock()
 
     template <typename T>
     void setProperty(const std::string& name,
@@ -420,7 +424,7 @@ class EXPORT_MAEPARSER IndexedBlock
     }
 
     void setBoolProperty(const std::string& name,
-                         const std::shared_ptr<IndexedBoolProperty> value)
+                         std::shared_ptr<IndexedBoolProperty> value)
     {
         set_indexed_property<IndexedBoolProperty>(m_bmap, name, value);
     }
@@ -437,7 +441,7 @@ class EXPORT_MAEPARSER IndexedBlock
     }
 
     void setIntProperty(const std::string& name,
-                        const std::shared_ptr<IndexedIntProperty> value)
+                        std::shared_ptr<IndexedIntProperty> value)
     {
         set_indexed_property<IndexedIntProperty>(m_imap, name, value);
     }
@@ -454,7 +458,7 @@ class EXPORT_MAEPARSER IndexedBlock
     }
 
     void setRealProperty(const std::string& name,
-                         const std::shared_ptr<IndexedRealProperty> value)
+                         std::shared_ptr<IndexedRealProperty> value)
     {
         set_indexed_property<IndexedRealProperty>(m_rmap, name, value);
     }
@@ -471,7 +475,7 @@ class EXPORT_MAEPARSER IndexedBlock
     }
 
     void setStringProperty(const std::string& name,
-                           const std::shared_ptr<IndexedStringProperty> value)
+                           std::shared_ptr<IndexedStringProperty> value)
     {
         set_indexed_property<IndexedStringProperty>(m_smap, name, value);
     }
