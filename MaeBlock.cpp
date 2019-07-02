@@ -22,7 +22,7 @@ template <typename T> inline string local_to_string(T val)
 
 inline bool char_requires_escaping(char c)
 {
-    return c == '"' || c == '\\' || c == ' ';
+    return c == '"' || c == '\\';
 }
 
 string local_to_string(const string& val)
@@ -31,16 +31,17 @@ string local_to_string(const string& val)
         return R"("")";
     }
 
-    // Create new string big enough to escape every character and add quotes
-    bool escaped_char = false;
+    // Quotes are required if any character need escaping, or there are
+    // spaces in the string (spaces do not require escaping)
+    bool quotes_required = false;
     for (const char& c : val) {
-        if (char_requires_escaping(c)) {
-            escaped_char = true;
+        if (char_requires_escaping(c) || c == ' ') {
+            quotes_required = true;
             break;
         }
     }
 
-    if (!escaped_char) {
+    if (!quotes_required) {
         return val;
     }
 
