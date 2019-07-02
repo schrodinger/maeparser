@@ -235,9 +235,9 @@ class EXPORT_MAEPARSER Block
         return get_property<std::string>(m_smap, name);
     }
 
-    void setStringProperty(const std::string& name, const std::string& value)
+    void setStringProperty(const std::string& name, std::string value)
     {
-        m_smap[name] = value;
+        m_smap[name] = std::move(value);
     }
 };
 

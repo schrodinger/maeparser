@@ -31,7 +31,7 @@ string local_to_string(const string& val)
         return R"("")";
     }
 
-    // Quotes are required if any character need escaping, or there are
+    // Quotes are required if any character needs escaping, or there are
     // spaces in the string (spaces do not require escaping)
     bool quotes_required = false;
     for (const char& c : val) {
