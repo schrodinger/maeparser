@@ -6,6 +6,7 @@
 #include <boost/iostreams/device/file.hpp>
 
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
 #include "MaeBlock.hpp"
@@ -37,6 +38,12 @@ Writer::Writer(const std::string& fname)
     } else {
         auto* file_stream = new ofstream(fname, ios_mode);
         m_out.reset(static_cast<ostream*>(file_stream));
+    }
+
+    if(m_out->fail()) {
+        std::stringstream ss;
+        ss << "Failed to open file \"" << fname << "\" for writing operation.";
+        throw std::runtime_error(ss.str());
     }
 
     write_opening_block();
