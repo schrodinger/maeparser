@@ -9,6 +9,7 @@
 #include "MaeBlock.hpp"
 #include "MaeConstants.hpp"
 #include "Reader.hpp"
+#include "TestCommon.hpp"
 
 using namespace schrodinger::mae;
 using std::shared_ptr;
@@ -314,6 +315,15 @@ BOOST_AUTO_TEST_CASE(QuotedStringTest)
     BOOST_REQUIRE_EQUAL(atom_names->at(0), R"(Does p " \this work)");
 
     fclose(f);
+}
+
+BOOST_AUTO_TEST_CASE(TestReadNonExistingFile)
+{
+    // This file should not exist!
+    CheckExceptionMsg<std::runtime_error> check_msg("Failed to open file \"non_existing_file.mae\" for reading operation");
+
+    BOOST_CHECK_EXCEPTION(Reader r("non_existing_file.mae"), std::runtime_error,
+                          check_msg);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -7,6 +7,7 @@
 #include "MaeConstants.hpp"
 #include "Reader.hpp"
 #include "Writer.hpp"
+#include "TestCommon.hpp"
 
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
@@ -80,6 +81,14 @@ BOOST_AUTO_TEST_CASE(Writer1)
     while ((b = output_r.next(CT_BLOCK)) != nullptr) {
         BOOST_CHECK(*b == *(input[input_num++]));
     }
+}
+
+BOOST_AUTO_TEST_CASE(TestWriteNonAccessiblePath)
+{
+    // This path should not exist/be accesible!
+    CheckExceptionMsg<std::runtime_error> check_msg("Failed to open file \"/non/accessible/path/file.mae\" for writing operation");
+
+    BOOST_CHECK_EXCEPTION(Writer w("/non/accessible/path/file.mae")    , std::runtime_error, check_msg);
 }
 
 /*

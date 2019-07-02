@@ -6,6 +6,7 @@
 #include <boost/iostreams/filtering_stream.hpp>
 
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
 using boost::algorithm::ends_with;
@@ -40,6 +41,12 @@ Reader::Reader(const std::string& fname, size_t buffer_size)
     } else {
         auto* file_stream = new std::ifstream(fname, ios_mode);
         stream.reset(static_cast<std::istream*>(file_stream));
+    }
+
+    if(stream->fail()) {
+        std::stringstream ss;
+        ss << "Failed to open file \"" << fname << "\" for reading operation.";
+        throw std::runtime_error(ss.str());
     }
 
     m_mae_parser.reset(new MaeParser(stream, buffer_size));
