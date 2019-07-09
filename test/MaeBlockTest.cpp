@@ -42,6 +42,25 @@ BOOST_AUTO_TEST_CASE(maeBlock)
         BOOST_REQUIRE_EQUAL(b.getStringProperty("a"), value);
         BOOST_REQUIRE_THROW(b.getStringProperty("b"), std::out_of_range);
     }
+
+    // All the properties we set have the same name, but different types
+    const std::string property_name("a");
+
+    auto bool_props = b.getProperties<mae::BoolProperty>();
+    BOOST_CHECK_EQUAL(bool_props.size(), 1u);
+    BOOST_CHECK_EQUAL(bool_props.begin()->first, property_name);
+
+    auto int_props = b.getProperties<int>();
+    BOOST_CHECK_EQUAL(int_props.size(), 1u);
+    BOOST_CHECK_EQUAL(int_props.begin()->first, property_name);
+
+    auto double_props = b.getProperties<double>();
+    BOOST_CHECK_EQUAL(double_props.size(), 1u);
+    BOOST_CHECK_EQUAL(double_props.begin()->first, property_name);
+
+    auto string_props = b.getProperties<std::string>();
+    BOOST_CHECK_EQUAL(string_props.size(), 1u);
+    BOOST_CHECK_EQUAL(string_props.begin()->first, property_name);
 }
 
 BOOST_AUTO_TEST_CASE(maeIndexedRealProperty)
@@ -262,6 +281,24 @@ BOOST_AUTO_TEST_CASE(toStringProperties)
     b.setIndexedBlockMap(ibm);
 
     BOOST_REQUIRE_EQUAL(b.toString(), rval);
+
+    // All the properties we set have the same name, but different types
+
+    auto bool_props = b.getProperties<mae::BoolProperty>();
+    BOOST_CHECK_EQUAL(bool_props.size(), 1u);
+    BOOST_CHECK_EQUAL(bool_props.begin()->first, std::string("b_m_bool"));
+
+    auto int_props = b.getProperties<int>();
+    BOOST_CHECK_EQUAL(int_props.size(), 1u);
+    BOOST_CHECK_EQUAL(int_props.begin()->first, std::string("i_m_int"));
+
+    auto double_props = b.getProperties<double>();
+    BOOST_CHECK_EQUAL(double_props.size(), 1u);
+    BOOST_CHECK_EQUAL(double_props.begin()->first, std::string("r_m_real"));
+
+    auto string_props = b.getProperties<std::string>();
+    BOOST_CHECK_EQUAL(string_props.size(), 1u);
+    BOOST_CHECK_EQUAL(string_props.begin()->first, std::string("s_m_string"));
 }
 
 BOOST_AUTO_TEST_CASE(toStringIndexedProperties)

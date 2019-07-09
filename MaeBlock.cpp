@@ -129,6 +129,31 @@ shared_ptr<const IndexedBlock> Block::getIndexedBlock(const string& name)
         m_indexed_block_map->getIndexedBlock(name));
 }
 
+template <>
+const std::map<std::string, BoolProperty>&
+Block::getProperties<BoolProperty>() const
+{
+    return m_bmap;
+}
+
+template <> const std::map<std::string, int>& Block::getProperties<int>() const
+{
+    return m_imap;
+}
+
+template <>
+const std::map<std::string, double>& Block::getProperties<double>() const
+{
+    return m_rmap;
+}
+
+template <>
+const std::map<std::string, std::string>&
+Block::getProperties<std::string>() const
+{
+    return m_smap;
+}
+
 bool real_map_equal(const map<string, double>& rmap1,
                     const map<string, double>& rmap2)
 {
@@ -394,6 +419,34 @@ bool IndexedBlock::operator==(const IndexedBlock& rhs) const
         return false;
 
     return true;
+}
+
+template <>
+const std::map<std::string, std::shared_ptr<IndexedProperty<BoolProperty>>>&
+IndexedBlock::getProperties() const
+{
+    return m_bmap;
+}
+
+template <>
+const std::map<std::string, std::shared_ptr<IndexedProperty<int>>>&
+IndexedBlock::getProperties() const
+{
+    return m_imap;
+}
+
+template <>
+const std::map<std::string, std::shared_ptr<IndexedProperty<double>>>&
+IndexedBlock::getProperties() const
+{
+    return m_rmap;
+}
+
+template <>
+const std::map<std::string, std::shared_ptr<IndexedProperty<std::string>>>&
+IndexedBlock::getProperties() const
+{
+    return m_smap;
 }
 
 } // namespace mae
