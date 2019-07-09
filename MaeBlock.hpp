@@ -363,11 +363,7 @@ inline void set_indexed_property(std::map<std::string, std::shared_ptr<T>>& map,
                                  std::shared_ptr<T> value)
 
 {
-    auto iter = map.find(name);
-    if (iter != map.end()) {
-        map.erase(iter);
-    }
-    map.insert(std::pair<std::string, std::shared_ptr<T>>(name, value));
+    map[name] = std::move(value);
 }
 
 class EXPORT_MAEPARSER IndexedBlock
