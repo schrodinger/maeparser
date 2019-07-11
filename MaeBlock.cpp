@@ -10,47 +10,57 @@ namespace schrodinger
 namespace mae
 {
 
-static const double tolerance = 0.00001; // Tolerance to match string cutoff
+namespace
+{
+const double tolerance = 0.00001; // Tolerance to match string cutoff
 
 // Wrap to-string to allow it to take strings and be a no-op
-template <typename T> static string local_to_string(T val)
+template <typename T> inline string local_to_string(T val)
 {
     return to_string(val);
 }
 
-static string local_to_string(string val)
+inline bool char_requires_escaping(char c)
 {
-    if (val.length() == 0)
+    return c == '"' || c == '\\';
+}
+
+string local_to_string(const string& val)
+{
+    if (val.empty()) {
         return R"("")";
-    // Create new string big enough to escape every character and add quotes
-    size_t pos_in_old = 0;
-    bool escaped_char = false;
-    for (; pos_in_old < val.length(); ++pos_in_old) {
-        const char& c = val[pos_in_old];
-        if (c == '"' || c == '\\' || c == ' ') {
-            escaped_char = true;
+    }
+
+    // Quotes are required if any character needs escaping, or there are
+    // spaces in the string (spaces do not require escaping)
+    bool quotes_required = false;
+    for (const char& c : val) {
+        if (char_requires_escaping(c) || c == ' ') {
+            quotes_required = true;
             break;
         }
     }
-    if (!escaped_char)
-        return val;
 
-    size_t pos_in_new = 1;
-    string new_string(val.length() * 2 + 2, '\"');
-    for (pos_in_old = 0; pos_in_old < val.length(); ++pos_in_old) {
-        const char& c = val[pos_in_old];
-        if (c == '"' || c == '\\') {
-            new_string[pos_in_new++] = '\\';
-        }
-        new_string[pos_in_new++] = val[pos_in_old];
+    if (!quotes_required) {
+        return val;
     }
-    new_string.resize(pos_in_new + 1);
-    return new_string;
+
+    std::stringstream new_string;
+    new_string << '\"';
+    for (const char& c : val) {
+        if (char_requires_escaping(c)) {
+            new_string << '\\';
+        }
+        new_string << c;
+    }
+    new_string << '\"';
+
+    return new_string.str();
 }
 
 template <typename T>
-static void output_property_names(ostream& out, const string& indentation,
-                                  map<string, T> properties)
+inline void output_property_names(ostream& out, const string& indentation,
+                                  const map<string, T>& properties)
 {
     for (const auto& p : properties) {
         out << indentation << p.first << "\n";
@@ -58,53 +68,83 @@ static void output_property_names(ostream& out, const string& indentation,
 }
 
 template <typename T>
-static void output_property_values(ostream& out, const string& indentation,
-                                   map<string, T> properties)
+inline void output_property_values(ostream& out, const string& indentation,
+                                   const map<string, T>& properties)
 {
     for (const auto& p : properties) {
         out << indentation << local_to_string(p.second) << "\n";
     }
 }
 
-Block::~Block()
+template <typename T>
+void output_indexed_property_values(ostream& out,
+                                           const map<string, T>& properties,
+                                           unsigned int index)
 {
-    // TODO: check with valgrind whether some destructor is needed
+    for (const auto& p : properties) {
+        const auto& property = p.second;
+        if (property->isDefined(index)) {
+            out << ' ' << local_to_string(property->at(index));
+        } else {
+            out << " <>";
+        }
+    }
+}
+
+template <typename T>
+bool maps_indexed_props_equal(const T& lmap, const T& rmap)
+{
+    if (rmap.size() != lmap.size())
+        return false;
+    auto diff = std::mismatch(
+        lmap.begin(), lmap.end(), rmap.begin(),
+        [](decltype(*begin(lmap)) l, decltype(*begin(lmap)) r) {
+            return l.first == r.first && *(l.second) == *(r.second);
+        });
+    if (diff.first != lmap.end())
+        return false;
+    return true;
+}
 }
 
 void Block::write(ostream& out, unsigned int current_indentation) const
 {
 
     string root_indentation = string(current_indentation, ' ');
-    string indentation = string(current_indentation + 2, ' ');
+    current_indentation += 2;
+    string indentation = string(current_indentation, ' ');
+
+    const bool has_data = !m_bmap.empty() || !m_rmap.empty() ||
+                          !m_imap.empty() || !m_smap.empty();
 
     out << root_indentation << getName() << " {\n";
 
-    output_property_names(out, indentation, m_bmap);
-    output_property_names(out, indentation, m_rmap);
-    output_property_names(out, indentation, m_imap);
-    output_property_names(out, indentation, m_smap);
+    if (has_data) {
+        output_property_names(out, indentation, m_bmap);
+        output_property_names(out, indentation, m_rmap);
+        output_property_names(out, indentation, m_imap);
+        output_property_names(out, indentation, m_smap);
 
-    if (m_bmap.size() + m_rmap.size() + m_imap.size() + m_smap.size() > 0) {
         out << indentation + ":::\n";
-    }
 
-    output_property_values(out, indentation, m_bmap);
-    output_property_values(out, indentation, m_rmap);
-    output_property_values(out, indentation, m_imap);
-    output_property_values(out, indentation, m_smap);
+        output_property_values(out, indentation, m_bmap);
+        output_property_values(out, indentation, m_rmap);
+        output_property_values(out, indentation, m_imap);
+        output_property_values(out, indentation, m_smap);
+    }
 
     if (hasIndexedBlockData()) {
         const auto block_names = m_indexed_block_map->getBlockNames();
         for (const auto& name : block_names) {
             const auto& indexed_block =
                 m_indexed_block_map->getIndexedBlock(name);
-            indexed_block->write(out, current_indentation + 2);
+            indexed_block->write(out, current_indentation);
         }
     }
 
     for (const auto& p : m_sub_block) {
         const auto& sub_block = p.second;
-        sub_block->write(out, current_indentation + 2);
+        sub_block->write(out, current_indentation);
     }
 
     out << root_indentation << "}\n\n";
@@ -295,54 +335,36 @@ size_t IndexedBlock::size() const
     return count;
 }
 
-template <typename T>
-static void output_indexed_property_values(ostream& out,
-                                           map<string, T> properties,
-                                           unsigned int index)
-{
-    for (const auto& p : properties) {
-        const auto& property = p.second;
-        if (property->isDefined(index)) {
-            out << ' ' << local_to_string(property->at(index));
-        } else {
-            out << " <>";
-        }
-    }
-}
-
 void IndexedBlock::write(ostream& out, unsigned int current_indentation) const
 {
     string root_indentation = string(current_indentation, ' ');
     string indentation = string(current_indentation + 2, ' ');
-    const bool has_data =
-        m_bmap.size() + m_rmap.size() + m_imap.size() + m_smap.size() > 0;
+
+    const bool has_data = !m_bmap.empty() || !m_rmap.empty() ||
+                          !m_imap.empty() || !m_smap.empty();
 
     out << root_indentation << getName() << "[" << to_string((int) size())
         << "] {\n";
 
     if (has_data) {
         out << indentation + "# First column is Index #\n";
-    }
 
-    output_property_names(out, indentation, m_bmap);
-    output_property_names(out, indentation, m_rmap);
-    output_property_names(out, indentation, m_imap);
-    output_property_names(out, indentation, m_smap);
+        output_property_names(out, indentation, m_bmap);
+        output_property_names(out, indentation, m_rmap);
+        output_property_names(out, indentation, m_imap);
+        output_property_names(out, indentation, m_smap);
 
-    if (has_data) {
         out << indentation + ":::\n";
-    }
 
-    for (unsigned int i = 0; i < size(); ++i) {
-        out << indentation << i + 1;
-        output_indexed_property_values(out, m_bmap, i);
-        output_indexed_property_values(out, m_rmap, i);
-        output_indexed_property_values(out, m_imap, i);
-        output_indexed_property_values(out, m_smap, i);
-        out << endl;
-    }
+        for (unsigned int i = 0; i < size(); ++i) {
+            out << indentation << i + 1;
+            output_indexed_property_values(out, m_bmap, i);
+            output_indexed_property_values(out, m_rmap, i);
+            output_indexed_property_values(out, m_imap, i);
+            output_indexed_property_values(out, m_smap, i);
+            out << endl;
+        }
 
-    if (has_data) {
         out << indentation + ":::\n";
     }
 
@@ -389,21 +411,6 @@ operator==(const IndexedProperty<double>& rhs) const
         if ((float) abs(m_data[i] - rhs.m_data[i]) > tolerance)
             return false;
 
-    return true;
-}
-
-template <typename T>
-static bool maps_indexed_props_equal(const T& lmap, const T& rmap)
-{
-    if (rmap.size() != lmap.size())
-        return false;
-    auto diff = std::mismatch(
-        lmap.begin(), lmap.end(), rmap.begin(),
-        [](decltype(*begin(lmap)) l, decltype(*begin(lmap)) r) {
-            return l.first == r.first && *(l.second) == *(r.second);
-        });
-    if (diff.first != lmap.end())
-        return false;
     return true;
 }
 
