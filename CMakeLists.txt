@@ -26,7 +26,7 @@ add_library(maeparser SHARED Buffer.cpp MaeBlock.cpp MaeParser.cpp Reader.cpp Wr
 SET_TARGET_PROPERTIES (maeparser
     PROPERTIES
        VERSION 1.2
-       SOVERSION 1.2
+       SOVERSION 1
 )
 target_link_libraries(maeparser Boost::disable_autolinking Boost::dynamic_linking Boost::iostreams)
 
