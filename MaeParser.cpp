@@ -448,21 +448,17 @@ bad_format:
 bool property_key_author_name(Buffer& buffer, char*& save)
 {
     while (buffer.current < buffer.end || buffer.load(save)) {
-        switch (*buffer.current) {
-        case '_':
+        if (*buffer.current == '_') {
             ++buffer.current;
-            goto name;
-        default:
-            if (!((*buffer.current >= 'a' && *buffer.current <= 'z') ||
-                  (*buffer.current >= 'A' && *buffer.current <= 'Z') ||
-                  (*buffer.current >= '0' && *buffer.current <= '9'))) {
-                return false;
-            }
+            break;
+        } else if (!((*buffer.current >= 'a' && *buffer.current <= 'z') ||
+                     (*buffer.current >= 'A' && *buffer.current <= 'Z') ||
+                     (*buffer.current >= '0' && *buffer.current <= '9'))) {
+            return false;
         }
         ++buffer.current;
     }
 
-name:
     char* start = buffer.current;
     while (buffer.current < buffer.end || buffer.load(save)) {
         switch (*buffer.current) {
