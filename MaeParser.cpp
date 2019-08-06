@@ -454,7 +454,8 @@ bool property_key_author_name(Buffer& buffer, char*& save)
             goto name;
         default:
             if (!((*buffer.current >= 'a' && *buffer.current <= 'z') ||
-                  (*buffer.current >= 'A' && *buffer.current <= 'Z'))) {
+                  (*buffer.current >= 'A' && *buffer.current <= 'Z') ||
+                  (*buffer.current >= '0' && *buffer.current <= '9'))) {
                 return false;
             }
         }
