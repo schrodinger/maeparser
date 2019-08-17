@@ -6,8 +6,8 @@
 #include <boost/iostreams/filtering_stream.hpp>
 
 #include <fstream>
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
 using boost::algorithm::ends_with;
 using boost::iostreams::file_source;
@@ -43,7 +43,7 @@ Reader::Reader(const std::string& fname, size_t buffer_size)
         stream.reset(static_cast<std::istream*>(file_stream));
     }
 
-    if(stream->fail()) {
+    if (stream->fail()) {
         std::stringstream ss;
         ss << "Failed to open file \"" << fname << "\" for reading operation.";
         throw std::runtime_error(ss.str());
@@ -65,5 +65,11 @@ std::shared_ptr<Block> Reader::next(const std::string& outer_block_name)
     } while (block != nullptr && block->getName() != outer_block_name);
     return block;
 }
+
+bool Reader::eof()
+{
+    return m_mae_parser->eof();
+}
+
 } // namespace mae
 } // namespace schrodinger

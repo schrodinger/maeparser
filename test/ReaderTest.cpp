@@ -326,4 +326,16 @@ BOOST_AUTO_TEST_CASE(TestReadNonExistingFile)
                           check_msg);
 }
 
+BOOST_AUTO_TEST_CASE(TestReaderEof)
+{
+    Reader r(uncompressed_sample);
+
+    size_t count = 0;
+    while (!r.eof()) {
+       BOOST_CHECK_NE(r.next(CT_BLOCK), nullptr);
+        ++count;
+    }
+    BOOST_CHECK_EQUAL(count, 3u);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

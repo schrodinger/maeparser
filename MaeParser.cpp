@@ -405,6 +405,12 @@ std::shared_ptr<std::string> MaeParser::property()
     return property_key(m_buffer);
 }
 
+bool MaeParser::eof()
+{
+    whitespace();
+    return !m_buffer.load();
+}
+
 std::shared_ptr<std::string> property_key(Buffer& buffer)
 {
     if (!buffer.load()) {

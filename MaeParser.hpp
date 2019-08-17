@@ -323,6 +323,11 @@ class EXPORT_MAEPARSER MaeParser
      * Read (and throw away) any whitespace.
      */
     void whitespace() { schrodinger::mae::whitespace(m_buffer); }
+
+    /**
+     *  Check if the parser reached the end of the data.
+     */
+    bool eof();
 };
 
 class EXPORT_MAEPARSER DirectMaeParser : public MaeParser

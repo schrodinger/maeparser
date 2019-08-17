@@ -35,6 +35,11 @@ class EXPORT_MAEPARSER Reader
     Reader(std::shared_ptr<MaeParser> mae_parser);
 
     std::shared_ptr<Block> next(const std::string& outer_block_name);
+
+    /**
+     *  Check if the parser reached the end of the data.
+     */
+    bool eof();
 };
 
 } // namespace mae
