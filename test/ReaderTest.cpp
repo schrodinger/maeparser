@@ -332,7 +332,7 @@ BOOST_AUTO_TEST_CASE(TestReaderEof)
 
     size_t count = 0;
     while (!r.eof()) {
-       BOOST_CHECK_NE(r.next(CT_BLOCK), nullptr);
+       BOOST_CHECK(r.next(CT_BLOCK) != nullptr);
         ++count;
     }
     BOOST_CHECK_EQUAL(count, 3u);
