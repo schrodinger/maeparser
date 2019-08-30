@@ -21,5 +21,9 @@ const char* const BOND_ATOM_1 = "i_m_from";
 const char* const BOND_ATOM_2 = "i_m_to";
 const char* const BOND_ORDER = "i_m_order";
 
+const std::string CT_CHIRALITY_PROP_PREFIX = "s_st_Chirality_";
+const std::string CT_PSEUDOCHIRALITY_PROP_PREFIX = "s_st_AtomNumChirality_";
+const std::string CT_EZ_PROP_PREFIX = "s_st_EZ_";
+
 } // End namespace mae
 } // End namespace schrodinger
