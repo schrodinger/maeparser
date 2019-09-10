@@ -346,6 +346,9 @@ template <typename T> class IndexedProperty
             m_is_null->reset(index);
         }
     }
+
+    const std::vector<T>& data() const {return m_data;}
+    const boost::dynamic_bitset<>* nullIndices() const {return m_is_null;}
 };
 
 typedef IndexedProperty<double> IndexedRealProperty;
