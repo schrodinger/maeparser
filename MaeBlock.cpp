@@ -78,8 +78,8 @@ inline void output_property_values(ostream& out, const string& indentation,
 
 template <typename T>
 void output_indexed_property_values(ostream& out,
-                                           const map<string, T>& properties,
-                                           unsigned int index)
+                                    const map<string, T>& properties,
+                                    unsigned int index)
 {
     for (const auto& p : properties) {
         const auto& property = p.second;
@@ -105,7 +105,7 @@ bool maps_indexed_props_equal(const T& lmap, const T& rmap)
         return false;
     return true;
 }
-}
+} // namespace
 
 void Block::write(ostream& out, unsigned int current_indentation) const
 {
@@ -170,25 +170,28 @@ shared_ptr<const IndexedBlock> Block::getIndexedBlock(const string& name)
 }
 
 template <>
-const std::map<std::string, BoolProperty>&
+EXPORT_MAEPARSER const std::map<std::string, BoolProperty>&
 Block::getProperties<BoolProperty>() const
 {
     return m_bmap;
 }
 
-template <> const std::map<std::string, int>& Block::getProperties<int>() const
+template <>
+EXPORT_MAEPARSER const std::map<std::string, int>&
+Block::getProperties<int>() const
 {
     return m_imap;
 }
 
 template <>
-const std::map<std::string, double>& Block::getProperties<double>() const
+EXPORT_MAEPARSER const std::map<std::string, double>&
+Block::getProperties<double>() const
 {
     return m_rmap;
 }
 
 template <>
-const std::map<std::string, std::string>&
+EXPORT_MAEPARSER const std::map<std::string, std::string>&
 Block::getProperties<std::string>() const
 {
     return m_smap;
@@ -429,29 +432,33 @@ bool IndexedBlock::operator==(const IndexedBlock& rhs) const
 }
 
 template <>
-const std::map<std::string, std::shared_ptr<IndexedProperty<BoolProperty>>>&
-IndexedBlock::getProperties() const
+EXPORT_MAEPARSER const
+    std::map<std::string, std::shared_ptr<IndexedProperty<BoolProperty>>>&
+    IndexedBlock::getProperties() const
 {
     return m_bmap;
 }
 
 template <>
-const std::map<std::string, std::shared_ptr<IndexedProperty<int>>>&
-IndexedBlock::getProperties() const
+EXPORT_MAEPARSER const
+    std::map<std::string, std::shared_ptr<IndexedProperty<int>>>&
+    IndexedBlock::getProperties() const
 {
     return m_imap;
 }
 
 template <>
-const std::map<std::string, std::shared_ptr<IndexedProperty<double>>>&
-IndexedBlock::getProperties() const
+EXPORT_MAEPARSER const
+    std::map<std::string, std::shared_ptr<IndexedProperty<double>>>&
+    IndexedBlock::getProperties() const
 {
     return m_rmap;
 }
 
 template <>
-const std::map<std::string, std::shared_ptr<IndexedProperty<std::string>>>&
-IndexedBlock::getProperties() const
+EXPORT_MAEPARSER const
+    std::map<std::string, std::shared_ptr<IndexedProperty<std::string>>>&
+    IndexedBlock::getProperties() const
 {
     return m_smap;
 }
