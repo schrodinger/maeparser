@@ -24,7 +24,7 @@ steps:
     source ${CONDA}/etc/profile.d/conda.sh
     conda activate maeparser_build
     cd build
-    make -j $( $(number_of_cores) ) install
+    make -j $( $(number_of_cores) )
   displayName: Build
 - bash: |
     source ${CONDA}/etc/profile.d/conda.sh

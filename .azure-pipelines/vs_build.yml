@@ -23,7 +23,7 @@ steps:
 - script: |
     call activate maeparser_build
     cd build
-    cmake --build . --config Release --target install -j $(number_of_cores)
+    cmake --build . --config Release -j $(number_of_cores)
   displayName: Build
 - script: |
     call activate maeparser_build

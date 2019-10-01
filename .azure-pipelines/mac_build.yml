@@ -41,7 +41,7 @@ steps:
     export SDKROOT="$(pwd)/MacOSX$(target_platform).sdk/"
     export CONDA_BUILD_SYSROOT=${SDKROOT}
     cd build
-    make -j $( $(number_of_cores) ) install
+    make -j $( $(number_of_cores) )
   displayName: Build
 - bash: |
     source ${CONDA}/etc/profile.d/conda.sh
