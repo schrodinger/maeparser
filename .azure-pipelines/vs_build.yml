@@ -28,7 +28,7 @@ steps:
 - script: |
     call activate maeparser_build
     cd build
-    ctest -j $(number_of_cores) --output-on-failure -T Test
+    ctest -j $(number_of_cores) --output-on-failure -T Test -C Release
   displayName: Run tests
 - task: PublishTestResults@2
   inputs:
