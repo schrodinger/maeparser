@@ -340,8 +340,8 @@ template <typename T> class IndexedProperty
         }
     }
 
-    const std::vector<T>& data() const {return m_data;}
-    const boost::dynamic_bitset<>* nullIndices() const {return m_is_null;}
+    const std::vector<T>& data() const { return m_data; }
+    const boost::dynamic_bitset<>* nullIndices() const { return m_is_null; }
 };
 
 typedef IndexedProperty<double> IndexedRealProperty;
@@ -485,6 +485,64 @@ class EXPORT_MAEPARSER IndexedBlock
     const std::map<std::string, std::shared_ptr<IndexedProperty<T>>>&
     getProperties() const;
 };
+
+// Template specializations
+
+template <>
+inline const std::map<std::string, BoolProperty>&
+Block::getProperties<BoolProperty>() const
+{
+    return m_bmap;
+}
+
+template <>
+inline const std::map<std::string, int>& Block::getProperties<int>() const
+{
+    return m_imap;
+}
+
+template <>
+inline const std::map<std::string, double>& Block::getProperties<double>() const
+{
+    return m_rmap;
+}
+
+template <>
+inline const std::map<std::string, std::string>&
+Block::getProperties<std::string>() const
+{
+    return m_smap;
+}
+
+template <>
+inline const std::map<std::string,
+                      std::shared_ptr<IndexedProperty<BoolProperty>>>&
+IndexedBlock::getProperties() const
+{
+    return m_bmap;
+}
+
+template <>
+inline const std::map<std::string, std::shared_ptr<IndexedProperty<int>>>&
+IndexedBlock::getProperties() const
+{
+    return m_imap;
+}
+
+template <>
+inline const std::map<std::string, std::shared_ptr<IndexedProperty<double>>>&
+IndexedBlock::getProperties() const
+{
+    return m_rmap;
+}
+
+template <>
+inline const std::map<std::string,
+                      std::shared_ptr<IndexedProperty<std::string>>>&
+IndexedBlock::getProperties() const
+{
+    return m_smap;
+}
 
 } // namespace mae
 } // namespace schrodinger
