@@ -45,8 +45,8 @@ INSTALL(EXPORT maeparser-targets
     FILE ${PROJECT_NAME}-config.cmake
     DESTINATION lib/cmake)
 
-install(FILES Buffer.hpp MaeBlock.hpp MaeConstants.hpp MaeParser.hpp MaeParserConfig.hpp Reader.hpp Writer.hpp
-        DESTINATION include/maeparser)
+file(GLOB mae_headers "*.hpp")
+install(FILES ${mae_headers} DESTINATION include/maeparser)
 
 target_compile_definitions(maeparser PRIVATE IN_MAEPARSER)
 
