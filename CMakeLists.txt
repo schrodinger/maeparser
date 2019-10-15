@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.5)
 project(maeparser)
 
 option(MAEPARSER_RIGOROUS_BUILD "Abort the build if the compiler issues any warnings" OFF )
+option(MAEPARSER_BUILD_TESTS "Whether test executables should be built" ON)
 
 if(MSVC)
     # C4251 disables warnings for export STL containers as arguments (returning a vector of things)
@@ -44,17 +45,20 @@ INSTALL(EXPORT maeparser-targets
     FILE ${PROJECT_NAME}-config.cmake
     DESTINATION lib/cmake)
 
+install(FILES Buffer.hpp MaeBlock.hpp  MaeParserConfig.hpp  MaeParser.hpp  Reader.hpp MaeConstants.hpp
+        DESTINATION include/maeparser)
+
 target_compile_definitions(maeparser PRIVATE IN_MAEPARSER)
 
 set_property(TARGET maeparser PROPERTY CXX_VISIBILITY_PRESET "hidden")
 
-set(MEMORYCHECK_COMMAND_OPTIONS "${MEMORYCHECK_COMMAND_OPTIONS} --tool=memcheck \
-        --time-stamp=yes --num-callers=20 --gen-suppressions=all --leak-check=full \
-        --show-reachable=yes --trace-children=yes --error-exitcode=29")
+# Tests
+if (MAEPARSER_BUILD_TESTS)
+    set(MEMORYCHECK_COMMAND_OPTIONS "${MEMORYCHECK_COMMAND_OPTIONS} --tool=memcheck \
+            --time-stamp=yes --num-callers=20 --gen-suppressions=all --leak-check=full \
+            --show-reachable=yes --trace-children=yes --error-exitcode=29")
 
-include(CTest)
-add_subdirectory(test)
-
-install(FILES Buffer.hpp MaeBlock.hpp  MaeParserConfig.hpp  MaeParser.hpp  Reader.hpp MaeConstants.hpp
-        DESTINATION include/maeparser)
+    include(CTest)
+    add_subdirectory(test)
+endif()
 

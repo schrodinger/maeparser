@@ -8,11 +8,11 @@ target_link_libraries(unittest maeparser Boost::unit_test_framework Boost::files
 get_filename_component(TEST_SAMPLES_PATH ${CMAKE_CURRENT_SOURCE_DIR} ABSOLUTE)
 target_compile_definitions(unittest PRIVATE "TEST_SAMPLES_PATH=\"${TEST_SAMPLES_PATH}\"")
 
-add_test(NAME unittest COMMAND ${CMAKE_BINARY_DIR}/test/unittest
-         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+add_test(NAME unittest COMMAND ${CMAKE_CURRENT_BINARY_DIR}/unittest
+         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 if(MSVC)
     add_custom_command(TARGET unittest POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${PROJECT_BINARY_DIR}/\$\(Configuration\)/maeparser.dll" "${CMAKE_BINARY_DIR}/test/\$\(Configuration\)/maeparser.dll")
+    "${PROJECT_BINARY_DIR}/\$\(Configuration\)/maeparser.dll" "${CMAKE_CURRENT_BINARY_DIR}/\$\(Configuration\)/maeparser.dll")
 endif(MSVC)
 
