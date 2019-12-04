@@ -39,10 +39,19 @@ endif(MAEPARSER_BUILD_SHARED_LIBS)
 
 find_package(Boost COMPONENTS iostreams REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
+set(boost_libs ${Boost_LIBRARIES})
 
-find_package(ZLIB REQUIRED)
+find_package(Boost COMPONENTS zlib QUIET)
+if(Boost_ZLIB_FOUND)
+    set(boost_libs ${boost_libs} ${Boost_LIBRARIES})
+    message(STATUS "Using Boost zlib module for iostreams dependency.")
+else(Boost_ZLIB_FOUND)
+    find_package(ZLIB REQUIRED)
+    set(boost_libs ${boost_libs} ${ZLIB_LIBRARIES})
+    message(STATUS "Using zlib library for iostreams dependency.")
+endif(Boost_ZLIB_FOUND)
 
-target_link_libraries(maeparser Boost::iostreams ZLIB::ZLIB)
+target_link_libraries(maeparser ${boost_libs})
 
 SET_TARGET_PROPERTIES (maeparser
     PROPERTIES
