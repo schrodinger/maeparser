@@ -6,12 +6,11 @@
 #include "MaeBlock.hpp"
 #include "MaeConstants.hpp"
 #include "Reader.hpp"
-#include "Writer.hpp"
 #include "TestCommon.hpp"
+#include "Writer.hpp"
 
-#define BOOST_TEST_DYN_LINK
-#include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/test/unit_test.hpp>
 
 using namespace schrodinger::mae;
 using std::shared_ptr;
@@ -86,9 +85,12 @@ BOOST_AUTO_TEST_CASE(Writer1)
 BOOST_AUTO_TEST_CASE(TestWriteNonAccessiblePath)
 {
     // This path should not exist/be accesible!
-    CheckExceptionMsg<std::runtime_error> check_msg("Failed to open file \"/non/accessible/path/file.mae\" for writing operation");
+    CheckExceptionMsg<std::runtime_error> check_msg(
+        "Failed to open file \"/non/accessible/path/file.mae\" for writing "
+        "operation");
 
-    BOOST_CHECK_EXCEPTION(Writer w("/non/accessible/path/file.mae")    , std::runtime_error, check_msg);
+    BOOST_CHECK_EXCEPTION(Writer w("/non/accessible/path/file.mae"),
+                          std::runtime_error, check_msg);
 }
 
 /*

@@ -2,9 +2,8 @@
 #include <fstream>
 #include <iostream>
 
-#define BOOST_TEST_DYN_LINK
-#include <boost/test/unit_test.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include "MaeBlock.hpp"
 #include "MaeConstants.hpp"
@@ -320,7 +319,8 @@ BOOST_AUTO_TEST_CASE(QuotedStringTest)
 BOOST_AUTO_TEST_CASE(TestReadNonExistingFile)
 {
     // This file should not exist!
-    CheckExceptionMsg<std::runtime_error> check_msg("Failed to open file \"non_existing_file.mae\" for reading operation");
+    CheckExceptionMsg<std::runtime_error> check_msg(
+        "Failed to open file \"non_existing_file.mae\" for reading operation");
 
     BOOST_CHECK_EXCEPTION(Reader r("non_existing_file.mae"), std::runtime_error,
                           check_msg);
