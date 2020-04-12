@@ -150,7 +150,7 @@ class EXPORT_MAEPARSER Block
     }
 
     std::shared_ptr<const IndexedBlock>
-    getIndexedBlock(const std::string& name);
+    getIndexedBlock(const std::string& name) const;
 
     void addBlock(std::shared_ptr<Block> b) { m_sub_block[b->getName()] = b; }
 
