@@ -311,7 +311,7 @@ class EXPORT_MAEPARSER TokenBufferList
     //  isn't limited to this value, it's just used to reserve space for
     //  storage.
     //
-    explicit TokenBufferList(BufferData buffer_data, size_t values = 0)
+    explicit TokenBufferList(const BufferData& buffer_data, size_t values = 0)
         : TokenBufferList()
     {
         reserve(values);

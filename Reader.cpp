@@ -26,7 +26,7 @@ Reader::Reader(FILE* file, size_t buffer_size)
 
 Reader::Reader(std::shared_ptr<std::istream> stream, size_t buffer_size)
 {
-    m_mae_parser.reset(new MaeParser(stream, buffer_size));
+    m_mae_parser.reset(new MaeParser(std::move(stream), buffer_size));
 }
 
 Reader::Reader(const std::string& fname, size_t buffer_size)

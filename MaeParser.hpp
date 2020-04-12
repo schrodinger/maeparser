@@ -134,7 +134,7 @@ class EXPORT_MAEPARSER IndexedBlockBuffer
 
     virtual ~IndexedBlockBuffer() = default;
 
-    void addPropertyName(const std::string name)
+    void addPropertyName(const std::string& name)
     {
         m_property_names.push_back(name);
     }
@@ -268,7 +268,7 @@ class EXPORT_MAEPARSER MaeParser
     }
 
   public:
-    explicit MaeParser(std::shared_ptr<std::istream> stream,
+    explicit MaeParser(const std::shared_ptr<std::istream>& stream,
                        size_t buffer_size = BufferLoader::DEFAULT_SIZE)
         : m_buffer(*stream, buffer_size), m_stream(stream)
     {
@@ -333,7 +333,7 @@ class EXPORT_MAEPARSER DirectMaeParser : public MaeParser
   public:
     explicit DirectMaeParser(std::shared_ptr<std::istream> stream,
                              size_t buffer_size = BufferLoader::DEFAULT_SIZE)
-        : MaeParser(stream, buffer_size)
+        : MaeParser(std::move(stream), buffer_size)
     {
     }
 

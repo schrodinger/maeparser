@@ -6,6 +6,7 @@
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 #include "MaeParserConfig.hpp"
 
@@ -71,7 +72,7 @@ class EXPORT_MAEPARSER IndexedBlockMap : public IndexedBlockMapI
     void addIndexedBlock(const std::string& name,
                          std::shared_ptr<IndexedBlock> indexed_block)
     {
-        m_indexed_block[name] = indexed_block;
+        m_indexed_block[name] = std::move(indexed_block);
     }
 };
 
@@ -104,7 +105,7 @@ class EXPORT_MAEPARSER BufferedIndexedBlockMap : public IndexedBlockMapI
     void addIndexedBlockBuffer(const std::string& name,
                                std::shared_ptr<IndexedBlockBuffer> block_buffer)
     {
-        m_indexed_buffer[name] = block_buffer;
+        m_indexed_buffer[name] = std::move(block_buffer);
     }
 };
 
@@ -139,7 +140,7 @@ class EXPORT_MAEPARSER Block
 
     void setIndexedBlockMap(std::shared_ptr<IndexedBlockMapI> indexed_block_map)
     {
-        m_indexed_block_map = indexed_block_map;
+        m_indexed_block_map = std::move(indexed_block_map);
     }
 
     bool hasIndexedBlockData() const { return m_indexed_block_map != nullptr; }
@@ -152,7 +153,10 @@ class EXPORT_MAEPARSER Block
     std::shared_ptr<const IndexedBlock>
     getIndexedBlock(const std::string& name) const;
 
-    void addBlock(std::shared_ptr<Block> b) { m_sub_block[b->getName()] = b; }
+    void addBlock(const std::shared_ptr<Block>& b)
+    {
+        m_sub_block[b->getName()] = b;
+    }
 
     /**
      * Check whether this block has a sub-block of the provided name.
@@ -427,7 +431,8 @@ class EXPORT_MAEPARSER IndexedBlock
     void setBoolProperty(const std::string& name,
                          std::shared_ptr<IndexedBoolProperty> value)
     {
-        set_indexed_property<IndexedBoolProperty>(m_bmap, name, value);
+        set_indexed_property<IndexedBoolProperty>(m_bmap, name,
+                                                  std::move(value));
     }
 
     bool hasIntProperty(const std::string& name) const
@@ -444,7 +449,8 @@ class EXPORT_MAEPARSER IndexedBlock
     void setIntProperty(const std::string& name,
                         std::shared_ptr<IndexedIntProperty> value)
     {
-        set_indexed_property<IndexedIntProperty>(m_imap, name, value);
+        set_indexed_property<IndexedIntProperty>(m_imap, name,
+                                                 std::move(value));
     }
 
     bool hasRealProperty(const std::string& name) const
@@ -461,7 +467,8 @@ class EXPORT_MAEPARSER IndexedBlock
     void setRealProperty(const std::string& name,
                          std::shared_ptr<IndexedRealProperty> value)
     {
-        set_indexed_property<IndexedRealProperty>(m_rmap, name, value);
+        set_indexed_property<IndexedRealProperty>(m_rmap, name,
+                                                  std::move(value));
     }
 
     bool hasStringProperty(const std::string& name) const
@@ -478,7 +485,8 @@ class EXPORT_MAEPARSER IndexedBlock
     void setStringProperty(const std::string& name,
                            std::shared_ptr<IndexedStringProperty> value)
     {
-        set_indexed_property<IndexedStringProperty>(m_smap, name, value);
+        set_indexed_property<IndexedStringProperty>(m_smap, name,
+                                                    std::move(value));
     }
 
     template <typename T>
