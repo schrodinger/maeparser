@@ -223,8 +223,7 @@ bool IndexedBlockMap::hasIndexedBlock(const string& name) const
 shared_ptr<const IndexedBlock>
 IndexedBlockMap::getIndexedBlock(const string& name) const
 {
-    map<string, shared_ptr<IndexedBlock>>::const_iterator block_iter =
-        m_indexed_block.find(name);
+    auto block_iter = m_indexed_block.find(name);
     if (block_iter != m_indexed_block.end()) {
         return const_pointer_cast<const IndexedBlock>(block_iter->second);
     } else {
@@ -246,8 +245,7 @@ bool BufferedIndexedBlockMap::hasIndexedBlock(const string& name) const
 shared_ptr<const IndexedBlock>
 BufferedIndexedBlockMap::getIndexedBlock(const string& name) const
 {
-    map<string, shared_ptr<IndexedBlock>>::const_iterator itb =
-        m_indexed_block.find(name);
+    auto itb = m_indexed_block.find(name);
     if (itb != m_indexed_block.end()) {
         return itb->second;
     }

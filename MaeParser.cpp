@@ -651,7 +651,7 @@ static long int simple_strtol(const char* ptr, const char* end)
 
 IndexedBlock* IndexedBlockBuffer::getIndexedBlock()
 {
-    IndexedBlock* iblock = new IndexedBlock(getName());
+    auto* iblock = new IndexedBlock(getName());
 
     std::vector<std::string>::const_iterator iter = m_property_names.begin();
 

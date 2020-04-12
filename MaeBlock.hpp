@@ -13,7 +13,7 @@ namespace schrodinger
 {
 namespace mae
 {
-typedef uint8_t BoolProperty;
+using BoolProperty = uint8_t;
 
 template <typename T>
 inline const T& get_property(const std::map<std::string, T>& map,
@@ -50,12 +50,12 @@ class EXPORT_MAEPARSER IndexedBlockMap : public IndexedBlockMapI
     std::map<std::string, std::shared_ptr<IndexedBlock>> m_indexed_block;
 
   public:
-    virtual bool hasIndexedBlock(const std::string& name) const;
+    bool hasIndexedBlock(const std::string& name) const override;
 
-    virtual std::shared_ptr<const IndexedBlock>
-    getIndexedBlock(const std::string& name) const;
+    std::shared_ptr<const IndexedBlock>
+    getIndexedBlock(const std::string& name) const override;
 
-    virtual std::vector<std::string> getBlockNames() const
+    std::vector<std::string> getBlockNames() const override
     {
         std::vector<std::string> rval;
         for (const auto& p : m_indexed_block) {
@@ -82,12 +82,12 @@ class EXPORT_MAEPARSER BufferedIndexedBlockMap : public IndexedBlockMapI
     std::map<std::string, std::shared_ptr<IndexedBlockBuffer>> m_indexed_buffer;
 
   public:
-    virtual bool hasIndexedBlock(const std::string& name) const;
+    bool hasIndexedBlock(const std::string& name) const override;
 
-    virtual std::shared_ptr<const IndexedBlock>
-    getIndexedBlock(const std::string& name) const;
+    std::shared_ptr<const IndexedBlock>
+    getIndexedBlock(const std::string& name) const override;
 
-    virtual std::vector<std::string> getBlockNames() const
+    std::vector<std::string> getBlockNames() const override
     {
         std::vector<std::string> rval;
         for (const auto& p : m_indexed_buffer) {
@@ -254,7 +254,7 @@ template <typename T> class IndexedProperty
     IndexedProperty<T>& operator=(const IndexedProperty<T>&) = delete;
 
   public:
-    typedef typename std::vector<T>::size_type size_type;
+    using size_type = typename std::vector<T>::size_type;
 
     /**
      * Construct an IndexedProperty from a reference to a vector of data.
@@ -344,10 +344,10 @@ template <typename T> class IndexedProperty
     const boost::dynamic_bitset<>* nullIndices() const { return m_is_null; }
 };
 
-typedef IndexedProperty<double> IndexedRealProperty;
-typedef IndexedProperty<int> IndexedIntProperty;
-typedef IndexedProperty<BoolProperty> IndexedBoolProperty;
-typedef IndexedProperty<std::string> IndexedStringProperty;
+using IndexedRealProperty = IndexedProperty<double>;
+using IndexedIntProperty = IndexedProperty<int>;
+using IndexedBoolProperty = IndexedProperty<BoolProperty>;
+using IndexedStringProperty = IndexedProperty<std::string>;
 
 template <typename T>
 inline std::shared_ptr<T>

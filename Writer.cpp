@@ -1,27 +1,28 @@
 #include "Writer.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/device/file.hpp>
 
 #include <fstream>
-#include <sstream>
 #include <iostream>
+#include <sstream>
+#include <utility>
 
 #include "MaeBlock.hpp"
 
 using namespace std;
 using boost::algorithm::ends_with;
-using boost::iostreams::filtering_ostream;
 using boost::iostreams::file_sink;
+using boost::iostreams::filtering_ostream;
 
 namespace schrodinger
 {
 namespace mae
 {
 
-Writer::Writer(std::shared_ptr<ostream> stream) : m_out(stream)
+Writer::Writer(std::shared_ptr<ostream> stream) : m_out(std::move(stream))
 {
     write_opening_block();
 }
@@ -40,7 +41,7 @@ Writer::Writer(const std::string& fname)
         m_out.reset(static_cast<ostream*>(file_stream));
     }
 
-    if(m_out->fail()) {
+    if (m_out->fail()) {
         std::stringstream ss;
         ss << "Failed to open file \"" << fname << "\" for writing operation.";
         throw std::runtime_error(ss.str());

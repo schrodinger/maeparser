@@ -62,6 +62,5 @@ const std::string CT_EZ_PROP_PREFIX = "s_st_EZ_";
  */
 const std::string CT_PSEUDOCHIRALITY_PROP_PREFIX = "s_st_AtomNumChirality_";
 
-
 } // End namespace mae
 } // End namespace schrodinger
