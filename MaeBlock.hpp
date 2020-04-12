@@ -120,11 +120,11 @@ class EXPORT_MAEPARSER Block
     std::map<std::string, std::shared_ptr<Block>> m_sub_block;
     std::shared_ptr<IndexedBlockMapI> m_indexed_block_map;
 
+  public:
     // Prevent copying.
     Block(const Block&) = delete;
     Block& operator=(const Block&) = delete;
 
-  public:
     Block(std::string name)
         : m_name(std::move(name)), m_bmap(), m_rmap(), m_imap(), m_smap(),
           m_indexed_block_map(nullptr)
@@ -249,11 +249,11 @@ template <typename T> class IndexedProperty
     std::vector<T> m_data;
     boost::dynamic_bitset<>* m_is_null;
 
+  public:
     // Prevent copying.
     IndexedProperty<T>(const IndexedProperty<T>&) = delete;
     IndexedProperty<T>& operator=(const IndexedProperty<T>&) = delete;
 
-  public:
     using size_type = typename std::vector<T>::size_type;
 
     /**
@@ -381,11 +381,11 @@ class EXPORT_MAEPARSER IndexedBlock
     std::map<std::string, std::shared_ptr<IndexedRealProperty>> m_rmap;
     std::map<std::string, std::shared_ptr<IndexedStringProperty>> m_smap;
 
+  public:
     // Prevent copying.
     IndexedBlock(const IndexedBlock&) = delete;
     IndexedBlock& operator=(const IndexedBlock&) = delete;
 
-  public:
     /**
      * Create an indexed block.
      */
