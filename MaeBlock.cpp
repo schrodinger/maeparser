@@ -160,7 +160,7 @@ string Block::toString() const
     return stream.str();
 }
 
-shared_ptr<const IndexedBlock> Block::getIndexedBlock(const string& name)
+shared_ptr<const IndexedBlock> Block::getIndexedBlock(const string& name) const
 {
     if (!hasIndexedBlockData()) {
         throw out_of_range("Indexed block not found: " + name);
@@ -373,8 +373,8 @@ bool IndexedProperty<T>::operator==(const IndexedProperty<T>& rhs) const
 // For doubles we need to implement our own comparator for the vectors to
 // take precision into account
 template <>
-bool IndexedProperty<double>::
-operator==(const IndexedProperty<double>& rhs) const
+bool IndexedProperty<double>::operator==(
+    const IndexedProperty<double>& rhs) const
 {
     if (m_is_null == nullptr || rhs.m_is_null == nullptr) {
         if ((m_is_null == nullptr) != (rhs.m_is_null == nullptr))
