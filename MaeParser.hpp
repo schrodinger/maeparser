@@ -331,9 +331,9 @@ class EXPORT_MAEPARSER MaeParser
 class EXPORT_MAEPARSER DirectMaeParser : public MaeParser
 {
   public:
-    explicit DirectMaeParser(std::shared_ptr<std::istream> stream,
+    explicit DirectMaeParser(const std::shared_ptr<std::istream>& stream,
                              size_t buffer_size = BufferLoader::DEFAULT_SIZE)
-        : MaeParser(std::move(stream), buffer_size)
+        : MaeParser(stream, buffer_size)
     {
     }
 
