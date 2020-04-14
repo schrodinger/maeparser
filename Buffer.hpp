@@ -305,21 +305,6 @@ class EXPORT_MAEPARSER TokenBufferList
   public:
     TokenBufferList() : m_token_buffer_list(), m_begin(), m_end() {}
 
-    ///
-    //  Create a TokenBufferList from an initial Buffer and the number of
-    //  values you expect to be collected. The number of collected tokens
-    //  isn't limited to this value, it's just used to reserve space for
-    //  storage.
-    //
-    explicit TokenBufferList(const BufferData& buffer_data, size_t values = 0)
-        : TokenBufferList()
-    {
-        reserve(values);
-        if (buffer_data.size() != 0) {
-            m_token_buffer_list.emplace_back(buffer_data, 0);
-        }
-    }
-
     void reserve(size_t size)
     {
         m_begin.reserve(size);
