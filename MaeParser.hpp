@@ -134,7 +134,7 @@ class EXPORT_MAEPARSER IndexedBlockBuffer
 
     virtual ~IndexedBlockBuffer() = default;
 
-    void addPropertyName(const std::string& name)
+    void addPropertyName(std::string&& name)
     {
         m_property_names.push_back(name);
     }

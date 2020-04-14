@@ -70,7 +70,7 @@ class EXPORT_MAEPARSER IndexedBlockMap : public IndexedBlockMapI
      * Add an IndexedBlock to the map.
      */
     void addIndexedBlock(const std::string& name,
-                         std::shared_ptr<IndexedBlock> indexed_block)
+                         std::shared_ptr<IndexedBlock>&& indexed_block)
     {
         m_indexed_block[name] = std::move(indexed_block);
     }
@@ -102,8 +102,9 @@ class EXPORT_MAEPARSER BufferedIndexedBlockMap : public IndexedBlockMapI
      * Add an IndexedBlockBuffer to the map, which can be used to retrieve an
      * IndexedBlock.
      */
-    void addIndexedBlockBuffer(const std::string& name,
-                               std::shared_ptr<IndexedBlockBuffer> block_buffer)
+    void
+    addIndexedBlockBuffer(const std::string& name,
+                          std::shared_ptr<IndexedBlockBuffer>&& block_buffer)
     {
         m_indexed_buffer[name] = std::move(block_buffer);
     }
@@ -153,10 +154,7 @@ class EXPORT_MAEPARSER Block
     std::shared_ptr<const IndexedBlock>
     getIndexedBlock(const std::string& name) const;
 
-    void addBlock(const std::shared_ptr<Block>& b)
-    {
-        m_sub_block[b->getName()] = b;
-    }
+    void addBlock(std::shared_ptr<Block>&& b) { m_sub_block[b->getName()] = b; }
 
     /**
      * Check whether this block has a sub-block of the provided name.
