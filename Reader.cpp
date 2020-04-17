@@ -6,8 +6,9 @@
 #include <boost/iostreams/filtering_stream.hpp>
 
 #include <fstream>
-#include <sstream>
 #include <iostream>
+#include <sstream>
+#include <utility>
 
 using boost::algorithm::ends_with;
 using boost::iostreams::file_source;
@@ -23,7 +24,7 @@ Reader::Reader(FILE* file, size_t buffer_size)
     m_mae_parser.reset(new MaeParser(file, buffer_size));
 }
 
-Reader::Reader(std::shared_ptr<std::istream> stream, size_t buffer_size)
+Reader::Reader(const std::shared_ptr<std::istream>& stream, size_t buffer_size)
 {
     m_mae_parser.reset(new MaeParser(stream, buffer_size));
 }
@@ -43,7 +44,7 @@ Reader::Reader(const std::string& fname, size_t buffer_size)
         stream.reset(static_cast<std::istream*>(file_stream));
     }
 
-    if(stream->fail()) {
+    if (stream->fail()) {
         std::stringstream ss;
         ss << "Failed to open file \"" << fname << "\" for reading operation.";
         throw std::runtime_error(ss.str());
@@ -52,7 +53,8 @@ Reader::Reader(const std::string& fname, size_t buffer_size)
     m_mae_parser.reset(new MaeParser(stream, buffer_size));
 }
 
-Reader::Reader(std::shared_ptr<MaeParser> mae_parser) : m_mae_parser(mae_parser)
+Reader::Reader(std::shared_ptr<MaeParser> mae_parser)
+    : m_mae_parser(std::move(mae_parser))
 {
 }
 

@@ -367,8 +367,8 @@ std::shared_ptr<Block> MaeParser::blockBody(const std::string& name)
         if (indexed) {
             indexed_block_parser->parse(name, indexed, m_buffer);
         } else {
-            std::shared_ptr<Block> sub_block = blockBody(name);
-            block->addBlock(sub_block);
+            auto sub_block = blockBody(name);
+            block->addBlock(std::move(sub_block));
         }
     }
 
@@ -573,7 +573,7 @@ void DirectIndexedBlockParser::parse(const std::string& name, size_t size,
         parser->addToIndexedBlock(indexed_block.get());
         delete parser;
     }
-    m_indexed_block_map->addIndexedBlock(name, indexed_block);
+    m_indexed_block_map->addIndexedBlock(name, std::move(indexed_block));
 }
 
 std::shared_ptr<IndexedBlockMapI> DirectIndexedBlockParser::getIndexedBlockMap()
@@ -651,7 +651,7 @@ static long int simple_strtol(const char* ptr, const char* end)
 
 IndexedBlock* IndexedBlockBuffer::getIndexedBlock()
 {
-    IndexedBlock* iblock = new IndexedBlock(getName());
+    auto* iblock = new IndexedBlock(getName());
 
     std::vector<std::string>::const_iterator iter = m_property_names.begin();
 
@@ -789,7 +789,7 @@ void BufferedIndexedBlockParser::parse(const std::string& name, size_t size,
     whitespace(buffer);
     std::shared_ptr<std::string> property_name;
     while ((property_name = property_key(buffer)) != nullptr) {
-        ibb->addPropertyName(*property_name);
+        ibb->addPropertyName(std::move(*property_name));
         whitespace(buffer);
     }
     triple_colon(buffer);
@@ -801,7 +801,7 @@ void BufferedIndexedBlockParser::parse(const std::string& name, size_t size,
         throw read_exception(buffer, "Missing closing '}' for "
                                      "indexed block.");
     }
-    m_indexed_block_map->addIndexedBlockBuffer(name, ibb);
+    m_indexed_block_map->addIndexedBlockBuffer(name, std::move(ibb));
 }
 
 } // end of namespace mae

@@ -1,5 +1,6 @@
 #include "MaeBlock.hpp"
 #include <cmath>
+#include <utility>
 
 #include "MaeParser.hpp"
 
@@ -223,8 +224,7 @@ bool IndexedBlockMap::hasIndexedBlock(const string& name) const
 shared_ptr<const IndexedBlock>
 IndexedBlockMap::getIndexedBlock(const string& name) const
 {
-    map<string, shared_ptr<IndexedBlock>>::const_iterator block_iter =
-        m_indexed_block.find(name);
+    auto block_iter = m_indexed_block.find(name);
     if (block_iter != m_indexed_block.end()) {
         return const_pointer_cast<const IndexedBlock>(block_iter->second);
     } else {
@@ -246,8 +246,7 @@ bool BufferedIndexedBlockMap::hasIndexedBlock(const string& name) const
 shared_ptr<const IndexedBlock>
 BufferedIndexedBlockMap::getIndexedBlock(const string& name) const
 {
-    map<string, shared_ptr<IndexedBlock>>::const_iterator itb =
-        m_indexed_block.find(name);
+    auto itb = m_indexed_block.find(name);
     if (itb != m_indexed_block.end()) {
         return itb->second;
     }
@@ -266,7 +265,7 @@ EXPORT_MAEPARSER void
 IndexedBlock::setProperty<BoolProperty>(const string& name,
                                         shared_ptr<IndexedBoolProperty> value)
 {
-    set_indexed_property<IndexedBoolProperty>(m_bmap, name, value);
+    set_indexed_property<IndexedBoolProperty>(m_bmap, name, std::move(value));
 }
 
 template <>
@@ -274,7 +273,8 @@ EXPORT_MAEPARSER void
 IndexedBlock::setProperty<double>(const string& name,
                                   shared_ptr<IndexedProperty<double>> value)
 {
-    set_indexed_property<IndexedProperty<double>>(m_rmap, name, value);
+    set_indexed_property<IndexedProperty<double>>(m_rmap, name,
+                                                  std::move(value));
 }
 
 template <>
@@ -282,7 +282,7 @@ EXPORT_MAEPARSER void
 IndexedBlock::setProperty<int>(const string& name,
                                shared_ptr<IndexedProperty<int>> value)
 {
-    set_indexed_property<IndexedProperty<int>>(m_imap, name, value);
+    set_indexed_property<IndexedProperty<int>>(m_imap, name, std::move(value));
 }
 
 template <>
@@ -290,7 +290,8 @@ EXPORT_MAEPARSER void
 IndexedBlock::setProperty<string>(const string& name,
                                   shared_ptr<IndexedProperty<string>> value)
 {
-    set_indexed_property<IndexedProperty<string>>(m_smap, name, value);
+    set_indexed_property<IndexedProperty<string>>(m_smap, name,
+                                                  std::move(value));
 }
 
 size_t IndexedBlock::size() const

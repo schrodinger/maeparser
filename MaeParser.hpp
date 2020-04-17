@@ -1,6 +1,13 @@
 #ifndef MAE_READER_HPP_
 #define MAE_READER_HPP_
 
+// Visual Studio versions prior to 2015 don't support noexcept
+#if defined(_MSC_FULL_VER) && _MSC_FULL_VER < 190023026
+#define NOEXCEPT
+#else
+#define NOEXCEPT noexcept
+#endif
+
 #include <cerrno>
 #include <cstdio>
 #include <map>
@@ -8,6 +15,7 @@
 #include <string>
 
 #include <boost/dynamic_bitset.hpp>
+#include <utility>
 
 #include "Buffer.hpp"
 #include "MaeBlock.hpp"
@@ -87,7 +95,7 @@ class EXPORT_MAEPARSER read_exception : public std::exception
         format(line_number, column, msg);
     }
 
-    virtual const char* what() const throw() { return m_msg; }
+    const char* what() const NOEXCEPT override { return m_msg; }
 };
 
 /**
@@ -99,7 +107,7 @@ class EXPORT_MAEPARSER Parser
 {
   public:
     virtual void parse(Buffer& buffer) = 0;
-    virtual ~Parser(){};
+    virtual ~Parser() = default;
 };
 
 class EXPORT_MAEPARSER IndexedBlockParser
@@ -107,7 +115,7 @@ class EXPORT_MAEPARSER IndexedBlockParser
     std::vector<std::string> m_property_names;
 
   public:
-    virtual ~IndexedBlockParser(){};
+    virtual ~IndexedBlockParser() = default;
 
     virtual void parse(const std::string& name, size_t size,
                        Buffer& buffer) = 0;
@@ -124,14 +132,14 @@ class EXPORT_MAEPARSER IndexedBlockBuffer
     size_t m_rows;
 
   public:
-    IndexedBlockBuffer(const std::string& name, size_t rows)
-        : m_property_names(), m_name(name), m_rows(rows)
+    IndexedBlockBuffer(std::string name, size_t rows)
+        : m_property_names(), m_name(std::move(name)), m_rows(rows)
     {
     }
 
-    virtual ~IndexedBlockBuffer() {}
+    virtual ~IndexedBlockBuffer() = default;
 
-    void addPropertyName(const std::string name)
+    void addPropertyName(std::string&& name)
     {
         m_property_names.push_back(name);
     }
@@ -166,9 +174,9 @@ class EXPORT_MAEPARSER BufferedIndexedBlockParser : public IndexedBlockParser
   public:
     BufferedIndexedBlockParser();
 
-    virtual std::shared_ptr<IndexedBlockMapI> getIndexedBlockMap();
+    std::shared_ptr<IndexedBlockMapI> getIndexedBlockMap() override;
 
-    virtual void parse(const std::string& name, size_t size, Buffer& buffer);
+    void parse(const std::string& name, size_t size, Buffer& buffer) override;
 };
 
 class EXPORT_MAEPARSER DirectIndexedBlockParser : public IndexedBlockParser
@@ -176,9 +184,9 @@ class EXPORT_MAEPARSER DirectIndexedBlockParser : public IndexedBlockParser
     std::shared_ptr<IndexedBlockMap> m_indexed_block_map;
 
   public:
-    virtual void parse(const std::string& name, size_t size, Buffer& buffer);
+    void parse(const std::string& name, size_t size, Buffer& buffer) override;
 
-    virtual std::shared_ptr<IndexedBlockMapI> getIndexedBlockMap();
+    std::shared_ptr<IndexedBlockMapI> getIndexedBlockMap() override;
 };
 
 class EXPORT_MAEPARSER IndexedValueParser : public Parser
@@ -196,20 +204,20 @@ template <typename T> class IndexedValueCollector : public IndexedValueParser
 
   public:
     explicit IndexedValueCollector(std::string name, size_t size)
-        : m_name(name), m_values(), m_is_null(nullptr)
+        : m_name(std::move(name)), m_values(), m_is_null(nullptr)
     {
         m_values.reserve(size);
         m_is_null = nullptr;
     }
 
-    ~IndexedValueCollector()
+    ~IndexedValueCollector() override
     {
         if (m_is_null) {
             delete m_is_null;
         }
     }
 
-    virtual void parse(Buffer& buffer)
+    void parse(Buffer& buffer) override
     {
         if (buffer.current >= buffer.end) {
             if (!buffer.load()) {
@@ -244,7 +252,7 @@ template <typename T> class IndexedValueCollector : public IndexedValueParser
         m_values.push_back(parse_value<T>(buffer));
     }
 
-    virtual void addToIndexedBlock(IndexedBlock* block)
+    void addToIndexedBlock(IndexedBlock* block) override
     {
         auto ptr = std::shared_ptr<IndexedProperty<T>>(
             new IndexedProperty<T>(m_values, m_is_null));
@@ -265,7 +273,7 @@ class EXPORT_MAEPARSER MaeParser
     }
 
   public:
-    explicit MaeParser(std::shared_ptr<std::istream> stream,
+    explicit MaeParser(const std::shared_ptr<std::istream>& stream,
                        size_t buffer_size = BufferLoader::DEFAULT_SIZE)
         : m_buffer(*stream, buffer_size), m_stream(stream)
     {
@@ -290,7 +298,7 @@ class EXPORT_MAEPARSER MaeParser
     }
 
     // TODO: finish big three (four)
-    virtual ~MaeParser() {}
+    virtual ~MaeParser() = default;
 
     std::shared_ptr<Block> blockBody(const std::string& name);
 
@@ -328,7 +336,7 @@ class EXPORT_MAEPARSER MaeParser
 class EXPORT_MAEPARSER DirectMaeParser : public MaeParser
 {
   public:
-    explicit DirectMaeParser(std::shared_ptr<std::istream> stream,
+    explicit DirectMaeParser(const std::shared_ptr<std::istream>& stream,
                              size_t buffer_size = BufferLoader::DEFAULT_SIZE)
         : MaeParser(stream, buffer_size)
     {
@@ -341,7 +349,7 @@ class EXPORT_MAEPARSER DirectMaeParser : public MaeParser
     }
 
   private:
-    virtual IndexedBlockParser* getIndexedBlockParser()
+    IndexedBlockParser* getIndexedBlockParser() override
     {
         return new DirectIndexedBlockParser();
     }

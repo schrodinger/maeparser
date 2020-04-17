@@ -11,6 +11,7 @@
 #include <memory>
 #include <sstream>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 #include "MaeParserConfig.hpp"
@@ -74,7 +75,7 @@ class BufferLoader
     {
     }
 
-    virtual ~BufferLoader() {}
+    virtual ~BufferLoader() = default;
 
     /**
      * Return the default buffer size for this BufferLoader. This should be
@@ -133,7 +134,7 @@ class StreamLoader : public BufferLoader
     StreamLoader(const StreamLoader&) = delete;
     StreamLoader& operator=(const StreamLoader&) = delete;
 
-    virtual size_t readData(char* ptr, size_t size) const override;
+    size_t readData(char* ptr, size_t size) const override;
 };
 
 /**
@@ -154,7 +155,7 @@ class FileLoader : public BufferLoader
   public:
     FileLoader(FILE* file) : m_file(file) {}
 
-    virtual size_t readData(char* ptr, size_t size) const override;
+    size_t readData(char* ptr, size_t size) const override;
 };
 
 /**
@@ -285,7 +286,8 @@ class EXPORT_MAEPARSER TokenBufferList
         size_t last_value;
 
         TokenBuffer(BufferData data, size_t next_index)
-            : buffer_data(data), first_value(next_index), last_value(next_index)
+            : buffer_data(std::move(data)), first_value(next_index),
+              last_value(next_index)
         {
         }
     };
@@ -302,21 +304,6 @@ class EXPORT_MAEPARSER TokenBufferList
 
   public:
     TokenBufferList() : m_token_buffer_list(), m_begin(), m_end() {}
-
-    ///
-    //  Create a TokenBufferList from an initial Buffer and the number of
-    //  values you expect to be collected. The number of collected tokens
-    //  isn't limited to this value, it's just used to reserve space for
-    //  storage.
-    //
-    explicit TokenBufferList(BufferData buffer_data, size_t values = 0)
-        : TokenBufferList()
-    {
-        reserve(values);
-        if (buffer_data.size() != 0) {
-            m_token_buffer_list.emplace_back(buffer_data, 0);
-        }
-    }
 
     void reserve(size_t size)
     {
@@ -366,12 +353,12 @@ class BufferDataCollector : public BufferLoader
         m_buffer->setBufferLoader(this);
     }
 
-    ~BufferDataCollector() { m_buffer->setBufferLoader(m_loader); }
+    ~BufferDataCollector() override { m_buffer->setBufferLoader(m_loader); }
 
-    virtual bool load(BufferData& data, const char* begin,
-                      const char* end) const override;
+    bool load(BufferData& data, const char* begin,
+              const char* end) const override;
 
-    virtual size_t readData(char* ptr, size_t size) const override;
+    size_t readData(char* ptr, size_t size) const override;
 };
 
 } // end namespace schrodinger

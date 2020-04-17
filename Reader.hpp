@@ -23,7 +23,7 @@ class EXPORT_MAEPARSER Reader
     Reader() = delete;
     Reader(FILE* file, size_t buffer_size = BufferLoader::DEFAULT_SIZE);
 
-    Reader(std::shared_ptr<std::istream> stream,
+    Reader(const std::shared_ptr<std::istream>& stream,
            size_t buffer_size = BufferLoader::DEFAULT_SIZE);
 
     Reader(const std::string& fname,
