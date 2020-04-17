@@ -9,15 +9,15 @@ option(MAEPARSER_BUILD_SHARED_LIBS "Build maeparser as a shared library (turn of
 
 if(MSVC)
     # C4251 disables warnings for export STL containers as arguments (returning a vector of things)
-    add_definitions(/wd4251 /wd4275 /wd4996 /D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS)
+    add_compile_options(/wd4251 /wd4275 /wd4996 /D_SCL_SECURE_NO_WARNINGS /D_CRT_SECURE_NO_WARNINGS)
     add_definitions(-DBOOST_ALL_NO_LIB)
 endif(MSVC)
 
 if(MAEPARSER_RIGOROUS_BUILD)
 if(MSVC)
-    add_definitions(/WX)
+    add_compile_options(/WX)
 else(MSVC)
-    add_definitions(-Wall -Wextra -Werror)
+    add_compile_options(-Wall -Wextra -Werror)
 endif(MSVC)
 endif(MAEPARSER_RIGOROUS_BUILD)
 
