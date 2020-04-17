@@ -1,6 +1,13 @@
 #ifndef MAE_READER_HPP_
 #define MAE_READER_HPP_
 
+// Visual Studio versions prior to 2015 don't support noexcept
+#if defined(_MSC_FULL_VER) && _MSC_FULL_VER < 190023026
+#define NOEXCEPT
+#else
+#define NOEXCEPT noexcept
+#endif
+
 #include <cerrno>
 #include <cstdio>
 #include <map>
@@ -88,7 +95,7 @@ class EXPORT_MAEPARSER read_exception : public std::exception
         format(line_number, column, msg);
     }
 
-    const char* what() const noexcept override { return m_msg; }
+    const char* what() const NOEXCEPT override { return m_msg; }
 };
 
 /**
@@ -101,7 +108,6 @@ class EXPORT_MAEPARSER Parser
   public:
     virtual void parse(Buffer& buffer) = 0;
     virtual ~Parser() = default;
-    ;
 };
 
 class EXPORT_MAEPARSER IndexedBlockParser
@@ -110,7 +116,6 @@ class EXPORT_MAEPARSER IndexedBlockParser
 
   public:
     virtual ~IndexedBlockParser() = default;
-    ;
 
     virtual void parse(const std::string& name, size_t size,
                        Buffer& buffer) = 0;
