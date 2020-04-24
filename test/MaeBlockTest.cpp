@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE(toStringProperties)
     auto ib = getExampleIndexedBlock();
 
     auto ibm = std::make_shared<mae::IndexedBlockMap>();
-    ibm->addIndexedBlock(ib->getName(), std::move(ib));
+    ibm->addIndexedBlock(ib->getName(), ib);
     b.setIndexedBlockMap(ibm);
 
     BOOST_REQUIRE_EQUAL(b.toString(), rval);
