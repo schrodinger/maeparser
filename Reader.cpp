@@ -67,5 +67,13 @@ std::shared_ptr<Block> Reader::next(const std::string& outer_block_name)
     } while (block != nullptr && block->getName() != outer_block_name);
     return block;
 }
+
+bool Reader::hasNext(const std::string& outer_block_name)
+{
+    m_mae_parser->whitespace();
+    return m_mae_parser->hasOuterBlock(outer_block_name);
+}
+
+
 } // namespace mae
 } // namespace schrodinger

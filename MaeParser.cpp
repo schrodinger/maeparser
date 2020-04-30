@@ -258,6 +258,24 @@ std::string outer_block_beginning(Buffer& buffer)
     return name;
 }
 
+bool MaeParser::hasOuterBlock(const std::string& outer_block_name)
+{
+    if (!m_buffer.load()) {
+        return false;
+    }
+
+    std::string block_name;
+    auto buffer_position = m_buffer.current;
+    do {
+        whitespace();
+        block_name = outer_block_beginning(m_buffer);
+    } while(!block_name.empty());
+
+    m_buffer.current = buffer_position;
+
+    return block_name == outer_block_name;
+}
+
 std::shared_ptr<Block> MaeParser::outerBlock()
 {
     if (!m_buffer.load()) {
@@ -269,27 +287,25 @@ std::shared_ptr<Block> MaeParser::outerBlock()
 
 std::string outer_block_name(Buffer& buffer)
 {
+    const auto bad_fmt_msg = "Bad format for outer block name; must be (f|p)_<author>_<name>.";
+
     char* save = buffer.current;
     char c = *buffer.current;
     if (c == '{') {
         return std::string();
     } else if (c != 'f' && c != 'p') {
-        goto bad_format;
+        throw read_exception(buffer, bad_fmt_msg);
     }
     ++buffer.current;
 
     if (!character('_', buffer, save)) {
-        goto bad_format;
+        throw read_exception(buffer, bad_fmt_msg);
     }
     if (!property_key_author_name(buffer, save)) {
-        goto bad_format;
+        throw read_exception(buffer, bad_fmt_msg);
     }
 
     return std::string(save, buffer.current - save);
-
-bad_format:
-    throw read_exception(buffer, "Bad format for outer block name; "
-                                 "must be (f|p)_<author>_<name>.");
 }
 
 std::string MaeParser::blockBeginning(int* indexed)
