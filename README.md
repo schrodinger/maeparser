@@ -1,5 +1,5 @@
 # maeparser
-[![Build Status](https://travis-ci.org/schrodinger/maeparser.svg?branch=master)](https://travis-ci.org/schrodinger/maeparser)
+[![Azure_Build_Status](https://dev.azure.com/patlorton/maeparser/_apis/build/status/schrodinger.maeparser?branchName=master)](https://dev.azure.com/patlorton/maeparser/_build/latest?definitionId=1&branchName=master)
 [![Build_Status](https://ci.appveyor.com/api/projects/status/github/schrodinger/maeparser?branch=master&svg=true)](https://ci.appveyor.com/project/torcolvin/maeparser)
 
 maeparser is a parser for [Schrodinger](https://www.schrodinger.com/) Maestro
