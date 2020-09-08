@@ -66,6 +66,8 @@ target_include_directories(maeparser PUBLIC
 if(MSVC)
     set(CMAKE_INSTALL_LIBDIR lib)
     set(CMAKE_INSTALL_BINDIR bin)
+else(MSVC)
+    include(GNUInstallDirs)
 endif(MSVC)
 
 install(TARGETS maeparser
