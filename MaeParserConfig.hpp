@@ -15,7 +15,7 @@
 #ifdef WIN32
 #define EXPORT_MAEPARSER __declspec(dllimport)
 #else
-#define EXPORT_MAEPARSER
+#define EXPORT_MAEPARSER __attribute__((visibility("default")))
 #endif
 
 #endif
