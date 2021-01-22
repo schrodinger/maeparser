@@ -2,26 +2,20 @@
 
 #ifndef STATIC_MAEPARSER
 
-#ifdef IN_MAEPARSER
-
 #ifdef WIN32
+#ifdef IN_MAEPARSER
 #define EXPORT_MAEPARSER __declspec(dllexport)
 #else
-#define EXPORT_MAEPARSER __attribute__((visibility("default")))
-#endif
-
-#else
-
-#ifdef WIN32
 #define EXPORT_MAEPARSER __declspec(dllimport)
-#else
-#define EXPORT_MAEPARSER
-#endif
-
-#endif
+#endif // IN_MAEPARSER
 
 #else
 
+#define EXPORT_MAEPARSER __attribute__((visibility("default")))
+#endif // WIN32
+
+#else
+
 #define EXPORT_MAEPARSER
 
-#endif
+#endif // STATIC_MAEPARSER
