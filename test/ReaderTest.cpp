@@ -326,4 +326,22 @@ BOOST_AUTO_TEST_CASE(TestReadNonExistingFile)
                           check_msg);
 }
 
+BOOST_AUTO_TEST_CASE(PeekReader)
+{
+    const auto property_name = "s_m_entry_name";
+    const std::vector<const char*> titles = {"ligprep-out.1", "ligprep-out.2",
+                                             "ligprep-out.3"};
+    Reader r(uncompressed_sample);
+    auto title = titles.begin();
+    while (r.hasNext(CT_BLOCK)) {
+        auto b = r.next(CT_BLOCK);
+        BOOST_REQUIRE(title != titles.end());
+        BOOST_REQUIRE_EQUAL(b->getStringProperty(property_name), *title);
+        ++title;
+
+    }
+    BOOST_REQUIRE(title == titles.end());
+    BOOST_CHECK(!r.hasNext(CT_BLOCK));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

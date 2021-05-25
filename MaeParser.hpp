@@ -310,6 +310,8 @@ class EXPORT_MAEPARSER MaeParser
 
     std::shared_ptr<Block> outerBlock();
 
+    bool hasOuterBlock(const std::string& outer_block_name);
+
     /**
      * Read a block name or a closing '}'. The argument 'indexed' is set to
      * a positive integer value indicating the number of rows, or zero if
