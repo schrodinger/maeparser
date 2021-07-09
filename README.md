@@ -12,11 +12,12 @@ for standard block and property names.
 To read a structure,
 
 ```C++
+#include <istream>
 #include "Reader.hpp"
 
 ...
 
-FILE* f = fopen("test.mae", "r");
+FILE* f = std::istream("test.mae", "r");
 schrodinger::mae::Reader r(f);
 
 std::shared_ptr<schrodinger::mae::Block> b;
