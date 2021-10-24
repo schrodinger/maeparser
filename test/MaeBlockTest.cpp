@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 
 #include <boost/test/unit_test.hpp>
@@ -133,8 +134,7 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlock)
         dv.push_back(3.0);
         IndexedBlock ib("m_atom");
         BOOST_REQUIRE(!ib.hasRealProperty("r_m_float"));
-        auto irps = std::shared_ptr<IndexedRealProperty>(
-            new IndexedRealProperty(dv, bs));
+        auto irps = std::make_shared<IndexedRealProperty>(dv, bs);
 
         ib.setRealProperty("r_m_float", irps);
         BOOST_REQUIRE(ib.hasRealProperty("r_m_float"));
@@ -169,8 +169,7 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlockBool)
         dv.push_back(true);
         IndexedBlock ib("m_atom");
         BOOST_REQUIRE(!ib.hasBoolProperty("b_m_bool"));
-        auto ibps = std::shared_ptr<IndexedBoolProperty>(
-            new IndexedBoolProperty(dv, bs));
+        auto ibps = std::make_shared<IndexedBoolProperty>(dv, bs);
 
         ib.setBoolProperty("b_m_bool", ibps);
         BOOST_REQUIRE(ib.hasBoolProperty("b_m_bool"));
@@ -199,8 +198,7 @@ BOOST_AUTO_TEST_CASE(maeIndexedBlockString)
         dv.push_back("Bye");
         IndexedBlock ib("m_atom");
         BOOST_REQUIRE(!ib.hasStringProperty("s_m_string"));
-        auto isps = std::shared_ptr<IndexedStringProperty>(
-            new IndexedStringProperty(dv, bs));
+        auto isps = std::make_shared<IndexedStringProperty>(dv, bs);
 
         ib.setStringProperty("s_m_string", isps);
         BOOST_REQUIRE(ib.hasStringProperty("s_m_string"));
@@ -234,8 +232,7 @@ std::shared_ptr<mae::IndexedBlock> getExampleIndexedBlock()
     boost::dynamic_bitset<>* rbs = new boost::dynamic_bitset<>(3);
     rbs->set(2);
 
-    auto irps =
-        std::shared_ptr<IndexedRealProperty>(new IndexedRealProperty(rv, rbs));
+    auto irps = std::make_shared<IndexedRealProperty>(rv, rbs);
     ib->setRealProperty("r_m_reals", irps);
 
     return ib;
