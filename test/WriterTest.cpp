@@ -29,7 +29,7 @@ class WriterGlobalFixture
   public:
     WriterGlobalFixture()
     {
-        for (auto& file : generated_files) {
+        for (const auto& file : generated_files) {
             boost::filesystem::path fpath(file);
             if (boost::filesystem::exists(fpath)) {
                 boost::filesystem::remove(fpath);

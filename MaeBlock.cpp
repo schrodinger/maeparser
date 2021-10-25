@@ -202,7 +202,7 @@ bool Block::operator==(const Block& rhs) const
     return true;
 }
 
-bool IndexedBlockMapI::operator==(const IndexedBlockMapI& rhs)
+bool IndexedBlockMapI::operator==(const IndexedBlockMapI& rhs) const
 {
     const auto& block_names = getBlockNames();
     for (const auto& name : block_names) {
