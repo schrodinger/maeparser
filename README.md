@@ -67,3 +67,34 @@ to handle output from:
 * Quantum Mechanics applications, such as Jaguar
 * Protein-Protein Docking applications
 * Many other backends used in both Life and Material Sciences
+
+Installation
+============
+
+Command line installation on a
+[Unix-like](https://www.https://en.wikipedia.org/wiki/Unix-like)
+operating system follows a typical configure, build, and test procedure.
+Configuration is via [CMake](https://www.https://en.wikipedia.org/wiki/CMake);
+building is via [Make](https://www.https://en.wikipedia.org/wiki/Make_(software));
+and testing can be performed by running a custom built program.  Here is an
+example command sequence:
+
+```bash
+git clone git@github.com:schrodinger/maeparser.git maeparser
+cd maeparser
+mkdir build
+cd build
+export CC=gcc
+export VERBOSE=yes
+cmake `pwd/..`
+make
+test/unittest 
+```
+
+Defining CC ensures that the first
+[compiler](https://www.https://en.wikipedia.org/wiki/Compiler) in one's
+[PATH](https://www.https://en.wikipedia.org/wiki/PATH_(variable)) is used,
+and defining VERBOSE enables viewing the gory details of compiling and
+[linking](https://www.https://en.wikipedia.org/wiki/Linker_(computing))
+that will be necessary to reproduce when one builds one's own program
+that uses the maeparser library.
