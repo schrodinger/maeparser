@@ -72,10 +72,10 @@ Installation
 ============
 
 Command line installation on a
-[Unix-like](https://www.https://en.wikipedia.org/wiki/Unix-like)
+[Unix-like](https://en.wikipedia.org/wiki/Unix-like)
 operating system follows a typical configure, build, and test procedure.
-Configuration is via [CMake](https://www.https://en.wikipedia.org/wiki/CMake);
-building is via [Make](https://www.https://en.wikipedia.org/wiki/Make_(software));
+Configuration is via [CMake](https://en.wikipedia.org/wiki/CMake);
+building is via [Make](https://en.wikipedia.org/wiki/Make_(software));
 and testing can be performed by running a custom built program.  Here is an
 example command sequence:
 
@@ -92,9 +92,9 @@ test/unittest
 ```
 
 Defining CC ensures that the first
-[compiler](https://www.https://en.wikipedia.org/wiki/Compiler) in one's
-[PATH](https://www.https://en.wikipedia.org/wiki/PATH_(variable)) is used,
+[compiler](https://en.wikipedia.org/wiki/Compiler) in one's
+[PATH](https://en.wikipedia.org/wiki/PATH_(variable)) is used,
 and defining VERBOSE enables viewing the gory details of compiling and
-[linking](https://www.https://en.wikipedia.org/wiki/Linker_(computing))
+[linking](https://en.wikipedia.org/wiki/Linker_(computing))
 that will be necessary to reproduce when one builds one's own program
 that uses the maeparser library.
