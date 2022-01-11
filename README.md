@@ -72,10 +72,8 @@ Installation
 ============
 
 Command line installation on a
-[Unix-like](https://en.wikipedia.org/wiki/Unix-like)
-operating system follows a typical configure, build, and test procedure.
-Configuration is via [CMake](https://en.wikipedia.org/wiki/CMake),
-and testing can be performed by running a custom built program.  Here is an
+Unix-like operating system follows a typical configure, build, and test procedure.
+Configuration is via [CMake](https://cmake.org/).  Here is an
 example command sequence:
 
 ```bash
@@ -86,20 +84,18 @@ cd maeparser
 mkdir build
 cd build
 export CC=gcc
-export VERBOSE=yes
-cmake `pwd/..`
+cmake --verbose ..
 
 # Build it
 make
 
 # Run the custom testing
-test/unittest 
+ctest
 ```
 
 Defining CC ensures that the specified
-[compiler](https://en.wikipedia.org/wiki/Compiler) is used in the build
+compiler is used in the build
 (in the example, it will be the first instance of `gcc` in one's
-[PATH](https://en.wikipedia.org/wiki/PATH_(variable))), 
-and defining VERBOSE enables viewing the gory details of compiling and
-[linking](https://en.wikipedia.org/wiki/Linker_(computing))
-that will be necessary for debugging or reporting issues if the build fails.
+PATH), 
+and the `--verbose` argumentenables viewing the gory details of compiling and
+linking that will be necessary for debugging or reporting issues if the build fails.
