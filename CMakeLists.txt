@@ -78,7 +78,7 @@ install(TARGETS maeparser
 
 INSTALL(EXPORT maeparser-targets
     FILE ${PROJECT_NAME}-config.cmake
-    DESTINATION lib${LIB_SUFFIX}/cmake)
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
 
 file(GLOB mae_headers "*.hpp")
 install(FILES ${mae_headers} DESTINATION include/maeparser)
