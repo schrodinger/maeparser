@@ -7,7 +7,7 @@ steps:
       conda info -a
       conda create --name maeparser_build $(compiler) cmake \
           boost-cpp=$(boost_version) boost=$(boost_version) \
-          libboost=$(boost_version)
+          libboost=$(boost_version) zlib
     displayName: Setup build environment
   - bash: |
       source ${CONDA}/etc/profile.d/conda.sh
