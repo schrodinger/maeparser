@@ -8,7 +8,6 @@
 #include <string>
 #include <utility>
 
-#include "MaeConstants.hpp"
 #include "MaeParserConfig.hpp"
 
 namespace schrodinger
