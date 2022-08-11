@@ -102,9 +102,8 @@ class EXPORT_MAEPARSER BufferedIndexedBlockMap : public IndexedBlockMapI
      * Add an IndexedBlockBuffer to the map, which can be used to retrieve an
      * IndexedBlock.
      */
-    void
-    addIndexedBlockBuffer(const std::string& name,
-                          std::shared_ptr<IndexedBlockBuffer> block_buffer)
+    void addIndexedBlockBuffer(const std::string& name,
+                               std::shared_ptr<IndexedBlockBuffer> block_buffer)
     {
         m_indexed_buffer[name] = std::move(block_buffer);
     }
@@ -154,7 +153,10 @@ class EXPORT_MAEPARSER Block
     std::shared_ptr<const IndexedBlock>
     getIndexedBlock(const std::string& name) const;
 
-    void addBlock(std::shared_ptr<Block> b) { m_sub_block[b->getName()] = std::move(b); }
+    void addBlock(std::shared_ptr<Block> b)
+    {
+        m_sub_block[b->getName()] = std::move(b);
+    }
 
     /**
      * Check whether this block has a sub-block of the provided name.
@@ -169,7 +171,7 @@ class EXPORT_MAEPARSER Block
     /**
      * Retrieve a shared pointer to the named sub-block.
      */
-    std::shared_ptr<Block> getBlock(const std::string& name)
+    std::shared_ptr<Block> getBlock(const std::string& name) const
     {
         std::map<std::string, std::shared_ptr<Block>>::const_iterator iter =
             m_sub_block.find(name);
@@ -178,6 +180,26 @@ class EXPORT_MAEPARSER Block
         } else {
             return iter->second;
         }
+    }
+
+    /**
+     * Get the names of all non-indexed sub-blocks
+     */
+    std::vector<std::string> getBlockNames() const
+    {
+        std::vector<std::string> names;
+        for (auto& n : m_sub_block) {
+            names.push_back(n.first);
+        }
+        return names;
+    }
+
+    /**
+     * Get the names of all indexed sub-blocks
+     */
+    std::vector<std::string> getIndexedBlockNames() const
+    {
+        return m_indexed_block_map->getBlockNames();
     }
 
     bool operator==(const Block& rhs) const;

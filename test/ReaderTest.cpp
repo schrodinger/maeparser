@@ -17,6 +17,9 @@ const boost::filesystem::path test_samples_path(TEST_SAMPLES_PATH);
 const std::string uncompressed_sample =
     (test_samples_path / "test.mae").string();
 
+const std::string subblock_sample =
+    (test_samples_path / "subblock_sample.mae").string();
+
 BOOST_AUTO_TEST_SUITE(ReaderSuite)
 
 BOOST_AUTO_TEST_CASE(Reader0)
@@ -324,6 +327,56 @@ BOOST_AUTO_TEST_CASE(TestReadNonExistingFile)
 
     BOOST_CHECK_EXCEPTION(Reader r("non_existing_file.mae"), std::runtime_error,
                           check_msg);
+}
+
+void write_block_names(const Block& block, int tabs, std::vector<std::pair<std::string, unsigned int>>& res) {
+   for (auto& subblock_name : block.getBlockNames()) {
+      res.push_back({subblock_name,tabs});
+      write_block_names(*block.getBlock(subblock_name), tabs + 1, res);
+   }
+   for (auto& indexed_subblock_name : block.getIndexedBlockNames()) {
+      res.push_back({indexed_subblock_name,tabs});
+   }
+}
+
+BOOST_AUTO_TEST_CASE(TestGetSubBlockNames)
+{
+    auto ss = std::make_shared<std::ifstream>(subblock_sample);
+    Reader r(ss);
+
+    std::shared_ptr<Block> b = r.next(CT_BLOCK);
+
+    /* This is the tree structure of the non atom or bond subblocks for this
+      CT block:
+
+      m_test_block
+        m_nested_block
+            m_test_nested_indexed_block
+        m_test_block
+        m_test_repeated_block
+        m_test_indexed_block
+    */
+
+   std::vector<std::pair<std::string, unsigned int>> expected_subblocks = {
+      {"m_test_block", 0},
+      {"m_nested_block", 1},
+      {"m_test_nested_indexed_block", 2},
+      {"m_test_block", 1},
+      {"m_test_repeated_block", 1},
+      {"m_test_indexed_block", 1},
+      {schrodinger::mae::ATOM_BLOCK, 0},
+      {schrodinger::mae::BOND_BLOCK, 0},
+   };
+   std::vector<std::pair<std::string, unsigned int>> actual_subblocks;
+   write_block_names(*b, 0, actual_subblocks);
+
+   BOOST_REQUIRE(actual_subblocks.size() == expected_subblocks.size());
+   for (unsigned int i = 0; i < actual_subblocks.size(); ++i) {
+      auto actual = actual_subblocks[i];
+      auto expected = expected_subblocks[i];
+      BOOST_CHECK_EQUAL(actual.first, expected.first);
+      BOOST_CHECK_EQUAL(actual.second, expected.second);
+   }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
