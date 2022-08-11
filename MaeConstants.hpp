@@ -20,6 +20,7 @@ const char* const BOND_BLOCK = "m_bond";
 const char* const BOND_ATOM_1 = "i_m_from";
 const char* const BOND_ATOM_2 = "i_m_to";
 const char* const BOND_ORDER = "i_m_order";
+const char* const DEPEND_BLOCK = "m_depend";
 
 /**
  * These are the prefixes used to store stereochemical properties in Maestro
