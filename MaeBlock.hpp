@@ -275,8 +275,8 @@ template <typename T> class IndexedProperty
 
   public:
     // Prevent copying.
-    IndexedProperty<T>(const IndexedProperty<T>&) = delete;
-    IndexedProperty<T>& operator=(const IndexedProperty<T>&) = delete;
+    IndexedProperty(const IndexedProperty<T>&) = delete;
+    IndexedProperty& operator=(const IndexedProperty<T>&) = delete;
 
     using size_type = typename std::vector<T>::size_type;
 
@@ -286,14 +286,14 @@ template <typename T> class IndexedProperty
      *
      * The optional boost::dynamic_bitset is owned by the created object.
      */
-    explicit IndexedProperty<T>(std::vector<T>& data,
+    explicit IndexedProperty(std::vector<T>& data,
                                 boost::dynamic_bitset<>* is_null = nullptr)
         : m_data(), m_is_null(is_null)
     {
         m_data.swap(data);
     }
 
-    ~IndexedProperty<T>()
+    ~IndexedProperty()
     {
         if (m_is_null != nullptr) {
             delete m_is_null;
