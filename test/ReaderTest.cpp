@@ -329,14 +329,16 @@ BOOST_AUTO_TEST_CASE(TestReadNonExistingFile)
                           check_msg);
 }
 
-void write_block_names(const Block& block, int tabs, std::vector<std::pair<std::string, unsigned int>>& res) {
-   for (auto& subblock_name : block.getBlockNames()) {
-      res.push_back({subblock_name,tabs});
-      write_block_names(*block.getBlock(subblock_name), tabs + 1, res);
-   }
-   for (auto& indexed_subblock_name : block.getIndexedBlockNames()) {
-      res.push_back({indexed_subblock_name,tabs});
-   }
+void write_block_names(const Block& block, int tabs,
+                       std::vector<std::pair<std::string, unsigned int>>& res)
+{
+    for (auto& subblock_name : block.getBlockNames()) {
+        res.push_back({subblock_name, tabs});
+        write_block_names(*block.getBlock(subblock_name), tabs + 1, res);
+    }
+    for (auto& indexed_subblock_name : block.getIndexedBlockNames()) {
+        res.push_back({indexed_subblock_name, tabs});
+    }
 }
 
 BOOST_AUTO_TEST_CASE(TestGetSubBlockNames)
@@ -357,26 +359,44 @@ BOOST_AUTO_TEST_CASE(TestGetSubBlockNames)
         m_test_indexed_block
     */
 
-   std::vector<std::pair<std::string, unsigned int>> expected_subblocks = {
-      {"m_test_block", 0},
-      {"m_nested_block", 1},
-      {"m_test_nested_indexed_block", 2},
-      {"m_test_block", 1},
-      {"m_test_repeated_block", 1},
-      {"m_test_indexed_block", 1},
-      {schrodinger::mae::ATOM_BLOCK, 0},
-      {schrodinger::mae::BOND_BLOCK, 0},
-   };
-   std::vector<std::pair<std::string, unsigned int>> actual_subblocks;
-   write_block_names(*b, 0, actual_subblocks);
+    std::vector<std::pair<std::string, unsigned int>> expected_subblocks = {
+        {"m_test_block", 0},
+        {"m_nested_block", 1},
+        {"m_test_nested_indexed_block", 2},
+        {"m_test_block", 1},
+        {"m_test_repeated_block", 1},
+        {"m_test_indexed_block", 1},
+        {schrodinger::mae::ATOM_BLOCK, 0},
+        {schrodinger::mae::BOND_BLOCK, 0},
+    };
+    std::vector<std::pair<std::string, unsigned int>> actual_subblocks;
+    write_block_names(*b, 0, actual_subblocks);
 
-   BOOST_REQUIRE(actual_subblocks.size() == expected_subblocks.size());
-   for (unsigned int i = 0; i < actual_subblocks.size(); ++i) {
-      auto actual = actual_subblocks[i];
-      auto expected = expected_subblocks[i];
-      BOOST_CHECK_EQUAL(actual.first, expected.first);
-      BOOST_CHECK_EQUAL(actual.second, expected.second);
-   }
+    BOOST_REQUIRE(actual_subblocks.size() == expected_subblocks.size());
+    for (unsigned int i = 0; i < actual_subblocks.size(); ++i) {
+        auto actual = actual_subblocks[i];
+        auto expected = expected_subblocks[i];
+        BOOST_CHECK_EQUAL(actual.first, expected.first);
+        BOOST_CHECK_EQUAL(actual.second, expected.second);
+    }
 }
 
+BOOST_AUTO_TEST_CASE(TestParsingPropertyNameWithColon)
+{
+    auto ss = std::make_shared<std::stringstream>();
+    *ss << R"(
+        f_m_ct {
+        s_m_prop:name::with:::many::::colons
+        :::
+        1.1.0
+        }
+        )";
+
+    Reader r(ss);
+
+    auto b = r.next(CT_BLOCK);
+    BOOST_REQUIRE(b);
+    BOOST_CHECK_EQUAL(b->getStringProperty("s_m_prop:name::with:::many::::colons"),
+                      "1.1.0");
+}
 BOOST_AUTO_TEST_SUITE_END()
