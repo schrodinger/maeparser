@@ -55,7 +55,7 @@ target_link_libraries(maeparser ${boost_libs})
 
 SET_TARGET_PROPERTIES (maeparser
     PROPERTIES
-       VERSION 1.3.0
+       VERSION 1.3.1
        SOVERSION 1
 )
 
