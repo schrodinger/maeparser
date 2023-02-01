@@ -235,15 +235,6 @@ BOOST_AUTO_TEST_CASE(BlockBeginningErrors)
 
 BOOST_AUTO_TEST_CASE(BlockBody)
 {
-    double tolerance = std::numeric_limits<double>::epsilon();
-    {
-        auto ss =
-            std::make_shared<std::stringstream>("b_m_foo b_m_bar::: 1 0 }");
-        MaeParser mp(ss);
-        auto bl = mp.blockBody(CT_BLOCK);
-        BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
-        BOOST_REQUIRE(!bl->getBoolProperty("b_m_bar"));
-    }
     {
         auto ss =
             std::make_shared<std::stringstream>(" b_m_foo b_m_bar ::: 1 0 }");
@@ -261,6 +252,7 @@ BOOST_AUTO_TEST_CASE(BlockBody)
         BOOST_REQUIRE(bl->getBoolProperty("b_m_foo"));
         BOOST_REQUIRE(!bl->getBoolProperty("b_m_bar"));
         BOOST_REQUIRE_EQUAL(bl->getStringProperty("s_m_foo"), "svalue");
+        double tolerance = std::numeric_limits<double>::epsilon();
         BOOST_REQUIRE_CLOSE(bl->getRealProperty("r_m_foo"), 3.1415, tolerance);
         BOOST_REQUIRE_EQUAL(bl->getIntProperty("i_m_foo"), 22);
     }

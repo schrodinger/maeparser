@@ -463,7 +463,6 @@ bool property_key_author_name(Buffer& buffer, char*& save)
     while (buffer.current < buffer.end || buffer.load(save)) {
         switch (*buffer.current) {
         case WHITESPACE:
-        case ':':
         case '{':
         case '[':
             return buffer.current != start;
