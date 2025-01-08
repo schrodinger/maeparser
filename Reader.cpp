@@ -1,9 +1,11 @@
 #include "Reader.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
+#ifdef MAEPARSER_HAVE_BOOST_IOSTREAMS
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
+#endif
 
 #include <fstream>
 #include <iostream>
@@ -11,8 +13,10 @@
 #include <utility>
 
 using boost::algorithm::ends_with;
+#ifdef MAEPARSER_HAVE_BOOST_IOSTREAMS
 using boost::iostreams::file_source;
 using boost::iostreams::filtering_istream;
+#endif
 
 namespace schrodinger
 {
@@ -35,10 +39,17 @@ Reader::Reader(const std::string& fname, size_t buffer_size)
 
     std::shared_ptr<std::istream> stream;
     if (ends_with(fname, ".maegz") || ends_with(fname, ".mae.gz")) {
+#ifdef MAEPARSER_HAVE_BOOST_IOSTREAMS
         auto* gzip_stream = new filtering_istream();
         gzip_stream->push(boost::iostreams::gzip_decompressor());
         gzip_stream->push(file_source(fname, ios_mode));
         stream.reset(static_cast<std::istream*>(gzip_stream));
+#else
+        std::stringstream ss;
+        ss << "Unable to open " << fname << " for reading, "
+            << "as maeparser was compiled without boost::iostreams support";
+        throw std::runtime_error(ss.str());
+#endif
     } else {
         auto* file_stream = new std::ifstream(fname, ios_mode);
         stream.reset(static_cast<std::istream*>(file_stream));
