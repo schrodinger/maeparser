@@ -1,5 +1,5 @@
 set (CMAKE_CXX_STANDARD 11)
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.12)
 
 project(maeparser)
 
@@ -50,7 +50,7 @@ if(MAEPARSER_USE_BOOST_IOSTREAMS)
         message(STATUS "Using Boost zlib module for iostreams dependency.")
     else(Boost_ZLIB_FOUND)
         find_package(ZLIB REQUIRED)
-        set(boost_libs ${boost_libs} ${ZLIB_LIBRARIES})
+        set(boost_libs ${boost_libs} ZLIB::ZLIB)
         message(STATUS "Using zlib library for iostreams dependency.")
     endif(Boost_ZLIB_FOUND)
 
