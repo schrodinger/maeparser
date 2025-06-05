@@ -363,11 +363,11 @@ std::shared_ptr<Block> MaeParser::blockBody(const std::string& name)
 
     int indexed = 0;
     for (advance(); *m_buffer.current != '}'; advance()) {
-        std::string name = blockBeginning(&indexed);
+        std::string subblock_name = blockBeginning(&indexed);
         if (indexed) {
-            indexed_block_parser->parse(name, indexed, m_buffer);
+            indexed_block_parser->parse(subblock_name, indexed, m_buffer);
         } else {
-            auto sub_block = blockBody(name);
+            auto sub_block = blockBody(subblock_name);
             block->addBlock(std::move(sub_block));
         }
     }
