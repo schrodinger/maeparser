@@ -356,6 +356,7 @@ BOOST_AUTO_TEST_CASE(TestGetSubBlockNames)
             m_test_nested_indexed_block
         m_test_block
         m_test_repeated_block
+        m_empty_block
         m_test_indexed_block
     */
 
@@ -365,6 +366,7 @@ BOOST_AUTO_TEST_CASE(TestGetSubBlockNames)
         {"m_test_nested_indexed_block", 2},
         {"m_test_block", 1},
         {"m_test_repeated_block", 1},
+        {"m_empty_block", 1},
         {"m_test_indexed_block", 1},
         {schrodinger::mae::ATOM_BLOCK, 0},
         {schrodinger::mae::BOND_BLOCK, 0},
@@ -372,7 +374,7 @@ BOOST_AUTO_TEST_CASE(TestGetSubBlockNames)
     std::vector<std::pair<std::string, unsigned int>> actual_subblocks;
     write_block_names(*b, 0, actual_subblocks);
 
-    BOOST_REQUIRE(actual_subblocks.size() == expected_subblocks.size());
+    BOOST_CHECK_EQUAL(actual_subblocks.size(), expected_subblocks.size());
     for (unsigned int i = 0; i < actual_subblocks.size(); ++i) {
         auto actual = actual_subblocks[i];
         auto expected = expected_subblocks[i];
@@ -396,7 +398,7 @@ BOOST_AUTO_TEST_CASE(TestParsingPropertyNameWithColon)
 
     auto b = r.next(CT_BLOCK);
     BOOST_REQUIRE(b);
-    BOOST_CHECK_EQUAL(b->getStringProperty("s_m_prop:name::with:::many::::colons"),
-                      "1.1.0");
+    BOOST_CHECK_EQUAL(
+        b->getStringProperty("s_m_prop:name::with:::many::::colons"), "1.1.0");
 }
 BOOST_AUTO_TEST_SUITE_END()

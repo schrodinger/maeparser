@@ -123,23 +123,23 @@ BOOST_AUTO_TEST_CASE(BlockBeginning)
 {
     {
         auto ss = std::make_shared<std::stringstream>("m_something {");
-        int indexed = 0;
+        int indexed = -2;
         MaeParser mp(ss);
         std::string name = mp.blockBeginning(&indexed);
         BOOST_REQUIRE_EQUAL(name, "m_something");
-        BOOST_REQUIRE_EQUAL(indexed, 0);
+        BOOST_REQUIRE_EQUAL(indexed, -1);
     }
     {
         auto ss = std::make_shared<std::stringstream>("mmmm_block{");
-        int indexed = 0;
+        int indexed = -2;
         MaeParser mp(ss);
         std::string name = mp.blockBeginning(&indexed);
         BOOST_REQUIRE_EQUAL(name, "mmmm_block");
-        BOOST_REQUIRE_EQUAL(indexed, 0);
+        BOOST_REQUIRE_EQUAL(indexed, -1);
     }
     {
         auto ss = std::make_shared<std::stringstream>("m_whatev[23]{");
-        int indexed = 0;
+        int indexed = -2;
         MaeParser mp(ss);
         std::string name = mp.blockBeginning(&indexed);
         BOOST_REQUIRE_EQUAL(name, "m_whatev");

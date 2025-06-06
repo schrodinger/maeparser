@@ -294,7 +294,7 @@ bad_format:
 
 std::string MaeParser::blockBeginning(int* indexed)
 {
-    *indexed = 0;
+    *indexed = -1;
 
     char* save = m_buffer.current;
     if (!property_key_author_name(m_buffer, save)) {
@@ -361,14 +361,14 @@ std::shared_ptr<Block> MaeParser::blockBody(const std::string& name)
         }
     };
 
-    int indexed = 0;
+    int indexed = -1;
     for (advance(); *m_buffer.current != '}'; advance()) {
-        std::string name = blockBeginning(&indexed);
-        if (indexed) {
-            indexed_block_parser->parse(name, indexed, m_buffer);
-        } else {
-            auto sub_block = blockBody(name);
+        std::string subblock_name = blockBeginning(&indexed);
+        if (indexed < 0) { // Not an indexed block
+            auto sub_block = blockBody(subblock_name);
             block->addBlock(std::move(sub_block));
+        } else {
+            indexed_block_parser->parse(subblock_name, indexed, m_buffer);
         }
     }
 
