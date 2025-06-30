@@ -1,7 +1,7 @@
 set (CMAKE_CXX_STANDARD 11)
 cmake_minimum_required(VERSION 3.12)
 
-project(maeparser)
+project(maeparser VERSION 1.3.3)
 
 option(MAEPARSER_RIGOROUS_BUILD "Abort the build if the compiler issues any warnings" OFF )
 option(MAEPARSER_BUILD_TESTS "Whether test executables should be built" ON)
@@ -55,11 +55,11 @@ if(MAEPARSER_USE_BOOST_IOSTREAMS)
     endif(Boost_ZLIB_FOUND)
 
     target_link_libraries(maeparser ${boost_libs})
-endif(MAEPARSER_BOOST_IOSTREAMS_SUPPORT)
+endif(MAEPARSER_USE_BOOST_IOSTREAMS)
 
 SET_TARGET_PROPERTIES (maeparser
     PROPERTIES
-       VERSION 1.3.3
+       VERSION ${PROJECT_VERSION}
        SOVERSION 1
 )
 
@@ -82,6 +82,12 @@ install(TARGETS maeparser
 
 INSTALL(EXPORT maeparser-targets
     FILE ${PROJECT_NAME}-config.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+    COMPATIBILITY AnyNewerVersion)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
 
 file(GLOB mae_headers "*.hpp")
