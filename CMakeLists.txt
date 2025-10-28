@@ -82,13 +82,13 @@ install(TARGETS maeparser
 
 INSTALL(EXPORT maeparser-targets
     FILE ${PROJECT_NAME}-config.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/maeparser)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
     COMPATIBILITY AnyNewerVersion)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/maeparser)
 
 file(GLOB mae_headers "*.hpp")
 install(FILES ${mae_headers} DESTINATION include/maeparser)
