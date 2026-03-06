@@ -54,7 +54,7 @@ if(MAEPARSER_USE_BOOST_IOSTREAMS)
         message(STATUS "Using zlib library for iostreams dependency.")
     endif(Boost_ZLIB_FOUND)
 
-    target_link_libraries(maeparser ${boost_libs})
+    target_link_libraries(maeparser PRIVATE ${boost_libs})
 endif(MAEPARSER_USE_BOOST_IOSTREAMS)
 
 SET_TARGET_PROPERTIES (maeparser
