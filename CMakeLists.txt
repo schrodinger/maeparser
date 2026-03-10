@@ -1,9 +1,9 @@
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 cmake_minimum_required(VERSION 3.12)
 
 project(maeparser VERSION 1.3.3)
 
-option(MAEPARSER_RIGOROUS_BUILD "Abort the build if the compiler issues any warnings" OFF )
+option(MAEPARSER_RIGOROUS_BUILD "Abort the build if the compiler issues any warnings" OFF)
 option(MAEPARSER_BUILD_TESTS "Whether test executables should be built" ON)
 option(MAEPARSER_BUILD_SHARED_LIBS "Build maeparser as a shared library (turn off for a static one)" ON)
 option(MAEPARSER_USE_BOOST_IOSTREAMS "Build maeparser with boost::iostreams" ON)
@@ -15,11 +15,11 @@ if(MSVC)
 endif(MSVC)
 
 if(MAEPARSER_RIGOROUS_BUILD)
-if(MSVC)
-    add_compile_options(/WX)
-else(MSVC)
-    add_compile_options(-Wall -Wextra -Werror)
-endif(MSVC)
+    if(MSVC)
+        add_compile_options(/WX)
+    else(MSVC)
+        add_compile_options(-Wall -Wextra -Werror)
+    endif(MSVC)
 endif(MAEPARSER_RIGOROUS_BUILD)
 
 file(GLOB mae_sources "*.cpp")
@@ -31,9 +31,11 @@ if(MAEPARSER_BUILD_SHARED_LIBS)
     set_property(TARGET maeparser PROPERTY CXX_VISIBILITY_PRESET "hidden")
 else(MAEPARSER_BUILD_SHARED_LIBS)
     set(Boost_USE_STATIC_LIBS ON)
+
     if(NOT MSVC)
         set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
     endif()
+
     add_library(maeparser STATIC ${mae_sources})
     target_compile_definitions(maeparser PRIVATE "STATIC_MAEPARSER")
 endif(MAEPARSER_BUILD_SHARED_LIBS)
@@ -45,6 +47,7 @@ if(MAEPARSER_USE_BOOST_IOSTREAMS)
     target_compile_definitions(maeparser PRIVATE "MAEPARSER_HAVE_BOOST_IOSTREAMS")
 
     find_package(Boost COMPONENTS zlib QUIET)
+
     if(Boost_ZLIB_FOUND)
         set(boost_libs ${boost_libs} ${Boost_LIBRARIES})
         message(STATUS "Using Boost zlib module for iostreams dependency.")
@@ -57,10 +60,10 @@ if(MAEPARSER_USE_BOOST_IOSTREAMS)
     target_link_libraries(maeparser PRIVATE ${boost_libs})
 endif(MAEPARSER_USE_BOOST_IOSTREAMS)
 
-SET_TARGET_PROPERTIES (maeparser
+SET_TARGET_PROPERTIES(maeparser
     PROPERTIES
-       VERSION ${PROJECT_VERSION}
-       SOVERSION 1
+    VERSION ${PROJECT_VERSION}
+    SOVERSION 1
 )
 
 target_include_directories(maeparser PUBLIC
@@ -91,10 +94,10 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/maeparser)
 
 file(GLOB mae_headers "*.hpp")
-install(FILES ${mae_headers} DESTINATION include/maeparser)
+install(FILES ${mae_headers} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/maeparser)
 
 # Tests
-if (MAEPARSER_BUILD_TESTS)
+if(MAEPARSER_BUILD_TESTS)
     set(MEMORYCHECK_COMMAND_OPTIONS "${MEMORYCHECK_COMMAND_OPTIONS} --tool=memcheck \
             --time-stamp=yes --num-callers=20 --gen-suppressions=all --leak-check=full \
             --show-reachable=yes --trace-children=yes --error-exitcode=29")
@@ -102,4 +105,3 @@ if (MAEPARSER_BUILD_TESTS)
     include(CTest)
     add_subdirectory(test)
 endif()
-
